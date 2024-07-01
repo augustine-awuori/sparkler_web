@@ -1,4 +1,12 @@
-const users = [
+export type User = {
+  id: string;
+  name: string;
+  bio: string;
+  token: string;
+  image: string;
+};
+
+const users: User[] = [
   {
     id: "augustine",
     name: "Awuori",
