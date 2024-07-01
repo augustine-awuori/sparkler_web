@@ -1,8 +1,9 @@
 const users = [
   {
-    id: "iamdillion",
-    name: "Dillion",
-    image: "https://dillionmegida.com/img/deee.jpg",
+    id: "augustine",
+    name: "Awuori",
+    image:
+      "https://yt3.ggpht.com/LtGpoUi8BXlZWKbFKjR6m5wJPgFxjVo1AAPgwRF_HWJYGsC3OMrEm61gHJxqw5bSpGPgKsM0BQ=s88-c-k-c0x00ffffff-no-rj",
     bio: "Just here, doing my thing. Developer advocate at @getstream_io",
     token: "ENTER TOKEN FOR iamdillion",
   },
