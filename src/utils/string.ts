@@ -1,6 +1,6 @@
 export function formatStringWithLink(
   text: string,
-  linkClass: string,
+  linkClass?: string,
   noLink = false
 ) {
   // regex to match links, hashtags and mentions
