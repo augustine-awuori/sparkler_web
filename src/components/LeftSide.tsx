@@ -275,7 +275,7 @@ export default function LeftSide({ onClickSparkle }: Props) {
       <button className="profile-section">
         <div className="details">
           <div className="details__img">
-            <img src={(userData as UserType | undefined)?.image} alt="" />
+            <img src={(userData as UserType | undefined)?.avatar} alt="" />
           </div>
           <div className="details__text">
             <span className="details__text__name">{userData.name}</span>

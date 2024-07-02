@@ -5,6 +5,7 @@ import CreateTweetTop from "./CreateSparkleTop";
 import MainHeader from "./MainHeader";
 import Timeline from "./Timeline";
 import LoadingIndicator from "../LoadingIndicator";
+import { useUser } from "../../hooks";
 
 const Container = styled.div`
   .header {
@@ -33,9 +34,7 @@ const Container = styled.div`
 `;
 
 export default function HomeContent() {
-  const { client } = useStreamContext();
-
-  const user = client?.currentUser?.data;
+  const { user } = useUser();
 
   if (!user)
     return (

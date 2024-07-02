@@ -10,7 +10,7 @@ export default function Timeline() {
     <div>
       <FlatFeed
         Activity={SparkleBlock}
-        userId={(user as unknown as User).id}
+        userId={(user as unknown as User)._id}
         feedGroup="user"
       />
     </div>

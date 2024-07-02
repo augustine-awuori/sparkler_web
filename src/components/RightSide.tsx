@@ -45,7 +45,7 @@ export default function RightSide() {
 
   const whoToFollow = users.filter((u) => {
     // filter out currently logged in user
-    return u.id !== client?.userId;
+    return u._id !== client?.userId;
   });
 
   return (
@@ -101,17 +101,17 @@ export default function RightSide() {
         <div className="follows-list">
           {whoToFollow.map((user) => {
             return (
-              <div className="user" key={user.id}>
-                <Link to={`/${user.id}`} className="user__details">
+              <div className="user" key={user._id}>
+                <Link to={`/${user._id}`} className="user__details">
                   <div className="user__img">
-                    <img src={user.image} alt="" />
+                    <img src={user.avatar} alt="" />
                   </div>
                   <div className="user__info">
                     <span className="user__name">{user.name}</span>
-                    <span className="user__id">@{user.id}</span>
+                    <span className="user__id">@{user._id}</span>
                   </div>
                 </Link>
-                <FollowBtn userId={user.id} />
+                <FollowBtn userId={user._id} />
               </div>
             );
           })}

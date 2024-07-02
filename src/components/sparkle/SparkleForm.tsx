@@ -11,10 +11,11 @@ import Location from "../icons/Location";
 import Poll from "../icons/Poll";
 import ProgressRing from "../icons/ProgressRing";
 import { User } from "../../users";
+import { useUser } from "../../hooks";
 
 interface FormProps {
   inline?: boolean;
-  minHeight?: string;
+  minheight?: string;
 }
 
 const Container = styled.div`
@@ -59,7 +60,8 @@ const Form = styled.form<FormProps>`
     flex: 1;
     flex-direction: ${({ inline }) => (inline ? "row" : "column")};
     align-items: ${({ inline }) => (inline ? "center" : "initial")};
-    height: ${({ inline, minHeight }) => (inline ? "40px" : minHeight)};
+    height: ${({ inline, minheight: minHeight }) =>
+      inline ? "40px" : minHeight};
 
     textarea {
       padding-top: 10px;
@@ -201,12 +203,11 @@ export default function SparkleForm({
   const { client } = useStreamContext();
   const [expanded, setExpanded] = useState(!collapsedOnMount);
   const [text, setText] = useState("");
+  const { user } = useUser();
 
   useEffect(() => {
     if (shouldFocus && inputRef.current) inputRef.current.focus();
   }, [shouldFocus]);
-
-  const user = client?.currentUser?.data;
 
   const MAX_CHARS = 280;
 
@@ -244,13 +245,13 @@ export default function SparkleForm({
         </span>
       )}
       <Form
-        minHeight={minHeight + "px"}
+        minheight={minHeight + "px"}
         inline={!expanded}
         className={className}
         onSubmit={submit}
       >
         <div className="user">
-          <img src={(user as User | undefined)?.image || ""} alt="" />
+          <img src={(user as User | undefined)?.avatar || ""} alt="" />
         </div>
         <div className="input-section">
           <textarea

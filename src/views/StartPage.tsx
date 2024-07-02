@@ -56,11 +56,11 @@ export default function Startpage() {
       <div className="users">
         {users.map((u) => (
           <button
-            onClick={() => onClickUser(u.id)}
+            onClick={() => onClickUser(u._id)}
             className="users__user"
-            key={u.id}
+            key={u._id}
           >
-            <img src={u.image} alt="" />
+            <img src={u.avatar} alt="" />
             <span className="name">{u.name}</span>
           </button>
         ))}

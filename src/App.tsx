@@ -2,42 +2,62 @@ import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { DefaultGenerics, StreamClient } from "getstream";
 import { StreamApp } from "react-activity-feed";
+import { Heading } from "@chakra-ui/react";
 
-import { getFromStorage } from "./utils/storage";
+import { User } from "./users";
+import { UserContext } from "./components/contexts";
+import auth from "./services/auth";
+import AuthPages from "./pages/AuthPages";
+import HomePage from "./pages/HomePage";
 import ScrollToTop from "./components/ScrollToTop";
-import StartPage from "./views/StartPage";
-import users from "./users";
 
-const APP_KEY = process.env.REACT_APP_KEY;
-const APP_ID = process.env.REACT_APP_ID;
+const id = "1322281";
+const key = "8hn252eegqq9";
 
 function App() {
   const [client, setClient] = useState<StreamClient<DefaultGenerics>>();
-  const userId = getFromStorage("user");
-  const user = users.find((u) => u.id === userId) || users[0];
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
-    init();
+    initUser();
+    initClient();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, APP_KEY]);
+  }, [user?._id]);
 
-  async function init() {
-    if (!APP_KEY) return;
-    const client = new StreamClient(APP_KEY, user.token, APP_ID);
+  const initUser = () => {
+    if (!user) {
+      const currentUser = auth.getCurrentUser();
+      if (currentUser) setUser(currentUser);
+    }
+  };
 
-    await client.user(user.id).getOrCreate({ ...user, token: "" });
-
-    setClient(client);
+  async function initClient() {
+    try {
+      if (!user) return;
+      const client = new StreamClient(key, user.feedToken, id);
+      setClient(client);
+      await client.user(user._id).getOrCreate({
+        name: user.name,
+        email: user.email,
+        token: user.feedToken,
+      });
+    } catch (error) {
+      console.log("ERR", error);
+    }
   }
 
-  if (!client || !APP_ID || !APP_KEY) return <></>;
+  if (!user) return <AuthPages />;
+
+  if (!client) return <Heading>Client Error</Heading>;
 
   return (
-    <StreamApp token={user.token} appId={APP_ID} apiKey={APP_KEY}>
+    <StreamApp token={user.feedToken} appId={id} apiKey={key}>
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<StartPage />} />
-      </Routes>
+      <UserContext.Provider value={{ setUser, user }}>
+        <Routes>
+          <Route element={<HomePage />} path="/" />
+        </Routes>
+      </UserContext.Provider>
     </StreamApp>
   );
 }
