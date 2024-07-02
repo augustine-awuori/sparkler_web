@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import { useSparkle } from "../../hooks";
 import Modal from "../Modal";
 import SparkleForm from "./SparkleForm";
 
@@ -22,9 +23,10 @@ interface Props {
 }
 
 export default function CreateTweetDialog({ onClickOutside }: Props) {
-  const onSubmit = async (_text: string) => {
-    // create sparkle
+  const { createSparkle } = useSparkle();
 
+  const onSubmit = async (text: string) => {
+    createSparkle(text);
     onClickOutside();
   };
 

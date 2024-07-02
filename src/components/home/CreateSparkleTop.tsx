@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import { useSparkle } from "../../hooks";
 import SparkleForm from "../sparkle/SparkleForm";
 
 const Container = styled.div`
@@ -7,8 +8,10 @@ const Container = styled.div`
 `;
 
 export default function CreateTweetTop() {
-  const onSubmit = async (_text: string) => {
-    // create sparkle here
+  const { createSparkle } = useSparkle();
+
+  const onSubmit = async (text: string) => {
+    createSparkle(text);
   };
 
   return (
