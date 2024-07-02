@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Star from "../icons/Star";
+import Sparkler from "../icons/Twitter";
 
 const Header = styled.header`
   display: flex;
@@ -22,7 +22,7 @@ export default function MainHeader() {
   return (
     <Header>
       <h1>Home</h1>
-      <Star color="white" />
+      <Sparkler color="white" />
     </Header>
   );
 }

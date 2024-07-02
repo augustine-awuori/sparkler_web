@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import { Feed, useStreamContext } from "react-activity-feed";
+import { Feed } from "react-activity-feed";
 
+import { useUser } from "../../hooks";
 import CreateTweetTop from "./CreateSparkleTop";
 import MainHeader from "./MainHeader";
 import Timeline from "./Timeline";
 import LoadingIndicator from "../LoadingIndicator";
-import { useUser } from "../../hooks";
 
 const Container = styled.div`
   .header {

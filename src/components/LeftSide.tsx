@@ -14,13 +14,16 @@ import Mail from "./icons/Mail";
 import Bookmark from "./icons/Bookmark";
 import User from "./icons/User";
 import More from "./icons/More";
-import Twitter from "./icons/Twitter";
+import Sparkle from "./icons/Twitter";
+import { useUser } from "../hooks";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 30px;
   height: 100%;
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Hide horizontal scrolling */
 
   .header {
     padding: 15px;
@@ -33,7 +36,7 @@ const Container = styled.div`
     a,
     button {
       display: block;
-      margin-bottom: 12px;
+      margin-bottom: 8px; /* Adjusted margin here */
       color: white;
       padding: 10px 15px;
       display: flex;
@@ -53,7 +56,6 @@ const Container = styled.div`
         .notifications-count {
           position: absolute;
           font-size: 11px;
-          /* min-width: 14px; */
           background-color: var(--theme-color);
           top: -5px;
           padding: 1px 5px;
@@ -99,6 +101,12 @@ const Container = styled.div`
           align-items: center;
           justify-content: center;
         }
+      }
+
+      span {
+        white-space: nowrap; /* Prevent text from wrapping */
+        overflow: hidden; /* Hide text overflow */
+        text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
       }
     }
   }
@@ -152,12 +160,18 @@ const Container = styled.div`
           color: white;
           font-size: 16px;
           font-weight: bold;
+          white-space: nowrap; /* Prevent text from wrapping */
+          overflow: hidden; /* Hide text overflow */
+          text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
         }
 
         &__id {
           font-size: 14px;
           margin-top: 2px;
           color: #aaa;
+          white-space: nowrap; /* Prevent text from wrapping */
+          overflow: hidden; /* Hide text overflow */
+          text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
         }
       }
     }
@@ -170,10 +184,10 @@ interface Props {
 
 export default function LeftSide({ onClickSparkle }: Props) {
   const location = useLocation();
-  const { userData } = useStreamContext();
+  const { user } = useUser();
   const [newNotifications, setNewNotifications] = useState(0);
 
-  if (!userData)
+  if (!user)
     return (
       <Container>
         <LoadingIndicator />
@@ -225,20 +239,20 @@ export default function LeftSide({ onClickSparkle }: Props) {
       onClick: () => {},
       label: "Profile",
       Icon: User,
-      link: `/${userData.id}`,
+      link: `/${user._id}`,
     },
   ];
 
   return (
     <Container>
       <Link to="/" className="header">
-        <Twitter color="white" size={25} />
+        <Sparkle color="white" size={25} />
       </Link>
       <div className="buttons">
         {menus.map((m) => {
           const isActiveLink =
             location.pathname === `/${m.id}` ||
-            (m.id === "profile" && location.pathname === `/${userData.id}`);
+            (m.id === "profile" && location.pathname === `/${user._id}`);
 
           return (
             <Link
@@ -275,11 +289,11 @@ export default function LeftSide({ onClickSparkle }: Props) {
       <button className="profile-section">
         <div className="details">
           <div className="details__img">
-            <img src={(userData as UserType | undefined)?.avatar} alt="" />
+            <img src={(user as UserType | undefined)?.avatar} alt="" />
           </div>
           <div className="details__text">
-            <span className="details__text__name">{userData.name}</span>
-            <span className="details__text__id">@{userData.id}</span>
+            <span className="details__text__name">{user.name}</span>
+            <span className="details__text__id">@{user.email}</span>
           </div>
         </div>
         <div>
