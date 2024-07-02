@@ -199,7 +199,7 @@ export default function LeftSide({ onClickSparkle }: Props) {
       id: "home",
       label: "Home",
       Icon: Home,
-      link: "/home",
+      link: "/",
       onClick: () => {},
     },
     {
