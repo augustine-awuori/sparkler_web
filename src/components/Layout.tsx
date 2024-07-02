@@ -10,7 +10,7 @@ import LoadingIndicator from "./LoadingIndicator";
 const Container = styled.div`
   min-height: 100vh;
   background: black;
-  --left: 250px;
+  --left: 240px;
   --right: 300px;
   --middle: calc(100% - var(--left) - var(--right));
 

@@ -48,11 +48,11 @@ const Container = styled.div`
 const tabs = [
   {
     id: "tweets",
-    label: "Tweets",
+    label: "Sparkles",
   },
   {
     id: "tweet-replies",
-    label: "Tweets & replies",
+    label: "Sparkles & replies",
   },
   {
     id: "media",

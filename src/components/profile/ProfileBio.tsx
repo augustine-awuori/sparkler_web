@@ -133,7 +133,10 @@ export default function ProfileBio() {
 
   if (!user) return <Heading>Profile user info is not available</Heading>;
 
-  const bio = formatStringWithLink(user.data.bio as string);
+  // TODO: get the user's bio const bio = formatStringWithLink(user.data.bio as string);
+  const bio = formatStringWithLink(
+    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt tempore vitae obcaecati. Minima pariatur numquam minus https://soamazing.shop @augustineawuori"
+  );
 
   return (
     <Container>
