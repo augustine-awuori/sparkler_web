@@ -6,7 +6,7 @@ export const authTokenKey = "x-auth-token";
 
 export type ResponseError = {
   response: {
-    data: DataError;
+    data?: DataError;
   };
 };
 

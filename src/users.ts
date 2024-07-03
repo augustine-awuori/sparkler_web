@@ -8,7 +8,7 @@ export type User = {
 
 const users: User[] = [
   {
-    _id: "augustine",
+    _id: "6683b34a54616765ff4f8832",
     name: "Awuori",
     avatar:
       "https://yt3.ggpht.com/LtGpoUi8BXlZWKbFKjR6m5wJPgFxjVo1AAPgwRF_HWJYGsC3OMrEm61gHJxqw5bSpGPgKsM0BQ=s88-c-k-c0x00ffffff-no-rj",
@@ -24,8 +24,8 @@ const users: User[] = [
     feedToken: "ENTER TOKEN FOR getstream_io",
   },
   {
-    _id: "jake",
-    name: "Jake",
+    _id: "augustine",
+    name: "August",
     avatar: "https://picsum.photos/300/300",
     email: "Just Jake, nothing much",
     feedToken: "ENTER TOKEN FOR jake",

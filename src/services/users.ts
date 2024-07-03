@@ -18,7 +18,7 @@ const login = async (userInfo: LoginInfo) => {
     console.log(error);
     return {
       ...emptyResponse,
-      problem: (error as ResponseError).response.data.error,
+      problem: (error as ResponseError).response.data?.error || "Unknown error",
     };
   }
 };

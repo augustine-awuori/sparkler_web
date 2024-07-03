@@ -50,15 +50,16 @@ const RegisterForm = ({ onSignInRequest }: Props) => {
       const { data, ok } = processResponse(res);
       if (ok) {
         auth.loginWithJwt(res?.headers[authTokenKey]);
-        window.location.href = "/home";
+        window.location.href = "/";
       } else {
         setError((data as DataError).error || "Unknown error");
         toast.error("Login failed");
       }
     } catch (error) {
-      setError((error as ResponseError).response.data.error);
-    } finally {
       setLoading(false);
+      setError(
+        (error as ResponseError).response?.data?.error || "unknown error"
+      );
     }
   };
 
@@ -75,7 +76,7 @@ const RegisterForm = ({ onSignInRequest }: Props) => {
         Sign Up to Sparkler
       </Heading>
       <Form handleSubmit={handleSubmit} onSubmit={doSubmit}>
-        <ErrorMessage error={error} />
+        <ErrorMessage error={error} visible />
         <FormField register={register} error={errors.email} label="Email" />
         <FormField register={register} error={errors.name} label="Name" />
         <FormField

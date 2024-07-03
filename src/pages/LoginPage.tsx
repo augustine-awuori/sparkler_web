@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { Box, Heading } from "@chakra-ui/react";
+
 import { z } from "zod";
 
-import { DataError, ResponseError } from "../services/client";
+import { ResponseError } from "../services/client";
 import {
   ErrorMessage,
   Form,
@@ -13,7 +16,6 @@ import { useForm } from "../hooks";
 import auth from "../services/auth";
 import service from "../services/users";
 import Text from "../components/Text";
-import { Box, Heading } from "@chakra-ui/react";
 
 const schema = z.object({
   email: z.string().email().min(7).max(70),
@@ -30,6 +32,7 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { errors, handleSubmit, register } = useForm(schema);
+  const navigate = useNavigate();
 
   const doSubmit = async (info: LoginInfo) => {
     try {
@@ -40,13 +43,15 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
 
       if (ok) {
         auth.loginWithJwt(data as string);
-        window.location.href = "/";
+        navigate("/");
       } else {
         setError(problem);
         toast.error("Login failed");
       }
     } catch (error) {
-      setError((error as ResponseError).response.data.error);
+      setError(
+        (error as ResponseError).response?.data?.error || "unknown error"
+      );
     } finally {
       setLoading(false);
     }
