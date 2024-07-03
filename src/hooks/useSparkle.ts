@@ -15,7 +15,7 @@ export default function useSparkle() {
     });
 
     await user.addActivity({
-      actor: `user:${client.userId}`,
+      actor: `SU:${client.userId}`,
       verb: "tweet",
       object: `SO:tweet:${collection.id}`,
     });
