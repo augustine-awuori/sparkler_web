@@ -117,6 +117,8 @@ export type Activity = {
     like: { user: { id: string } }[];
   };
   reaction_counts: { comment: number; like: number };
+  target: string;
+  verb: string;
 };
 
 interface Props {

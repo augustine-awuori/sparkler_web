@@ -1,10 +1,8 @@
 import classNames from "classnames";
 import { useState } from "react";
-import { useStreamContext } from "react-activity-feed";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-import { User as UserType } from "../users";
 import LoadingIndicator from "./LoadingIndicator";
 import Bell from "./icons/Bell";
 import Group from "./icons/Group";
@@ -185,7 +183,7 @@ interface Props {
 export default function LeftSide({ onClickSparkle }: Props) {
   const location = useLocation();
   const { user } = useUser();
-  const [newNotifications, setNewNotifications] = useState(0);
+  const [newNotifications] = useState(0);
 
   if (!user)
     return (
@@ -285,20 +283,6 @@ export default function LeftSide({ onClickSparkle }: Props) {
       </div>
       <button onClick={onClickSparkle} className="tweet-btn">
         Sparkle
-      </button>
-      <button className="profile-section">
-        <div className="details">
-          <div className="details__img">
-            <img src={(user as UserType | undefined)?.avatar} alt="" />
-          </div>
-          <div className="details__text">
-            <span className="details__text__name">{user.name}</span>
-            <span className="details__text__id">@{user.email}</span>
-          </div>
-        </div>
-        <div>
-          <More color="white" />
-        </div>
       </button>
     </Container>
   );

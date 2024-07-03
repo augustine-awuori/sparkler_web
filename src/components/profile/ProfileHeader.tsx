@@ -77,11 +77,11 @@ export default function ProfileHeader() {
         </button>
         <div className="info">
           <h1>{"Display user name here"}</h1>
-          <span className="info__tweets-count">{activitiesCount} Tweets</span>
+          <span className="info__tweets-count">{activitiesCount} Sparkles</span>
         </div>
       </div>
       <div className="cover">
-        <img src="https://picsum.photos/500/300" alt="" />
+        <img src="https://picsum.photos/500/200" alt="" />
       </div>
     </Header>
   );

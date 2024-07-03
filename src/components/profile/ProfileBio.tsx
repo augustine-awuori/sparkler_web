@@ -142,7 +142,10 @@ export default function ProfileBio() {
     <Container>
       <div className="top">
         <div className="image">
-          <img src={user.data.image as string} alt="" />
+          <img
+            src={(user.data.image as string) || "https://picsum.photos/500/200"}
+            alt=""
+          />
         </div>
         {!isLoggedInUserProfile && (
           <div className="actions">

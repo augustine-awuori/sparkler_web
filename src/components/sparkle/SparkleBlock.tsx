@@ -163,7 +163,10 @@ export default function SparkleBlock({ activity }: Props) {
     <>
       <Block>
         <div className="user-image">
-          <img src={actor.data.image} alt="" />
+          <img
+            src={actor.data.image || "https://picsum.photos/500/300"}
+            alt=""
+          />
         </div>
         <div className="tweet">
           <button onClick={() => navigate(tweetLink)} className="link">
