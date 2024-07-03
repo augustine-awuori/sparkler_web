@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import { useStreamContext } from "react-activity-feed";
+import { toast } from "react-toastify";
 
 export default function useSparkle() {
   const { client } = useStreamContext();
@@ -7,16 +8,14 @@ export default function useSparkle() {
   const user = client?.feed("user", client.userId);
 
   const createSparkle = async (text: string) => {
-    if (!client || !user) return;
-
-    const actor = `user:${client.userId}`;
+    if (!client || !user) return toast.error("Sparkle could not be created");
 
     const collection = await client.collections.add("tweet", nanoid(), {
       text,
     });
 
     await user.addActivity({
-      actor,
+      actor: `user:${client.userId}`,
       verb: "tweet",
       object: `SO:tweet:${collection.id}`,
     });
