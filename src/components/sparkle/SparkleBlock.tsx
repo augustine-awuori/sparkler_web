@@ -6,13 +6,11 @@ import { Image } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import { Activity as AppActivity, ActivityObject } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import { generateTweetLink } from "../../utils/links";
 import Comment from "../icons/Comment";
-import CommentDialog, {
-  Activity as AppActivity,
-  ActivityObject,
-} from "./CommentDialog ";
+import CommentDialog from "./CommentDialog ";
 import Heart from "../icons/Heart";
 import More from "../icons/More";
 import Retweet from "../icons/Retweet";
@@ -117,14 +115,13 @@ export default function SparkleBlock({ activity }: Props) {
   let hasLikedSparkle = false;
   const tweet = (activity.object as unknown as ActivityObject).data;
 
-  // check if current logged in user has liked tweet
-  if (appActivity?.own_reactions?.like) {
+  if (appActivity?.own_reactions?.like && user) {
     const myReaction = appActivity.own_reactions.like.find(
       (l) => l.user.id === user?.id
     );
     hasLikedSparkle = Boolean(myReaction);
   }
-  console.log(appActivity);
+
   const onToggleLike = () => toggleLike(activity, hasLikedSparkle);
 
   const actions = [
