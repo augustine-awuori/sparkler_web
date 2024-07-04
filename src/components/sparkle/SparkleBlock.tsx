@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { Activity } from "getstream";
 import { useState } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { Image } from "@chakra-ui/react";
@@ -8,7 +9,10 @@ import styled from "styled-components";
 import { formatStringWithLink } from "../../utils/string";
 import { generateTweetLink } from "../../utils/links";
 import Comment from "../icons/Comment";
-import CommentDialog, { Activity } from "./CommentDialog ";
+import CommentDialog, {
+  Activity as AppActivity,
+  ActivityObject,
+} from "./CommentDialog ";
 import Heart from "../icons/Heart";
 import More from "../icons/More";
 import Retweet from "../icons/Retweet";
@@ -108,30 +112,27 @@ export default function SparkleBlock({ activity }: Props) {
   const navigate = useNavigate();
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
 
-  const actor = activity.actor;
-
+  const appActivity = activity as unknown as AppActivity;
+  const actor = appActivity.actor;
   let hasLikedSparkle = false;
-
-  const tweet = activity.object.data;
+  const tweet = (activity.object as unknown as ActivityObject).data;
 
   // check if current logged in user has liked tweet
-  if (activity?.own_reactions?.like) {
-    const myReaction = activity.own_reactions.like.find(
+  if (appActivity?.own_reactions?.like) {
+    const myReaction = appActivity.own_reactions.like.find(
       (l) => l.user.id === user?.id
     );
     hasLikedSparkle = Boolean(myReaction);
   }
 
-  const onToggleLike = () => {
-    // toggleLike(activity, hasLikedSparkle);
-  };
+  const onToggleLike = () => toggleLike(activity, hasLikedSparkle);
 
   const actions = [
     {
       id: "comment",
       Icon: Comment,
       alt: "Comment",
-      value: activity?.reaction_counts?.comment || 0,
+      value: appActivity?.reaction_counts?.comment || 0,
       onClick: () => setCommentDialogOpened(true),
     },
     {
@@ -144,7 +145,7 @@ export default function SparkleBlock({ activity }: Props) {
       id: "heart",
       Icon: Heart,
       alt: "Heart",
-      value: activity?.reaction_counts?.like || 0,
+      value: appActivity?.reaction_counts?.like || 0,
       onClick: onToggleLike,
     },
     {

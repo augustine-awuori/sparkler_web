@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Activity as MainActivity } from "getstream";
 
 import { formatStringWithLink } from "../../utils/string";
 import Modal from "../Modal";
@@ -105,13 +106,26 @@ const BlockContent = styled.div`
   }
 `;
 
+export interface ActivityActor {
+  created_at: string;
+  data: { profileImage: string; name: string; id: string; email: string };
+  id: string;
+  updated_at: string;
+}
+
+export interface ActivityObject {
+  collection: string;
+  created_at: string;
+  data: { text: string };
+  foreign_id: string;
+  id: string;
+  updated_at: string;
+}
+
 export type Activity = {
   id: string;
-  actor: {
-    data: { profileImage: string; name: string; id: string; email: string };
-    id: string;
-  };
-  object: { data: { text: string } };
+  actor: ActivityActor;
+  object: ActivityObject;
   time: string;
   own_reactions: {
     like: { user: { id: string } }[];
@@ -122,7 +136,7 @@ export type Activity = {
 };
 
 interface Props {
-  activity: Activity;
+  activity: MainActivity;
   onClickOutside: () => void;
   onPostComment: (comment: string) => Promise<void>;
 }
@@ -134,9 +148,9 @@ export default function CommentDialog({
 }: Props) {
   const {
     object: { data: sparkle },
-  } = activity;
+  } = activity as unknown as Activity;
 
-  const tweetActor = activity.actor;
+  const tweetActor = (activity as unknown as Activity).actor;
 
   const onSubmit = async (text: string) => {
     await onPostComment(text);
