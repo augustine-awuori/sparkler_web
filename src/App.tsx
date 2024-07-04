@@ -4,12 +4,10 @@ import { DefaultGenerics, StreamClient } from "getstream";
 import { StreamApp } from "react-activity-feed";
 import { Heading } from "@chakra-ui/react";
 
+import { AuthPages, HomePage, ProfilePage, ThreadPage } from "./pages";
 import { User } from "./users";
 import { UserContext } from "./components/contexts";
 import auth from "./services/auth";
-import AuthPages from "./pages/AuthPages";
-import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage";
 import ScrollToTop from "./components/ScrollToTop";
 
 const id = "1322281";
@@ -51,6 +49,7 @@ function App() {
       <ScrollToTop />
       <UserContext.Provider value={{ setUser, user }}>
         <Routes>
+          <Route element={<ThreadPage />} path="/:user_id/status/:id" />
           <Route element={<ProfilePage />} path="/:user_id" />
           <Route element={<HomePage />} path="/" />
         </Routes>
