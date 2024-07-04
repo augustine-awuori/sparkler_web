@@ -124,7 +124,7 @@ export default function SparkleBlock({ activity }: Props) {
     );
     hasLikedSparkle = Boolean(myReaction);
   }
-
+  console.log(appActivity);
   const onToggleLike = () => toggleLike(activity, hasLikedSparkle);
 
   const actions = [

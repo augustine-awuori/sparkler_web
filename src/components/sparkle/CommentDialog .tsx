@@ -128,9 +128,26 @@ export type Activity = {
   object: ActivityObject;
   time: string;
   own_reactions: {
-    like: { user: { id: string } }[];
+    like: {
+      activity_id: string;
+      children_counts: object;
+      created_at: string;
+      data: object;
+      id: string;
+      kind: "like";
+      latest_children: object;
+      parent: string;
+      updated_at: string;
+      user: {
+        created_at: string;
+        updated_at: string;
+        id: string;
+        data: { email: string; name: string; profileImage?: string };
+      };
+      user_id: string;
+    }[];
   };
-  reaction_counts: { comment: number; like: number };
+  reaction_counts: { comment?: number; like?: number };
   target: string;
   verb: string;
 };
