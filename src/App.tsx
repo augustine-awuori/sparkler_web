@@ -37,13 +37,8 @@ function App() {
       if (!user) return;
       const client = new StreamClient(key, user.feedToken, id);
       setClient(client);
-      await client.user(user._id).getOrCreate({
-        name: user.name,
-        email: user.email,
-        token: user.feedToken,
-      });
     } catch (error) {
-      console.log("ERR", error);
+      console.error(error);
     }
   }
 

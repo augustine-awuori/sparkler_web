@@ -207,7 +207,15 @@ export default function SparkleForm({
 
   useEffect(() => {
     if (shouldFocus && inputRef.current) inputRef.current.focus();
-  }, [shouldFocus]);
+    if (client?.currentUser?.data?.name === "Unknown" && user) {
+      client.currentUser.update({
+        name: user.name,
+        email: user.email,
+        profileImage: user.avatar,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldFocus, client?.currentUser, user?._id]);
 
   const MAX_CHARS = 280;
 

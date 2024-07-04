@@ -13,6 +13,7 @@ import More from "../icons/More";
 import Retweet from "../icons/Retweet";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
+import useLike from "../../hooks/useLike";
 
 const Block = styled.div`
   display: flex;
@@ -102,12 +103,13 @@ interface Props {
 
 export default function SparkleBlock({ activity }: Props) {
   const { user } = useStreamContext();
+  const { toggleLike } = useLike();
   const navigate = useNavigate();
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
 
   const actor = activity.actor;
 
-  let hasLikedTweet = false;
+  let hasLikedSparkle = false;
 
   const tweet = activity.object.data;
 
@@ -116,11 +118,11 @@ export default function SparkleBlock({ activity }: Props) {
     const myReaction = activity.own_reactions.like.find(
       (l) => l.user.id === user?.id
     );
-    hasLikedTweet = Boolean(myReaction);
+    hasLikedSparkle = Boolean(myReaction);
   }
 
   const onToggleLike = () => {
-    // toggle like reaction
+    // toggleLike(activity, hasLikedSparkle);
   };
 
   const actions = [
@@ -201,16 +203,16 @@ export default function SparkleBlock({ activity }: Props) {
                 >
                   <action.Icon
                     color={
-                      action.id === "heart" && hasLikedTweet
+                      action.id === "heart" && hasLikedSparkle
                         ? "var(--theme-color)"
                         : "#777"
                     }
                     size={17}
-                    fill={action.id === "heart" && hasLikedTweet && true}
+                    fill={action.id === "heart" && hasLikedSparkle && true}
                   />
                   <span
                     className={classNames("tweet__actions__value", {
-                      colored: action.id === "heart" && hasLikedTweet,
+                      colored: action.id === "heart" && hasLikedSparkle,
                     })}
                   >
                     {action.value}

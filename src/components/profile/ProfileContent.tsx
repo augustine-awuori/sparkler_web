@@ -12,10 +12,10 @@ import TabList from "./TabList";
 import ProfileTweets from "./ProfileSparkles";
 
 const Container = styled.div`
-  --profile-image-size: 120px;
+  --profile-image-size: 100px;
 
   .tab-list {
-    margin-top: 30px;
+    margin-top: 20px;
   }
 `;
 

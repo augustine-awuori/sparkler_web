@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import { format } from "date-fns";
 import { useStreamContext } from "react-activity-feed";
-import { Heading } from "@chakra-ui/react";
+import { Heading, Image } from "@chakra-ui/react";
 
 import { formatStringWithLink } from "../../utils/string";
+import { ProfileUser } from "./ProfileHeader";
 import { useProfile } from "../../hooks";
 import More from "../icons/More";
 import Mail from "../icons/Mail";
@@ -141,12 +142,15 @@ export default function ProfileBio() {
   return (
     <Container>
       <div className="top">
-        <div className="image">
-          <img
-            src={(user.data.image as string) || "https://picsum.photos/500/200"}
-            alt=""
+        <figure className="image">
+          <Image
+            src={
+              (user?.data as unknown as ProfileUser)?.profileImage ||
+              "https://picsum.photos/500/200"
+            }
+            alt="profile image"
           />
-        </div>
+        </figure>
         {!isLoggedInUserProfile && (
           <div className="actions">
             {actions.map((action) => (

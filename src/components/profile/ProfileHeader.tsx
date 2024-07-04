@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { useProfile } from "../../hooks";
 import ArrowLeft from "../icons/ArrowLeft";
+import { unknown } from "zod";
 
 const Header = styled.header`
   .top {
@@ -45,6 +46,12 @@ const Header = styled.header`
   }
 `;
 
+export interface ProfileUser {
+  name: string;
+  email: string;
+  profileImage?: string;
+}
+
 export default function ProfileHeader() {
   const navigate = useNavigate();
   const { user } = useProfile();
@@ -69,6 +76,8 @@ export default function ProfileHeader() {
     navigate(-1);
   };
 
+  if (!user) return <Navigate to="/" />;
+
   return (
     <Header>
       <div className="top">
@@ -76,7 +85,10 @@ export default function ProfileHeader() {
           <ArrowLeft size={20} color="white" />
         </button>
         <div className="info">
-          <h1>{"Display user name here"}</h1>
+          <h1>
+            {(user?.data as unknown as ProfileUser).name ||
+              "Display user name here"}
+          </h1>
           <span className="info__tweets-count">{activitiesCount} Sparkles</span>
         </div>
       </div>
