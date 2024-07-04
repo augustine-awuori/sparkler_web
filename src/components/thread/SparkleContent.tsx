@@ -13,7 +13,7 @@ import Retweet from "../icons/Retweet";
 import Heart from "../icons/Heart";
 import Upload from "../icons/Upload";
 import TweetForm from "../sparkle/SparkleForm";
-import TweetCommentBlock from "./SparkleCommentBlock";
+import SparkleCommentBlock from "./SparkleCommentBlock";
 import CommentDialog from "../sparkle/CommentDialog ";
 import More from "../icons/More";
 import useComment from "../../hooks/useComment";
@@ -133,6 +133,7 @@ const Container = styled.div`
     border-bottom: 1px solid #555;
   }
 `;
+
 interface Props {
   activity: MainActivity;
 }
@@ -259,13 +260,13 @@ export default function SparkleContent({ activity }: Props) {
             onSubmit={onPostComment}
             submitText="Reply"
             collapsedOnMount={true}
-            placeholder="Tweet your reply"
+            placeholder="Sparkle your reply"
             replyingTo={tweetActor.id}
           />
         </div>
-        {/* {appActivity.latest_reactions?.comment?.map((comment) => (
-            <TweetCommentBlock key={comment.id} comment={comment} />
-          ))} */}
+        {appActivity.latest_reactions?.comment?.map((comment) => (
+          <SparkleCommentBlock key={comment.id} comment={comment} />
+        ))}
       </Container>
     </>
   );

@@ -5,7 +5,6 @@ import styled from "styled-components";
 
 import { useProfile } from "../../hooks";
 import ArrowLeft from "../icons/ArrowLeft";
-import { unknown } from "zod";
 
 const Header = styled.header`
   .top {
@@ -47,6 +46,7 @@ const Header = styled.header`
 `;
 
 export interface ProfileUser {
+  id: string;
   name: string;
   email: string;
   profileImage?: string;
@@ -56,7 +56,6 @@ export default function ProfileHeader() {
   const navigate = useNavigate();
   const { user } = useProfile();
   const { client } = useStreamContext();
-
   const [activitiesCount, setActivitiesCount] = useState(0);
 
   useEffect(() => {

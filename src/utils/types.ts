@@ -1,17 +1,46 @@
-export interface ActivityActor {
+export const randomImageUrl = "https://picsum.photos/500/200";
+
+type Common = {
   created_at: string;
-  data: { profileImage: string; name: string; id: string; email: string };
   id: string;
   updated_at: string;
+};
+
+export interface ActivityActor extends Common {
+  data: {
+    id: string;
+    email: string;
+    name: string;
+    profileImage?: string;
+  };
 }
 
-export interface ActivityObject {
+export interface ActivityObject extends Common {
   collection: string;
-  created_at: string;
   data: { text: string };
   foreign_id: string;
-  id: string;
-  updated_at: string;
+}
+
+export interface Comment extends Common {
+  activity_id: string;
+  children_counts: object;
+  data: { text: string };
+  kind: "comment";
+  latest_children: object;
+  parent: string;
+  user: ActivityActor;
+  user_id: string;
+}
+
+interface Like extends Common {
+  activity_id: string;
+  children_counts: object;
+  data: object;
+  kind: "like";
+  latest_children: object;
+  parent: string;
+  user: ActivityActor;
+  user_id: string;
 }
 
 export type Activity = {
@@ -19,25 +48,13 @@ export type Activity = {
   actor: ActivityActor;
   object: ActivityObject;
   time: string;
+  latest_reactions: {
+    like?: Like[];
+    comment?: Comment[];
+  };
   own_reactions: {
-    like: {
-      activity_id: string;
-      children_counts: object;
-      created_at: string;
-      data: object;
-      id: string;
-      kind: "like";
-      latest_children: object;
-      parent: string;
-      updated_at: string;
-      user: {
-        created_at: string;
-        updated_at: string;
-        id: string;
-        data: { email: string; name: string; profileImage?: string };
-      };
-      user_id: string;
-    }[];
+    comment?: Comment[];
+    like?: Like[];
   };
   reaction_counts: { comment?: number; like?: number };
   target: string;

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import { Comment, randomImageUrl } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import More from "../icons/More";
 import SparkleActorName from "../sparkle/SparkleActorName";
@@ -53,23 +54,19 @@ const Block = styled.div`
 `;
 
 interface Props {
-  comment: {
-    user: { data: { image: string; name: string }; id: string };
-    created_at: string;
-    data: { text: string };
-  };
+  comment: Comment;
 }
 
 export default function SparkleCommentBlock({ comment }: Props) {
   const { user, data: tweetComment } = comment;
-  console.log("comment", comment);
+
   return (
     <Block
     //   to="/"
     >
-      <div className="user-image">
-        <img src={user.data.image} alt="" />
-      </div>
+      <figure className="user-image">
+        <img src={user.data.profileImage || randomImageUrl} alt="" />
+      </figure>
       <div className="comment-tweet">
         <div>
           <SparkleActorName

@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { useStreamContext } from "react-activity-feed";
 import styled from "styled-components";
 
+import { randomImageUrl } from "../../utils/types";
 import { User } from "../../users";
 import { useUser } from "../../hooks";
 import Calendar from "../icons/Calendar";
@@ -210,6 +211,7 @@ export default function SparkleForm({
     if (shouldFocus && inputRef.current) inputRef.current.focus();
     if (client?.currentUser?.data?.name === "Unknown" && user) {
       client.currentUser.update({
+        id: client.userId,
         name: user.name,
         email: user.email,
         profileImage: user.avatar,
@@ -259,9 +261,12 @@ export default function SparkleForm({
         className={className}
         onSubmit={submit}
       >
-        <div className="user">
-          <img src={(user as User | undefined)?.avatar || ""} alt="" />
-        </div>
+        <figure className="user">
+          <img
+            src={(user as User | undefined)?.avatar || randomImageUrl}
+            alt="profile"
+          />
+        </figure>
         <div className="input-section">
           <textarea
             ref={inputRef}

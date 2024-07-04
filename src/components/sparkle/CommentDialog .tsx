@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { Activity as MainActivity } from "getstream";
 
-import { Activity } from "../../utils/types";
+import { Activity, ActivityActor } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import Modal from "../Modal";
-import TweetActorName from "./SparkleActorName";
-import TweetForm from "./SparkleForm";
+import SparkleActorName from "./SparkleActorName";
+import SparkleForm from "./SparkleForm";
 
 const Container = styled.div`
   .modal-block {
@@ -122,7 +122,7 @@ export default function CommentDialog({
     object: { data: sparkle },
   } = activity as unknown as Activity;
 
-  const tweetActor = (activity as unknown as Activity).actor;
+  const sparkleActor = activity.actor as unknown as ActivityActor;
 
   const onSubmit = async (text: string) => {
     await onPostComment(text);
@@ -136,13 +136,13 @@ export default function CommentDialog({
         <BlockContent>
           <div className="tweet">
             <div className="img">
-              <img src={tweetActor.data.profileImage} alt="" />
+              <img src={sparkleActor.data.profileImage} alt="" />
             </div>
             <div className="details">
-              <TweetActorName
+              <SparkleActorName
                 time={activity.time}
-                name={tweetActor.data.name}
-                id={tweetActor.data.id}
+                name={sparkleActor.data.name}
+                id={sparkleActor.data.id}
               />
               <p
                 className="tweet-text"
@@ -156,15 +156,15 @@ export default function CommentDialog({
               />
               <div className="replying-info">
                 Replying to{" "}
-                <span className="replying-info--actor">@{tweetActor.id}</span>
+                <span className="replying-info--actor">@{sparkleActor.id}</span>
               </div>
             </div>
           </div>
           <div className="comment">
-            <TweetForm
+            <SparkleForm
               className="comment-form"
               submitText="Reply"
-              placeholder="Tweet your reply"
+              placeholder="Sparkle your reply"
               onSubmit={onSubmit}
               shouldFocus={true}
             />
