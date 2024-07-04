@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { Activity as AppActivity, ActivityObject } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import { generateTweetLink } from "../../utils/links";
+import { useComment, useLike } from "../../hooks";
 import Comment from "../icons/Comment";
 import CommentDialog from "./CommentDialog ";
 import Heart from "../icons/Heart";
@@ -16,7 +17,6 @@ import More from "../icons/More";
 import Retweet from "../icons/Retweet";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
-import useLike from "../../hooks/useLike";
 
 const Block = styled.div`
   display: flex;
@@ -107,6 +107,7 @@ interface Props {
 export default function SparkleBlock({ activity }: Props) {
   const { user } = useStreamContext();
   const { toggleLike } = useLike();
+  const { createComment } = useComment();
   const navigate = useNavigate();
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
 
@@ -152,13 +153,12 @@ export default function SparkleBlock({ activity }: Props) {
     },
   ];
 
-  const tweetLink = activity.id
+  const sparkleLink = activity.id
     ? generateTweetLink(actor.id, activity.id)
     : "#";
 
-  const onPostComment = async (_text: string) => {
-    // create comment
-  };
+  const onPostComment = async (text: string) =>
+    await createComment(text, activity);
 
   return (
     <>
@@ -170,7 +170,7 @@ export default function SparkleBlock({ activity }: Props) {
           />
         </figure>
         <div className="tweet">
-          <button onClick={() => navigate(tweetLink)} className="link">
+          <button onClick={() => navigate(sparkleLink)} className="link">
             <TweetActorName
               name={actor.data.name}
               id={actor.id}
