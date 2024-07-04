@@ -108,7 +108,7 @@ const BlockContent = styled.div`
 export type Activity = {
   id: string;
   actor: {
-    data: { image: string; name: string; id: string };
+    data: { profileImage: string; name: string; id: string; email: string };
     id: string;
   };
   object: { data: { text: string } };
@@ -150,7 +150,7 @@ export default function CommentDialog({
         <BlockContent>
           <div className="tweet">
             <div className="img">
-              <img src={tweetActor.data.image} alt="" />
+              <img src={tweetActor.data.profileImage} alt="" />
             </div>
             <div className="details">
               <TweetActorName

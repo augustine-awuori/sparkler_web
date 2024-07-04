@@ -4,19 +4,19 @@ import styled from "styled-components";
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr; /* Equal horizontal space for each tab */
   border-bottom: 1px solid #555;
   width: 100%;
 
   .tab {
     color: #777;
-    padding: 0 35px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     font-size: 15px;
+    flex: 1;
 
     &:hover {
       background-color: #111;
@@ -25,7 +25,11 @@ const Container = styled.div`
     &__label {
       position: relative;
       width: 100%;
+      text-align: center;
       padding: 20px 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       &.active {
         color: white;
@@ -57,10 +61,6 @@ const tabs = [
   {
     id: "media",
     label: "Media",
-  },
-  {
-    id: "likes",
-    label: "Likes",
   },
 ];
 

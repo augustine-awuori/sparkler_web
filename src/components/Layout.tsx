@@ -65,7 +65,6 @@ export default function Layout({ children }: { children: ReactNode }) {
           <div className="right-side-bar">
             <RightSide />
           </div>
-          <div />
         </div>
       </Container>
     </>

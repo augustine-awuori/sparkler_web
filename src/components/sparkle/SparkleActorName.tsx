@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 const TextBlock = styled(Link)`
   display: flex;
+  align-items: center;
 
   &:hover .user--name {
     text-decoration: underline;
@@ -13,10 +14,18 @@ const TextBlock = styled(Link)`
     &--name {
       color: white;
       font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px;
     }
     &--id {
       margin-left: 5px;
       color: #777;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px; /* Adjust as needed */
     }
   }
   .tweet-date {
@@ -55,9 +64,9 @@ export default function SparkleActorName({ time, name, id }: Props) {
   const lessThan1hr = hoursBetweenDates < 1;
 
   const timeText = lessThan1hr
-    ? format(timeDiff, "m") + "m"
+    ? `${Math.floor(timeDiff / (60 * 1000))}m`
     : lessThan24hrs
-    ? format(timeDiff, "H") + "h"
+    ? `${Math.floor(hoursBetweenDates)}h`
     : format(new Date(time), "MMM d");
 
   return (

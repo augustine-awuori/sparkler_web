@@ -41,17 +41,16 @@ const Container = styled.div`
   width: 100%;
   max-width: 350px;
   padding: 16px;
-  background-color: #000; /* Change to black */
+  background-color: #000;
   border-left: 1px solid #e1e8ed;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: auto;
   box-sizing: border-box;
-  overflow-y: auto;
 `;
 
 const SearchContainer = styled.div`
-  background-color: #333; /* Darken the background color */
+  background-color: #333;
   border-radius: 20px;
   padding: 8px 16px;
   display: flex;
@@ -182,6 +181,10 @@ const FollowsContainer = styled.div`
         .user__id {
           font-size: 12px;
           color: #657786;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100px; /* Adjust the width as needed */
         }
       }
     }

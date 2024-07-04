@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { useState } from "react";
 import { useStreamContext } from "react-activity-feed";
+import { Image } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -164,12 +165,12 @@ export default function SparkleBlock({ activity }: Props) {
   return (
     <>
       <Block>
-        <div className="user-image">
-          <img
-            src={actor.data.image || "https://picsum.photos/500/300"}
-            alt=""
+        <figure className="user-image">
+          <Image
+            src={actor.data.profileImage || "https://picsum.photos/500/300"}
+            alt="profile"
           />
-        </div>
+        </figure>
         <div className="tweet">
           <button onClick={() => navigate(tweetLink)} className="link">
             <TweetActorName

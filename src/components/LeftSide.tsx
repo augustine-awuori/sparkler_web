@@ -3,17 +3,16 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-import LoadingIndicator from "./LoadingIndicator";
-import Bell from "./icons/Bell";
-import Group from "./icons/Group";
-import Home from "./icons/Home";
-import Hashtag from "./icons/Hashtag";
-import Mail from "./icons/Mail";
-import Bookmark from "./icons/Bookmark";
-import User from "./icons/User";
-import More from "./icons/More";
-import Sparkle from "./icons/Twitter";
 import { useUser } from "../hooks";
+import Bell from "./icons/Bell";
+import Bookmark from "./icons/Bookmark";
+import Group from "./icons/Group";
+import Hashtag from "./icons/Hashtag";
+import Home from "./icons/Home";
+import LoadingIndicator from "./LoadingIndicator";
+import Mail from "./icons/Mail";
+import Sparkle from "./icons/Twitter";
+import User from "./icons/User";
 
 const Container = styled.div`
   display: flex;
@@ -88,16 +87,6 @@ const Container = styled.div`
           top: 7px;
           border-radius: 50%;
           background-color: var(--theme-color);
-        }
-      }
-
-      &.btn--more {
-        svg {
-          border: 1px solid #fff;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
         }
       }
 
@@ -274,12 +263,6 @@ export default function LeftSide({ onClickSparkle }: Props) {
             </Link>
           );
         })}
-        <button className="btn--more">
-          <div className="btn--icon">
-            <More color="white" size={20} />
-          </div>
-          <span>More</span>
-        </button>
       </div>
       <button onClick={onClickSparkle} className="tweet-btn">
         Sparkle

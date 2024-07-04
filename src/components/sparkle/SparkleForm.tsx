@@ -3,6 +3,8 @@ import classNames from "classnames";
 import { useStreamContext } from "react-activity-feed";
 import styled from "styled-components";
 
+import { User } from "../../users";
+import { useUser } from "../../hooks";
 import Calendar from "../icons/Calendar";
 import Emoji from "../icons/Emoji";
 import Gif from "../icons/Gif";
@@ -10,8 +12,6 @@ import Image from "../icons/Image";
 import Location from "../icons/Location";
 import Poll from "../icons/Poll";
 import ProgressRing from "../icons/ProgressRing";
-import { User } from "../../users";
-import { useUser } from "../../hooks";
 
 interface FormProps {
   inline?: boolean;
@@ -83,6 +83,7 @@ const Form = styled.form<FormProps>`
       align-items: center;
 
       button {
+        margin: 0 8px;
         &:disabled {
           opacity: 0.5;
         }
@@ -277,6 +278,7 @@ export default function SparkleForm({
                     type="button"
                     disabled={action.id === "location"}
                     key={action.id}
+                    style={{ margin: "0 8px" }}
                   >
                     <action.Icon size={19} color="var(--theme-color)" />
                   </button>

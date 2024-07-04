@@ -15,7 +15,7 @@ const Container = styled.div`
   --profile-image-size: 100px;
 
   .tab-list {
-    margin-top: 20px;
+    margin-top: 10px;
   }
 `;
 
