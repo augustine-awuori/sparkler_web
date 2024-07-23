@@ -4,12 +4,93 @@ import { useStreamContext } from "react-activity-feed";
 import { Heading, Image } from "@chakra-ui/react";
 
 import { formatStringWithLink } from "../../utils/string";
-import { ProfileUser } from "./ProfileHeader";
 import { useProfile } from "../../hooks";
+import EditProfileButton from "../profile/EditProfileButton";
 import More from "../icons/More";
 import Mail from "../icons/Mail";
 import Calendar from "../icons/Calendar";
 import FollowBtn from "../FollowBtn";
+
+const actions = [
+  {
+    Icon: More,
+    id: "more",
+  },
+  {
+    Icon: Mail,
+    id: "message",
+  },
+];
+
+export default function ProfileBio() {
+  const { user } = useProfile();
+  const { client } = useStreamContext();
+
+  const joinedDate = format(
+    new Date(user?.created_at || Date.now()),
+    "MMMM RRRR"
+  );
+
+  const isLoggedInUserProfile = user?.id === client?.userId;
+
+  if (!user) return <Heading>Profile user info is not available</Heading>;
+
+  const formattedBio = formatStringWithLink(user.data.bio || "");
+
+  return (
+    <Container>
+      <div className="top">
+        <figure className="image">
+          <Image
+            src={user?.data?.profileImage || "https://picsum.photos/500/200"}
+            alt="profile image"
+          />
+        </figure>
+        {!isLoggedInUserProfile ? (
+          <div className="actions">
+            {actions.map((action) => (
+              <button className="action-btn" key={action.id}>
+                <action.Icon color="white" size={21} />
+              </button>
+            ))}
+            <FollowBtn userId={user.data.id} />
+          </div>
+        ) : (
+          <div className="actions">
+            <EditProfileButton />
+          </div>
+        )}
+      </div>
+      <div className="details">
+        <span className="user__name">{user.data?.name as string}</span>
+        <span className="user__id">@{user?.data?.username as string}</span>
+        <span
+          className="user__bio"
+          dangerouslySetInnerHTML={{ __html: formattedBio }}
+        />
+        <div className="user__joined">
+          <Calendar color="#777" size={20} />
+          <span className="user__joined--text">Joined {joinedDate}</span>
+        </div>
+        <div className="user__follows">
+          <span className="user__follows__following">
+            <b>{user.following_count || 0}</b> Followin
+            {user.following_count === 1 ? "g" : "gs"}
+          </span>
+          <span className="user__follows__followers">
+            <b>{user.followers_count || 0}</b> Follower
+            {user.followers_count === 1 ? "" : "s"}
+          </span>
+        </div>
+        {!isLoggedInUserProfile && (
+          <div className="user__followed-by">
+            Not followed by anyone you are following
+          </div>
+        )}
+      </div>
+    </Container>
+  );
+}
 
 const Container = styled.div`
   padding: 20px;
@@ -18,7 +99,7 @@ const Container = styled.div`
   .top {
     display: flex;
     justify-content: space-between;
-    margin-top: calc(var(--profile-image-size) / -2);
+    margin-top: calc(var(--profile-image-size) / -1.5);
 
     .image {
       width: var(--profile-image-size);
@@ -109,79 +190,3 @@ const Container = styled.div`
     }
   }
 `;
-
-const actions = [
-  {
-    Icon: More,
-    id: "more",
-  },
-  {
-    Icon: Mail,
-    id: "message",
-  },
-];
-
-export default function ProfileBio() {
-  const { user } = useProfile();
-  const { client } = useStreamContext();
-
-  const joinedDate = format(
-    new Date(user?.created_at || Date.now()),
-    "MMMM RRRR"
-  );
-
-  const isLoggedInUserProfile = user?.id === client?.userId;
-
-  if (!user) return <Heading>Profile user info is not available</Heading>;
-
-  // TODO: get the user's bio const bio = formatStringWithLink(user.data.bio as string);
-  const bio = formatStringWithLink(
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt tempore vitae obcaecati. Minima pariatur numquam minus https://soamazing.shop @augustineawuori"
-  );
-
-  return (
-    <Container>
-      <div className="top">
-        <figure className="image">
-          <Image
-            src={
-              (user?.data as unknown as ProfileUser)?.profileImage ||
-              "https://picsum.photos/500/200"
-            }
-            alt="profile image"
-          />
-        </figure>
-        {!isLoggedInUserProfile && (
-          <div className="actions">
-            {actions.map((action) => (
-              <button className="action-btn" key={action.id}>
-                <action.Icon color="white" size={21} />
-              </button>
-            ))}
-            <FollowBtn userId={user?.id} />
-          </div>
-        )}
-      </div>
-      <div className="details">
-        <span className="user__name">{user.data?.name as string}</span>
-        <span className="user__id">@{user?.id}</span>
-        <span className="user__bio" dangerouslySetInnerHTML={{ __html: bio }} />
-        <div className="user__joined">
-          <Calendar color="#777" size={20} />
-          <span className="user__joined--text">Joined {joinedDate}</span>
-        </div>
-        <div className="user__follows">
-          <span className="user__follows__following">
-            <b>{user.following_count || 0}</b> Following
-          </span>
-          <span className="user__follows__followers">
-            <b>{user.followers_count || 0}</b> Followers
-          </span>
-        </div>
-        <div className="user__followed-by">
-          Not followed by anyone you are following
-        </div>
-      </div>
-    </Container>
-  );
-}

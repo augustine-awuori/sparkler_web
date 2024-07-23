@@ -9,15 +9,6 @@ import ProfileHeader from "./ProfileHeader";
 import LoadingIndicator from "../LoadingIndicator";
 import ProfileBio from "./ProfileBio";
 import TabList from "./TabList";
-import ProfileTweets from "./ProfileSparkles";
-
-const Container = styled.div`
-  --profile-image-size: 100px;
-
-  .tab-list {
-    margin-top: 10px;
-  }
-`;
 
 export default function ProfileContent() {
   const { client } = useStreamContext();
@@ -50,9 +41,12 @@ export default function ProfileContent() {
           <div className="tab-list">
             <TabList />
           </div>
-          <ProfileTweets />
         </main>
       </Container>
     </ProfileContext.Provider>
   );
 }
+
+const Container = styled.div`
+  --profile-image-size: 100px;
+`;

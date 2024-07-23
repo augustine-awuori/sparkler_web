@@ -2,6 +2,55 @@ import classNames from "classnames";
 import { useState } from "react";
 import styled from "styled-components";
 
+import ProfileSparkles from "./ProfileSparkles";
+import ProfileReplies from "./ProfileReplies";
+
+type TabId = "tweets" | "tweet-replies" | "media";
+
+const tabs: { id: TabId; label: string }[] = [
+  {
+    id: "tweets",
+    label: "Sparkles",
+  },
+  {
+    id: "tweet-replies",
+    label: "Sparkles & replies",
+  },
+  {
+    id: "media",
+    label: "Media",
+  },
+];
+
+export default function TabList() {
+  const [activeTab, setActiveTab] = useState<TabId>(tabs[0].id);
+
+  return (
+    <div>
+      <Container>
+        {tabs.map((tab) => (
+          <button
+            onClick={() => setActiveTab(tab.id)}
+            className="tab"
+            key={tab.id}
+          >
+            <span
+              className={classNames(
+                "tab__label",
+                activeTab === tab.id && "active"
+              )}
+            >
+              {tab.label}
+            </span>
+          </button>
+        ))}
+      </Container>
+      {activeTab === "tweets" && <ProfileSparkles />}
+      {activeTab === "tweet-replies" && <ProfileReplies />}
+    </div>
+  );
+}
+
 const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr; /* Equal horizontal space for each tab */
@@ -48,43 +97,3 @@ const Container = styled.div`
     }
   }
 `;
-
-const tabs = [
-  {
-    id: "tweets",
-    label: "Sparkles",
-  },
-  {
-    id: "tweet-replies",
-    label: "Sparkles & replies",
-  },
-  {
-    id: "media",
-    label: "Media",
-  },
-];
-
-export default function TabList() {
-  const [activeTab, setActiveTab] = useState(tabs[0].id);
-
-  return (
-    <Container>
-      {tabs.map((tab) => (
-        <button
-          onClick={() => setActiveTab(tab.id)}
-          className="tab"
-          key={tab.id}
-        >
-          <span
-            className={classNames(
-              "tab__label",
-              activeTab === tab.id && "active"
-            )}
-          >
-            {tab.label}
-          </span>
-        </button>
-      ))}
-    </Container>
-  );
-}

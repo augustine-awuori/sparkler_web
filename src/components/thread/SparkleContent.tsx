@@ -203,7 +203,7 @@ export default function SparkleContent({ activity }: Props) {
           </figure>
           <div className="user__name">
             <span className="user__name--name">{tweetActor.name}</span>
-            <span className="user__name--id">@{tweetActor.id}</span>
+            <span className="user__name--id">@{tweetActor.username}</span>
           </div>
           <div className="user__option">
             <More color="#777" size={20} />
@@ -226,7 +226,9 @@ export default function SparkleContent({ activity }: Props) {
 
           <div className="tweet__analytics">
             <BarChart color="#888" />
-            <span className="tweet__analytics__text">View Tweet Analytics</span>
+            <span className="tweet__analytics__text">
+              View Sparkle Analytics
+            </span>
           </div>
 
           <div className="tweet__reactions">

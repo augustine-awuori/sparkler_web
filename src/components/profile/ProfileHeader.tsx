@@ -6,45 +6,6 @@ import styled from "styled-components";
 import { useProfile } from "../../hooks";
 import ArrowLeft from "../icons/ArrowLeft";
 
-const Header = styled.header`
-  .top {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    color: white;
-    width: 100%;
-    backdrop-filter: blur(2px);
-    background-color: rgba(0, 0, 0, 0.5);
-
-    .info {
-      margin-left: 30px;
-
-      h1 {
-        font-size: 20px;
-      }
-
-      &__tweets-count {
-        font-size: 14px;
-        margin-top: 2px;
-        color: #888;
-      }
-    }
-  }
-
-  .cover {
-    width: 100%;
-    background-color: #555;
-    height: 200px;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
-  }
-`;
-
 export interface ProfileUser {
   id: string;
   name: string;
@@ -59,10 +20,10 @@ export default function ProfileHeader() {
   const [activitiesCount, setActivitiesCount] = useState(0);
 
   useEffect(() => {
-    const feed = client?.feed("user", user?.id);
+    const userFeed = client?.feed("user", user?.id);
 
     async function getActivitiesCount() {
-      const activities = await feed?.get();
+      const activities = await userFeed?.get();
 
       if (activities) setActivitiesCount(activities.results.length);
     }
@@ -78,8 +39,8 @@ export default function ProfileHeader() {
   if (!user) return <Navigate to="/" />;
 
   return (
-    <Header>
-      <div className="top">
+    <>
+      <StickyHeader>
         <button onClick={navigateBack}>
           <ArrowLeft size={20} color="white" />
         </button>
@@ -90,10 +51,54 @@ export default function ProfileHeader() {
           </h1>
           <span className="info__tweets-count">{activitiesCount} Sparkles</span>
         </div>
-      </div>
-      <div className="cover">
-        <img src="https://picsum.photos/500/200" alt="" />
-      </div>
-    </Header>
+      </StickyHeader>
+      <Header>
+        <div className="cover">
+          <img src="https://picsum.photos/500/200" alt="" />
+        </div>
+      </Header>
+    </>
   );
 }
+
+const StickyHeader = styled.div`
+  align-items: center;
+  backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  padding: 10px 15px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+
+  .info {
+    margin-left: 30px;
+
+    h1 {
+      font-size: 20px;
+    }
+
+    &__tweets-count {
+      font-size: 14px;
+      margin-top: 2px;
+      color: #888;
+    }
+  }
+`;
+
+const Header = styled.header`
+  .cover {
+    width: 100%;
+    background-color: #555;
+    height: 150px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+`;

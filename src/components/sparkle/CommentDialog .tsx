@@ -142,6 +142,7 @@ export default function CommentDialog({
               <SparkleActorName
                 time={activity.time}
                 name={sparkleActor.data.name}
+                username={sparkleActor.data.username}
                 id={sparkleActor.data.id}
               />
               <p
@@ -156,7 +157,9 @@ export default function CommentDialog({
               />
               <div className="replying-info">
                 Replying to{" "}
-                <span className="replying-info--actor">@{sparkleActor.id}</span>
+                <span className="replying-info--actor">
+                  @{sparkleActor.data.username}
+                </span>
               </div>
             </div>
           </div>

@@ -9,8 +9,10 @@ type Common = {
 export interface ActivityActor extends Common {
   data: {
     id: string;
+    bio?: string;
     email: string;
     name: string;
+    username: string;
     profileImage?: string;
   };
 }

@@ -4,7 +4,14 @@ import { DefaultGenerics, StreamClient } from "getstream";
 import { StreamApp } from "react-activity-feed";
 import { Heading } from "@chakra-ui/react";
 
-import { AuthPages, HomePage, ProfilePage, ThreadPage } from "./pages";
+import {
+  AuthPages,
+  EditProfilePage,
+  HomePage,
+  NotificationsPage,
+  ProfilePage,
+  ThreadPage,
+} from "./pages";
 import { User } from "./users";
 import { UserContext } from "./components/contexts";
 import auth from "./services/auth";
@@ -20,8 +27,21 @@ function App() {
   useEffect(() => {
     initUser();
     initClient();
+    updateUserDetailsWhenNecessary();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?._id]);
+
+  const updateUserDetailsWhenNecessary = () => {
+    if (client?.currentUser?.data?.name === "Unknown" && user) {
+      client.currentUser.update({
+        id: client.userId,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        profileImage: user.avatar,
+      });
+    }
+  };
 
   const initUser = () => {
     if (!user) {
@@ -49,7 +69,9 @@ function App() {
       <ScrollToTop />
       <UserContext.Provider value={{ setUser, user }}>
         <Routes>
+          <Route element={<NotificationsPage />} path="/notifications" />
           <Route element={<ThreadPage />} path="/:user_id/status/:id" />
+          <Route element={<EditProfilePage />} path="/:user_id/edit" />
           <Route element={<ProfilePage />} path="/:user_id" />
           <Route element={<HomePage />} path="/" />
         </Routes>

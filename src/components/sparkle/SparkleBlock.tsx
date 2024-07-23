@@ -8,7 +8,7 @@ import styled from "styled-components";
 
 import { Activity as AppActivity, ActivityObject } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
-import { generateTweetLink } from "../../utils/links";
+import { generateSparkleLink } from "../../utils/links";
 import { useComment, useLike } from "../../hooks";
 import Comment from "../icons/Comment";
 import CommentDialog from "./CommentDialog ";
@@ -154,7 +154,7 @@ export default function SparkleBlock({ activity }: Props) {
   ];
 
   const sparkleLink = activity.id
-    ? generateTweetLink(actor.id, activity.id)
+    ? generateSparkleLink(actor.id, activity.id)
     : "#";
 
   const onPostComment = async (text: string) =>
@@ -174,6 +174,7 @@ export default function SparkleBlock({ activity }: Props) {
             <TweetActorName
               name={actor.data.name}
               id={actor.id}
+              username={actor.data.username}
               time={activity.time}
             />
             <div className="tweet__details">

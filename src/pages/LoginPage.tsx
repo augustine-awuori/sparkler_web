@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { Box, Heading } from "@chakra-ui/react";
 
 import { z } from "zod";
@@ -32,7 +31,6 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { errors, handleSubmit, register } = useForm(schema);
-  const navigate = useNavigate();
 
   const doSubmit = async (info: LoginInfo) => {
     try {
@@ -43,17 +41,16 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
 
       if (ok) {
         auth.loginWithJwt(data as string);
-        navigate("/");
+        window.location.href = "/";
       } else {
         setError(problem);
         toast.error("Login failed");
       }
     } catch (error) {
+      setLoading(false);
       setError(
         (error as ResponseError).response?.data?.error || "unknown error"
       );
-    } finally {
-      setLoading(false);
     }
   };
 

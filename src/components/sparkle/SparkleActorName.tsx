@@ -50,10 +50,11 @@ const TextBlock = styled(Link)`
 interface Props {
   time: string;
   name: string;
+  username: string;
   id: string;
 }
 
-export default function SparkleActorName({ time, name, id }: Props) {
+export default function SparkleActorName({ time, name, id, username }: Props) {
   const timeDiff = Date.now() - new Date(time).getTime();
 
   // convert ms to hours
@@ -72,7 +73,7 @@ export default function SparkleActorName({ time, name, id }: Props) {
   return (
     <TextBlock to={`/${id}`}>
       <span className="user--name">{name}</span>
-      <span className="user--id">@{id}</span>
+      <span className="user--id">@{username}</span>
       <span className="tweet-date">{timeText}</span>
     </TextBlock>
   );

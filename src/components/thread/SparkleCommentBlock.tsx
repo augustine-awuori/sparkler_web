@@ -71,6 +71,7 @@ export default function SparkleCommentBlock({ comment }: Props) {
         <div>
           <SparkleActorName
             name={user.data.name}
+            username={user.data.username}
             id={user.id}
             time={comment.created_at}
           />

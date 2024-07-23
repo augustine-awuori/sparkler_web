@@ -15,7 +15,6 @@ const login = async (userInfo: LoginInfo) => {
   try {
     return processResponse(await client.post("/auth", userInfo));
   } catch (error) {
-    console.log(error);
     return {
       ...emptyResponse,
       problem: (error as ResponseError).response.data?.error || "Unknown error",

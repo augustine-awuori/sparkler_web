@@ -1,3 +1,6 @@
-export function generateTweetLink(actorId: string, tweetActivityId: string) {
-  return `/${actorId}/status/${tweetActivityId}`;
+export function generateSparkleLink(
+  actorId: string,
+  sparkleActivityId: string
+) {
+  return `/${actorId}/status/${sparkleActivityId}`;
 }

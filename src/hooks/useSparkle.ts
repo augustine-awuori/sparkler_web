@@ -5,19 +5,24 @@ import { toast } from "react-toastify";
 export default function useSparkle() {
   const { client } = useStreamContext();
 
-  const user = client?.feed("user", client.userId);
+  const userFeed = client?.feed("user", client.userId);
 
   const createSparkle = async (text: string) => {
-    if (!client || !user) return toast.error("Sparkle could not be created");
+    if (!client || !userFeed)
+      return toast.error("Sparkle could not be created");
 
     const collection = await client.collections.add("tweet", nanoid(), {
       text,
     });
 
-    await user.addActivity({
+    const time = new Date().toISOString();
+
+    await userFeed.addActivity({
       actor: `SU:${client.userId}`,
       verb: "tweet",
       object: `SO:tweet:${collection.id}`,
+      foreign_id: client.userId + time,
+      time,
     });
   };
 
