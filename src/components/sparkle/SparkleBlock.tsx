@@ -18,88 +18,6 @@ import Retweet from "../icons/Retweet";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
 
-const Block = styled.div`
-  display: flex;
-  border-bottom: 1px solid #333;
-  padding: 15px;
-
-  .user-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 10px;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .tweet {
-    flex: 1;
-    .link {
-      display: block;
-      padding-bottom: 5px;
-      text-decoration: none;
-      width: 100%;
-    }
-
-    &__text {
-      color: white;
-      font-size: 15px;
-      line-height: 20px;
-      margin-top: 3px;
-      width: 100%;
-
-      &--link {
-        color: var(--theme-color);
-        text-decoration: none;
-      }
-    }
-
-    &__actions {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 5px;
-
-      button {
-        display: flex;
-        align-items: center;
-      }
-
-      &__value {
-        margin-left: 10px;
-        color: #666;
-
-        &.colored {
-          color: var(--theme-color);
-        }
-      }
-    }
-
-    &__image {
-      margin-top: 20px;
-      border-radius: 20px;
-      border: 1px solid #333;
-      overflow: hidden;
-      width: calc(100% + 20px);
-
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
-  }
-
-  .more {
-    width: 40px;
-    height: 40px;
-    display: flex;
-  }
-`;
-
 interface Props {
   activity: Activity;
 }
@@ -237,3 +155,85 @@ export default function SparkleBlock({ activity }: Props) {
     </>
   );
 }
+
+const Block = styled.div`
+  display: flex;
+  border-bottom: 1px solid #333;
+  padding: 15px;
+
+  .user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .tweet {
+    flex: 1;
+    .link {
+      display: block;
+      padding-bottom: 5px;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    &__text {
+      color: white;
+      font-size: 15px;
+      line-height: 20px;
+      margin-top: 3px;
+      width: 100%;
+
+      &--link {
+        color: var(--theme-color);
+        text-decoration: none;
+      }
+    }
+
+    &__actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+
+      button {
+        display: flex;
+        align-items: center;
+      }
+
+      &__value {
+        margin-left: 10px;
+        color: #666;
+
+        &.colored {
+          color: var(--theme-color);
+        }
+      }
+    }
+
+    &__image {
+      margin-top: 20px;
+      border-radius: 20px;
+      border: 1px solid #333;
+      overflow: hidden;
+      width: calc(100% + 20px);
+
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  .more {
+    width: 40px;
+    height: 40px;
+    display: flex;
+  }
+`;
