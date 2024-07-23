@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { Activity as MainActivity } from "getstream";
 
-import { Activity } from "../../utils/types";
+import { Activity, randomImageUrl } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import BarChart from "../icons/BarChart";
 import Comment from "../icons/Comment";
@@ -199,7 +199,10 @@ export default function SparkleContent({ activity }: Props) {
       <Container>
         <Link to={`/${tweetActor.id}`} className="user">
           <figure className="user__image">
-            <img src={tweetActor?.profileImage} alt="" />
+            <img
+              src={tweetActor?.profileImage || randomImageUrl}
+              alt="profile"
+            />
           </figure>
           <div className="user__name">
             <span className="user__name--name">{tweetActor.name}</span>
