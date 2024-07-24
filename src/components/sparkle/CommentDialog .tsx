@@ -7,106 +7,6 @@ import Modal from "../Modal";
 import SparkleActorName from "./SparkleActorName";
 import SparkleForm from "./SparkleForm";
 
-const Container = styled.div`
-  .modal-block {
-    padding: 15px;
-    width: 600px;
-    height: max-content;
-  }
-`;
-
-const BlockContent = styled.div`
-  .tweet {
-    margin-top: 30px;
-    display: flex;
-    position: relative;
-
-    &::after {
-      content: "";
-      background-color: #444;
-      width: 2px;
-      height: calc(100% - 35px);
-      position: absolute;
-      left: 20px;
-      z-index: 0;
-      top: 45px;
-    }
-
-    .img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 15px;
-      border-radius: 50%;
-      overflow: hidden;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    .details {
-      .actor-name {
-        font-size: 15px;
-        &--name {
-          color: white;
-          font-weight: bold;
-        }
-
-        &--id {
-          color: #888;
-        }
-      }
-
-      .tweet-text {
-        color: white;
-        margin-top: 3px;
-        font-size: 14px;
-      }
-
-      .replying-info {
-        color: #555;
-        display: flex;
-        margin-top: 20px;
-        font-size: 14px;
-
-        &--actor {
-          margin-left: 5px;
-          color: var(--theme-color);
-        }
-      }
-    }
-  }
-
-  .comment {
-    display: flex;
-    margin-top: 20px;
-
-    .img {
-      width: 35px;
-      height: 35px;
-      margin-left: 3px;
-      border-radius: 50%;
-      margin-right: 15px;
-      border-radius: 50%;
-      overflow: hidden;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    .comment-form {
-      flex: 1;
-      height: 120px;
-    }
-  }
-`;
-
 interface Props {
   activity: MainActivity;
   onClickOutside: () => void;
@@ -177,3 +77,110 @@ export default function CommentDialog({
     </Container>
   );
 }
+
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .modal-block {
+    padding: 15px;
+    width: 100%;
+    max-width: 800px; /* Optional: Set a max-width if you want to limit the maximum size */
+    height: max-content;
+  }
+`;
+
+const BlockContent = styled.div`
+  .tweet {
+    margin-top: 30px;
+    display: flex;
+    position: relative;
+    width: 100%;
+
+    &::after {
+      content: "";
+      background-color: #444;
+      width: 2px;
+      height: calc(100% - 35px);
+      position: absolute;
+      left: 20px;
+      z-index: 0;
+      top: 45px;
+    }
+
+    .img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 15px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .details {
+      width: calc(100% - 55px); /* Adjust based on img width and margin */
+
+      .actor-name {
+        font-size: 15px;
+        &--name {
+          color: white;
+          font-weight: bold;
+        }
+
+        &--id {
+          color: #888;
+        }
+      }
+
+      .tweet-text {
+        color: white;
+        margin-top: 3px;
+        font-size: 14px;
+      }
+
+      .replying-info {
+        color: #555;
+        display: flex;
+        margin-top: 20px;
+        font-size: 14px;
+
+        &--actor {
+          margin-left: 5px;
+          color: var(--theme-color);
+        }
+      }
+    }
+  }
+
+  .comment {
+    display: flex;
+    margin-top: 20px;
+    width: 100%;
+
+    .img {
+      width: 35px;
+      height: 35px;
+      margin-left: 3px;
+      border-radius: 50%;
+      margin-right: 15px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .comment-form {
+      flex: 1;
+      height: 120px;
+    }
+  }
+`;

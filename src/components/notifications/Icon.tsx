@@ -15,7 +15,7 @@ const NotificationIcon = () => {
       {!!newNotifications && (
         <span className="notifications-count">{newNotifications}</span>
       )}
-      <Bell fill={isActiveLink} color="white" />
+      <Bell fill={isActiveLink} color="white" size={23} />
     </Container>
   );
 };

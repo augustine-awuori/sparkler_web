@@ -24,19 +24,22 @@ const BottomNav = () => {
       bg="black"
       display={{ base: "flex", md: "none" }}
       justifyContent="space-around"
-      p={2}
+      px={2}
+      py={1}
       borderTop="1px solid #333"
       zIndex="10"
     >
       <BottomTab
-        Icon={<Home color="#fff" fill={isCurrentPath("/")} />}
+        Icon={<Home color="#fff" fill={isCurrentPath("/")} size={23} />}
         pathname="/"
       />
-      <BottomTab Icon={<Discover color="#fff" />} pathname="/" />
-      <BottomTab Icon={<Group color="#fff" />} pathname="/" />
+      <BottomTab Icon={<Discover color="#fff" size={23} />} pathname="/" />
+      <BottomTab Icon={<Group color="#fff" size={23} />} pathname="/" />
       <BottomTab Icon={<NotificationIcon />} pathname="/notifications" />
       <BottomTab
-        Icon={<User color="#fff" fill={isCurrentPath(`/${user?._id}`)} />}
+        Icon={
+          <User size={23} color="#fff" fill={isCurrentPath(`/${user?._id}`)} />
+        }
         pathname={`/${user?._id}`}
       />
     </Box>

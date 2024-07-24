@@ -19,11 +19,13 @@ export default function ProfileContent() {
     if (!user_id) return;
 
     const getUser = async () => {
-      const user = await client
-        ?.user(user_id)
-        .get({ with_follow_counts: true });
+      try {
+        const user = await client
+          ?.user(user_id)
+          .get({ with_follow_counts: true });
 
-      if (user?.full) setUser(user.full);
+        if (user?.full) setUser(user.full);
+      } catch (error) {}
     };
 
     getUser();
