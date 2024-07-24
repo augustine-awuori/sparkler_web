@@ -1,10 +1,10 @@
-import classNames from "classnames";
-import { Activity } from "getstream";
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { Image } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import classNames from "classnames";
+import { Activity } from "getstream";
 
 import { Activity as AppActivity, ActivityObject } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
@@ -14,6 +14,7 @@ import Comment from "../icons/Comment";
 import CommentDialog from "./CommentDialog ";
 import Heart from "../icons/Heart";
 import More from "../icons/More";
+import ResparklePopup from "./ResparklePopup";
 import Retweet from "../icons/Retweet";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
@@ -22,12 +23,15 @@ interface Props {
   activity: Activity;
 }
 
-export default function SparkleBlock({ activity }: Props) {
+const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const { user } = useStreamContext();
   const { toggleLike } = useLike();
   const { createComment } = useComment();
   const navigate = useNavigate();
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
+  const [retweetPopupOpened, setResparklePopupOpened] = useState(false);
+  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+  const retweetButtonRef = useRef<HTMLButtonElement>(null);
 
   const appActivity = activity as unknown as AppActivity;
   const actor = appActivity.actor;
@@ -56,6 +60,14 @@ export default function SparkleBlock({ activity }: Props) {
       Icon: Retweet,
       alt: "Retweet",
       value: 0,
+      onClick: (_e: React.MouseEvent<HTMLButtonElement>) => {
+        const buttonRect = retweetButtonRef.current!.getBoundingClientRect();
+        setPopupPosition({
+          top: buttonRect.top - 10,
+          left: buttonRect.left,
+        });
+        setResparklePopupOpened(!retweetPopupOpened);
+      },
     },
     {
       id: "heart",
@@ -112,9 +124,10 @@ export default function SparkleBlock({ activity }: Props) {
             {actions.map((action) => {
               return (
                 <button
+                  ref={action.id === "retweet" ? retweetButtonRef : null}
                   onClick={(e) => {
                     e.stopPropagation();
-                    action.onClick?.();
+                    action.onClick?.(e);
                   }}
                   key={action.id}
                   type="button"
@@ -126,7 +139,11 @@ export default function SparkleBlock({ activity }: Props) {
                         : "#777"
                     }
                     size={17}
-                    fill={action.id === "heart" && hasLikedSparkle && true}
+                    fill={
+                      action.id === "heart" && hasLikedSparkle
+                        ? true
+                        : undefined
+                    }
                   />
                   <span
                     className={classNames("tweet__actions__value", {
@@ -147,14 +164,21 @@ export default function SparkleBlock({ activity }: Props) {
       {activity.id && commentDialogOpened && (
         <CommentDialog
           onPostComment={onPostComment}
-          //   shouldOpen={commentDialogOpened}
           onClickOutside={() => setCommentDialogOpened(false)}
           activity={activity}
         />
       )}
+      {retweetPopupOpened && (
+        <ResparklePopup
+          onClose={() => setResparklePopupOpened(false)}
+          onResparkle={() => console.log("Resparkle clicked")}
+          onQuote={() => console.log("Quote clicked")}
+          position={popupPosition}
+        />
+      )}
     </>
   );
-}
+};
 
 const Block = styled.div`
   display: flex;
@@ -237,3 +261,5 @@ const Block = styled.div`
     display: flex;
   }
 `;
+
+export default SparkleBlock;

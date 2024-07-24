@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { DefaultGenerics, StreamClient } from "getstream";
 import { StreamApp } from "react-activity-feed";
-import { Heading } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 
 import {
   AuthPages,
@@ -67,15 +67,17 @@ function App() {
   return (
     <StreamApp token={user.feedToken} appId={id} apiKey={key}>
       <ScrollToTop />
-      <UserContext.Provider value={{ setUser, user }}>
-        <Routes>
-          <Route element={<NotificationsPage />} path="/notifications" />
-          <Route element={<ThreadPage />} path="/:user_id/status/:id" />
-          <Route element={<EditProfilePage />} path="/:user_id/edit" />
-          <Route element={<ProfilePage />} path="/:user_id" />
-          <Route element={<HomePage />} path="/" />
-        </Routes>
-      </UserContext.Provider>
+      <Box fontFamily="quicksand">
+        <UserContext.Provider value={{ setUser, user }}>
+          <Routes>
+            <Route element={<NotificationsPage />} path="/notifications" />
+            <Route element={<ThreadPage />} path="/:user_id/status/:id" />
+            <Route element={<EditProfilePage />} path="/:user_id/edit" />
+            <Route element={<ProfilePage />} path="/:user_id" />
+            <Route element={<HomePage />} path="/" />
+          </Routes>
+        </UserContext.Provider>
+      </Box>
     </StreamApp>
   );
 }

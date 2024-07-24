@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { useFeedContext, useStreamContext } from "react-activity-feed";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Activity as MainActivity } from "getstream";
 
 import { Activity, randomImageUrl } from "../../utils/types";
@@ -18,6 +18,7 @@ import CommentDialog from "../sparkle/CommentDialog ";
 import More from "../icons/More";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
+import ResparklePopup from "../sparkle/ResparklePopup";
 
 const Container = styled.div`
   padding: 10px 15px;
@@ -144,6 +145,9 @@ export default function SparkleContent({ activity }: Props) {
   const { createComment } = useComment();
   const { toggleLike } = useLike();
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
+  const [resparklePopupOpened, setResparklePopupOpened] = useState(false);
+  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+  const retweetButtonRef = useRef<HTMLButtonElement>(null);
 
   const time = format(new Date(activity.time), "p");
   const date = format(new Date(activity.time), "PP");
@@ -172,7 +176,18 @@ export default function SparkleContent({ activity }: Props) {
       Icon: Comment,
       onClick: () => setCommentDialogOpened(true),
     },
-    { id: "retweet", Icon: Retweet },
+    {
+      id: "retweet",
+      Icon: Retweet,
+      onClick: (_e: React.MouseEvent<HTMLButtonElement>) => {
+        const buttonRect = retweetButtonRef.current!.getBoundingClientRect();
+        setPopupPosition({
+          top: buttonRect.top - 10,
+          left: buttonRect.left,
+        });
+        setResparklePopupOpened(!resparklePopupOpened);
+      },
+    },
     {
       id: "heart",
       Icon: Heart,
@@ -189,6 +204,14 @@ export default function SparkleContent({ activity }: Props) {
 
   return (
     <>
+      {resparklePopupOpened && (
+        <ResparklePopup
+          onClose={() => setResparklePopupOpened(false)}
+          onQuote={console.log}
+          onResparkle={console.log}
+          position={popupPosition}
+        />
+      )}
       {commentDialogOpened && (
         <CommentDialog
           activity={activity}
@@ -245,7 +268,11 @@ export default function SparkleContent({ activity }: Props) {
 
           <div className="tweet__reactors">
             {reactors.map((action, i) => (
-              <button onClick={action.onClick} key={`reactor-${i}`}>
+              <button
+                onClick={action.onClick}
+                key={`reactor-${i}`}
+                ref={action.id === "retweet" ? retweetButtonRef : null}
+              >
                 <action.Icon
                   color={
                     action.id === "heart" && hasLikedTweet
