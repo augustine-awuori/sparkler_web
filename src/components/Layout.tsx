@@ -1,12 +1,13 @@
 import { ReactNode, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
-import styled from "styled-components";
 import { Box, useBreakpointValue } from "@chakra-ui/react";
+import styled from "styled-components";
 
 import LeftSide from "./LeftSide";
 import CreateTweetDialog from "./sparkle/CreateSparkleDialog";
 import RightSide from "./RightSide";
 import LoadingIndicator from "./LoadingIndicator";
+import BottomNav from "./nav/BottomNav";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user } = useStreamContext();
@@ -25,21 +26,22 @@ export default function Layout({ children }: { children: ReactNode }) {
         />
       )}
       <Container>
-        <div className="content">
+        <Box className="content">
           {showLeftSidebar && (
             <Box className="left-side-bar">
               <LeftSide onClickSparkle={() => setCreateDialogOpened(true)} />
             </Box>
           )}
-          <main className="main-content">
+          <Box as="main" className="main-content">
             {!user ? <LoadingIndicator /> : children}
-          </main>
+            <BottomNav />
+          </Box>
           {showRightSidebar && (
             <Box className="right-side-bar">
               <RightSide />
             </Box>
           )}
-        </div>
+        </Box>
       </Container>
     </>
   );
@@ -69,6 +71,7 @@ const Container = styled.div`
     border-left: 1px solid #333;
     border-right: 1px solid #333;
     min-height: 100vh;
+    padding-bottom: 56px;
   }
 
   .right-side-bar {

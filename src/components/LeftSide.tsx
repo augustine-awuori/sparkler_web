@@ -1,12 +1,10 @@
-import classNames from "classnames";
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useStreamContext } from "react-activity-feed";
-import styled from "styled-components";
 import { Button } from "@chakra-ui/react";
 import { GiFairyWand } from "react-icons/gi";
+import { Link, useLocation } from "react-router-dom";
+import classNames from "classnames";
+import styled from "styled-components";
 
-import { useUser } from "../hooks";
+import { useNewNotifications, useUser } from "../hooks";
 import Bell from "./icons/Bell";
 import Bookmark from "./icons/Bookmark";
 import Group from "./icons/Group";
@@ -21,39 +19,10 @@ interface Props {
   onClickSparkle: () => void;
 }
 
-interface Notificaton {
-  is_seen: boolean;
-}
-
 export default function LeftSide({ onClickSparkle }: Props) {
   const location = useLocation();
   const { user } = useUser();
-  const [newNotifications, setNewNotifications] = useState(0);
-  const { client, userData } = useStreamContext();
-
-  useEffect(() => {
-    if (!userData || location.pathname === `/notifications`) return;
-
-    let notifFeed = client?.feed("notification", userData?.id);
-
-    async function init() {
-      const notifications = await notifFeed?.get();
-
-      const unread = (notifications?.results as Notificaton[]).filter(
-        (notification) => !notification.is_seen
-      );
-      setNewNotifications(unread.length);
-
-      notifFeed?.subscribe((data) => {
-        setNewNotifications(newNotifications + data.new.length);
-      });
-    }
-
-    init();
-
-    return () => notifFeed?.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname, userData]);
+  const { newNotifications } = useNewNotifications();
 
   if (!user)
     return (
