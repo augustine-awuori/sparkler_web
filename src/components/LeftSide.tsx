@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useStreamContext } from "react-activity-feed";
 import styled from "styled-components";
+import { Button } from "@chakra-ui/react";
+import { GiFairyWand } from "react-icons/gi";
 
 import { useUser } from "../hooks";
 import Bell from "./icons/Bell";
@@ -14,6 +16,145 @@ import LoadingIndicator from "./LoadingIndicator";
 import Mail from "./icons/Mail";
 import Sparkle from "./icons/Twitter";
 import User from "./icons/User";
+
+interface Props {
+  onClickSparkle: () => void;
+}
+
+interface Notificaton {
+  is_seen: boolean;
+}
+
+export default function LeftSide({ onClickSparkle }: Props) {
+  const location = useLocation();
+  const { user } = useUser();
+  const [newNotifications, setNewNotifications] = useState(0);
+  const { client, userData } = useStreamContext();
+
+  useEffect(() => {
+    if (!userData || location.pathname === `/notifications`) return;
+
+    let notifFeed = client?.feed("notification", userData?.id);
+
+    async function init() {
+      const notifications = await notifFeed?.get();
+
+      const unread = (notifications?.results as Notificaton[]).filter(
+        (notification) => !notification.is_seen
+      );
+      setNewNotifications(unread.length);
+
+      notifFeed?.subscribe((data) => {
+        setNewNotifications(newNotifications + data.new.length);
+      });
+    }
+
+    init();
+
+    return () => notifFeed?.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, userData]);
+
+  if (!user)
+    return (
+      <Container>
+        <LoadingIndicator />
+      </Container>
+    );
+
+  const menus = [
+    {
+      id: "home",
+      label: "Home",
+      Icon: Home,
+      link: "/",
+      onClick: () => {},
+    },
+    {
+      id: "explore",
+      label: "Explore",
+      Icon: Hashtag,
+      onClick: () => {},
+    },
+    {
+      id: "communities",
+      onClick: () => {},
+      label: "Communities",
+      Icon: Group,
+    },
+    {
+      id: "notifications",
+      label: "Notifications",
+      Icon: Bell,
+      onClick: () => {},
+      link: "/notifications",
+      value: newNotifications,
+    },
+    {
+      id: "messages",
+      onClick: () => {},
+      label: "Messages",
+      Icon: Mail,
+    },
+    {
+      id: "bookmarks",
+      onClick: () => {},
+      label: "Bookmarks",
+      Icon: Bookmark,
+    },
+    {
+      id: "profile",
+      onClick: () => {},
+      label: "Profile",
+      Icon: User,
+      link: `/${user._id}`,
+    },
+  ];
+
+  return (
+    <Container>
+      <Link to="/" className="header">
+        <Sparkle color="white" size={25} />
+      </Link>
+      <div className="buttons">
+        {menus.map((m) => {
+          const isActiveLink =
+            location.pathname === `/${m.id}` ||
+            (m.id === "profile" && location.pathname === `/${user._id}`);
+
+          return (
+            <Link
+              to={m.link ?? "#"}
+              className={classNames(
+                `btn--${m.id} new-tweets`,
+                isActiveLink && "active"
+              )}
+              key={m.id}
+              onClick={m.onClick}
+            >
+              <div className="btn--icon">
+                {newNotifications && m.id === "notifications" ? (
+                  <span className="notifications-count">
+                    {newNotifications}
+                  </span>
+                ) : null}
+                <m.Icon fill={isActiveLink} color="white" size={25} />
+              </div>
+              <span>{m.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+      <Button
+        onClick={onClickSparkle}
+        className="tweet-btn"
+        leftIcon={<GiFairyWand color="#fff" />}
+      >
+        Sparkle
+      </Button>
+    </Container>
+  );
+}
 
 const Container = styled.div`
   display: flex;
@@ -165,138 +306,3 @@ const Container = styled.div`
     }
   }
 `;
-
-interface Props {
-  onClickSparkle: () => void;
-}
-
-interface Notificaton {
-  is_seen: boolean;
-}
-
-export default function LeftSide({ onClickSparkle }: Props) {
-  const location = useLocation();
-  const { user } = useUser();
-  const [newNotifications, setNewNotifications] = useState(0);
-  const { client, userData } = useStreamContext();
-
-  useEffect(() => {
-    if (!userData || location.pathname === `/notifications`) return;
-
-    let notifFeed = client?.feed("notification", userData?.id);
-
-    async function init() {
-      const notifications = await notifFeed?.get();
-
-      const unread = (notifications?.results as Notificaton[]).filter(
-        (notification) => !notification.is_seen
-      );
-      setNewNotifications(unread.length);
-
-      notifFeed?.subscribe((data) => {
-        setNewNotifications(newNotifications + data.new.length);
-      });
-    }
-
-    init();
-
-    return () => notifFeed?.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname, userData]);
-
-  if (!user)
-    return (
-      <Container>
-        <LoadingIndicator />
-      </Container>
-    );
-
-  const menus = [
-    {
-      id: "home",
-      label: "Home",
-      Icon: Home,
-      link: "/",
-      onClick: () => {},
-    },
-    {
-      id: "explore",
-      label: "Explore",
-      Icon: Hashtag,
-      onClick: () => {},
-    },
-    {
-      id: "communities",
-      onClick: () => {},
-      label: "Communities",
-      Icon: Group,
-    },
-    {
-      id: "notifications",
-      label: "Notifications",
-      Icon: Bell,
-      onClick: () => {},
-      link: "/notifications",
-      value: newNotifications,
-    },
-    {
-      id: "messages",
-      onClick: () => {},
-      label: "Messages",
-      Icon: Mail,
-    },
-    {
-      id: "bookmarks",
-      onClick: () => {},
-      label: "Bookmarks",
-      Icon: Bookmark,
-    },
-    {
-      id: "profile",
-      onClick: () => {},
-      label: "Profile",
-      Icon: User,
-      link: `/${user._id}`,
-    },
-  ];
-
-  return (
-    <Container>
-      <Link to="/" className="header">
-        <Sparkle color="white" size={25} />
-      </Link>
-      <div className="buttons">
-        {menus.map((m) => {
-          const isActiveLink =
-            location.pathname === `/${m.id}` ||
-            (m.id === "profile" && location.pathname === `/${user._id}`);
-
-          return (
-            <Link
-              to={m.link ?? "#"}
-              className={classNames(
-                `btn--${m.id} new-tweets`,
-                isActiveLink && "active"
-              )}
-              key={m.id}
-              onClick={m.onClick}
-            >
-              <div className="btn--icon">
-                {newNotifications && m.id === "notifications" ? (
-                  <span className="notifications-count">
-                    {newNotifications}
-                  </span>
-                ) : null}
-                <m.Icon fill={isActiveLink} color="white" size={25} />
-              </div>
-              <span>{m.label}</span>
-            </Link>
-          );
-        })}
-      </div>
-      <button onClick={onClickSparkle} className="tweet-btn">
-        Sparkle
-      </button>
-    </Container>
-  );
-}

@@ -38,7 +38,7 @@ export default function CreateTweetDialog({ onClickOutside }: Props) {
           shouldFocus={true}
           minHeight={240}
           className="tweet-form"
-          placeholder="What's happening"
+          placeholder="What's sparkling?"
         />
       </Modal>
     </Container>

@@ -3,6 +3,26 @@ import styled from "styled-components";
 
 import Close from "./icons/Close";
 
+interface Props {
+  children: JSX.Element;
+  className: string;
+  onClickOutside: () => void;
+}
+
+export default function Modal({ className, children, onClickOutside }: Props) {
+  return (
+    <Container>
+      <Backdrop onClick={() => onClickOutside()} />
+      <div className={classNames("modal", className)}>
+        <button onClick={onClickOutside} className="close-btn">
+          <Close color="white" size={24} />
+        </button>
+        {children}
+      </div>
+    </Container>
+  );
+}
+
 const Container = styled.div`
   position: fixed;
   z-index: 6;
@@ -36,23 +56,3 @@ const Backdrop = styled.div`
   top: 0;
   background-color: rgba(255, 255, 255, 0.2);
 `;
-
-interface Props {
-  children: JSX.Element;
-  className: string;
-  onClickOutside: () => void;
-}
-
-export default function Modal({ className, children, onClickOutside }: Props) {
-  return (
-    <Container>
-      <Backdrop onClick={() => onClickOutside()} />
-      <div className={classNames("modal", className)}>
-        <button onClick={onClickOutside} className="close-btn">
-          <Close color="white" size={24} />
-        </button>
-        {children}
-      </div>
-    </Container>
-  );
-}

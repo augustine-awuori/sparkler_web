@@ -1,7 +1,7 @@
 import { Flex, FlexProps, Text } from "@chakra-ui/react";
-import { IconType } from "react-icons";
-import { FaPencilAlt, FaRetweet } from "react-icons/fa";
+import { FaPencilAlt } from "react-icons/fa";
 import styled from "styled-components";
+import Retweet from "../icons/Retweet";
 
 interface RetweetPopupProps {
   onClose: () => void;
@@ -11,7 +11,7 @@ interface RetweetPopupProps {
 }
 
 interface OptionProps extends FlexProps {
-  Icon: IconType;
+  Icon: JSX.Element;
   label: string;
 }
 
@@ -26,7 +26,7 @@ const Option = ({ Icon, label, ...rest }: OptionProps) => (
     py={2}
     {...rest}
   >
-    <Icon />
+    {Icon}
     <Text ml={2}>{label}</Text>
   </Flex>
 );
@@ -43,8 +43,12 @@ const ResparklePopup: React.FC<RetweetPopupProps> = ({
         style={{ top: position.top + "px", left: position.left + "px" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <Option Icon={FaRetweet} label="Resparkle" onClick={onResparkle} />
-        <Option Icon={FaPencilAlt} label="Quote" onClick={onQuote} />
+        <Option
+          Icon={<Retweet color="#fff" />}
+          label="Resparkle"
+          onClick={onResparkle}
+        />
+        <Option Icon={<FaPencilAlt />} label="Quote" onClick={onQuote} />
       </PopupContainer>
     </PopupOverlay>
   );
