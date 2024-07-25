@@ -22,5 +22,16 @@ const login = async (userInfo: LoginInfo) => {
   }
 };
 
+const getUserByUsername = async (username: string) => {
+  try {
+    return processResponse(await client.get(`${endpoint}/${username}`));
+  } catch (error) {
+    return {
+      ...emptyResponse,
+      problem: (error as ResponseError).response.data?.error || "Unknown error",
+    };
+  }
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { register, login };
+export default { register, login, getUserByUsername };

@@ -40,7 +40,7 @@ const BottomNav = () => {
         Icon={
           <User size={23} color="#fff" fill={isCurrentPath(`/${user?._id}`)} />
         }
-        pathname={`/${user?._id}`}
+        pathname={`/${user?.username}`}
       />
     </Box>
   );

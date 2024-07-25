@@ -26,7 +26,7 @@ export default function SparkleActorName({ time, name, id, username }: Props) {
     : format(new Date(time), "MMM d");
 
   return (
-    <TextBlock to={`/${id}`}>
+    <TextBlock to={`/${username}`}>
       <span className="user--name">{name}</span>
       <span className="user--id">@{username}</span>
       <span className="tweet-date">{timeText}</span>

@@ -84,7 +84,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   ];
 
   const sparkleLink = activity.id
-    ? generateSparkleLink(actor.id, activity.id)
+    ? generateSparkleLink(actor.data.username, activity.id)
     : "#";
 
   const onPostComment = async (text: string) =>

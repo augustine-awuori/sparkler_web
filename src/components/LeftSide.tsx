@@ -76,7 +76,7 @@ export default function LeftSide({ onClickSparkle }: Props) {
       onClick: () => {},
       label: "Profile",
       Icon: User,
-      link: `/${user._id}`,
+      link: `/${user.username}`,
     },
   ];
 
