@@ -49,7 +49,9 @@ export default function ProfileHeader() {
             {(user?.data as unknown as ProfileUser).name ||
               "Display user name here"}
           </h1>
-          <span className="info__tweets-count">{activitiesCount} Sparkles</span>
+          <span className="info__tweets-count">
+            {activitiesCount} Sparkle{activitiesCount === 1 ? "" : "s"}
+          </span>
         </div>
       </StickyHeader>
       <Header>
