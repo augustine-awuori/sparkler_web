@@ -188,6 +188,8 @@ const Block = styled.div`
   .user-image {
     width: 40px;
     height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     border-radius: 50%;
     overflow: hidden;
     margin-right: 10px;
