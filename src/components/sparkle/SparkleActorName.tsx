@@ -2,6 +2,38 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+interface Props {
+  time: string;
+  name: string;
+  username: string;
+  id: string;
+}
+
+export default function SparkleActorName({ time, name, id, username }: Props) {
+  const timeDiff = Date.now() - new Date(time).getTime();
+
+  // convert ms to hours
+  const hoursBetweenDates = timeDiff / (60 * 60 * 1000);
+
+  const lessThan24hrs = hoursBetweenDates < 24;
+
+  const lessThan1hr = hoursBetweenDates < 1;
+
+  const timeText = lessThan1hr
+    ? `${Math.floor(timeDiff / (60 * 1000))}m`
+    : lessThan24hrs
+    ? `${Math.floor(hoursBetweenDates)}h`
+    : format(new Date(time), "MMM d");
+
+  return (
+    <TextBlock to={`/${id}`}>
+      <span className="user--name">{name}</span>
+      <span className="user--id">@{username}</span>
+      <span className="tweet-date">{timeText}</span>
+    </TextBlock>
+  );
+}
+
 const TextBlock = styled(Link)`
   display: flex;
   align-items: center;
@@ -46,35 +78,3 @@ const TextBlock = styled(Link)`
     }
   }
 `;
-
-interface Props {
-  time: string;
-  name: string;
-  username: string;
-  id: string;
-}
-
-export default function SparkleActorName({ time, name, id, username }: Props) {
-  const timeDiff = Date.now() - new Date(time).getTime();
-
-  // convert ms to hours
-  const hoursBetweenDates = timeDiff / (60 * 60 * 1000);
-
-  const lessThan24hrs = hoursBetweenDates < 24;
-
-  const lessThan1hr = hoursBetweenDates < 1;
-
-  const timeText = lessThan1hr
-    ? `${Math.floor(timeDiff / (60 * 1000))}m`
-    : lessThan24hrs
-    ? `${Math.floor(hoursBetweenDates)}h`
-    : format(new Date(time), "MMM d");
-
-  return (
-    <TextBlock to={`/${id}`}>
-      <span className="user--name">{name}</span>
-      <span className="user--id">@{username}</span>
-      <span className="tweet-date">{timeText}</span>
-    </TextBlock>
-  );
-}
