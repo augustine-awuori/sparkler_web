@@ -1,26 +1,26 @@
 import { format } from "date-fns";
-import { useFeedContext, useStreamContext } from "react-activity-feed";
+import { useFeedContext } from "react-activity-feed";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useRef, useState } from "react";
 import { Activity as MainActivity } from "getstream";
+import { Box } from "@chakra-ui/react";
 
 import { Activity, randomImageUrl } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
+import { useActivity, useSparkle } from "../../hooks";
 import BarChart from "../icons/BarChart";
 import Comment from "../icons/Comment";
-import Retweet from "../icons/Retweet";
-import Heart from "../icons/Heart";
-import Upload from "../icons/Upload";
-import TweetForm from "../sparkle/SparkleForm";
-import SparkleCommentBlock from "./SparkleCommentBlock";
 import CommentDialog from "../sparkle/CommentDialog ";
+import Heart from "../icons/Heart";
 import More from "../icons/More";
+import ResparklePopup from "../sparkle/ResparklePopup";
+import Retweet from "../icons/Retweet";
+import SparkleCommentBlock from "./SparkleCommentBlock";
+import TweetForm from "../sparkle/SparkleForm";
+import Upload from "../icons/Upload";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
-import ResparklePopup from "../sparkle/ResparklePopup";
-import { useActivity, useSparkle } from "../../hooks";
-import { Box } from "@chakra-ui/react";
 
 interface Props {
   activity: MainActivity;
@@ -28,7 +28,6 @@ interface Props {
 
 export default function SparkleContent({ activity }: Props) {
   const feed = useFeedContext();
-  const { client } = useStreamContext();
   const { createComment } = useComment();
   const { toggleLike } = useLike();
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
@@ -37,7 +36,7 @@ export default function SparkleContent({ activity }: Props) {
   const navigate = useNavigate();
   const { setActivity } = useActivity();
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
-  const { checkIfHasResparkled } = useSparkle();
+  const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
 
   const time = format(new Date(activity.time), "p");
   const date = format(new Date(activity.time), "PP");
@@ -47,15 +46,7 @@ export default function SparkleContent({ activity }: Props) {
   const tweetActor = appActivity.actor.data;
   const likesCount = appActivity.reaction_counts.like || 0;
   const resparklesCount = appActivity.reaction_counts.resparkle || "0";
-
-  let hasLikedSparkled = false;
-
-  if (appActivity?.own_reactions?.like) {
-    const myReaction = appActivity.own_reactions.like.find(
-      (l) => l.user.id === client?.userId
-    );
-    hasLikedSparkled = Boolean(myReaction);
-  }
+  const hasLikedSparkled = checkIfHasLiked(appActivity);
 
   const onToggleLike = async () => {
     await toggleLike(activity, hasLikedSparkled);

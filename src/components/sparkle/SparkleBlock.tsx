@@ -40,7 +40,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
   const { setActivity } = useActivity();
   const { toggleResparkle } = useResparkle();
-  const { deleteSparkle, checkIfHasResparkled } = useSparkle();
+  const { deleteSparkle, checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const isAReaction = activity.foreign_id.startsWith("reaction");
   const sparkle = isAReaction
     ? (activity.object as unknown as AppActivity).object.data
@@ -54,15 +54,8 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     ? (activity.object as unknown as AppActivity)
     : (activity as unknown as AppActivity);
   const actor = appActivity.actor;
-  let hasLikedSparkle = false;
+  let hasLikedSparkle = checkIfHasLiked(appActivity);
   const hasResparkled = checkIfHasResparkled(appActivity);
-
-  if (appActivity?.own_reactions?.like && user) {
-    const myReaction = appActivity.own_reactions.like.find(
-      (l) => l.user.id === user?.id
-    );
-    hasLikedSparkle = Boolean(myReaction);
-  }
 
   const onToggleLike = () => toggleLike(activity, hasLikedSparkle);
 

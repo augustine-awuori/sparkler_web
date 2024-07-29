@@ -8,7 +8,7 @@ import { Activity as AppActivity } from "../../utils/types";
 import { generateSparkleLink } from "../../utils/links";
 import LoadingIndicator from "../LoadingIndicator";
 import ThreadHeader from "../Header";
-import TweetContent from "./SparkleContent";
+import SparkleContent from "./SparkleContent";
 
 export default function ThreadContent() {
   const { client } = useStreamContext();
@@ -52,7 +52,7 @@ export default function ThreadContent() {
   return (
     <div>
       <ThreadHeader />
-      <TweetContent activity={activity} />
+      <SparkleContent activity={activity} />
     </div>
   );
 }

@@ -46,5 +46,23 @@ export default function useSparkle() {
     return hasResparkled;
   };
 
-  return { createSparkle, deleteSparkle, checkIfHasResparkled };
+  const checkIfHasLiked = (activity: Activity) => {
+    let hasLikedSparkle = false;
+
+    if (activity?.own_reactions?.like && user) {
+      const myReaction = activity.own_reactions.like.find(
+        (l) => l.user.id === user?._id
+      );
+      hasLikedSparkle = Boolean(myReaction);
+    }
+
+    return hasLikedSparkle;
+  };
+
+  return {
+    createSparkle,
+    deleteSparkle,
+    checkIfHasLiked,
+    checkIfHasResparkled,
+  };
 }
