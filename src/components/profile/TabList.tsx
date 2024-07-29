@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import ProfileSparkles from "./ProfileSparkles";
 import ProfileReplies from "./ProfileReplies";
+import ProfileMedia from "./ProfileMedia";
 
 type TabId = "tweets" | "tweet-replies" | "media";
 
@@ -47,6 +48,7 @@ export default function TabList() {
       </Container>
       {activeTab === "tweets" && <ProfileSparkles />}
       {activeTab === "tweet-replies" && <ProfileReplies />}
+      {activeTab === "media" && <ProfileMedia />}
     </div>
   );
 }
