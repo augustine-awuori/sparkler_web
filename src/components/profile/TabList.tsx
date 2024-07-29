@@ -14,7 +14,7 @@ const tabs: { id: TabId; label: string }[] = [
   },
   {
     id: "tweet-replies",
-    label: "Sparkles & replies",
+    label: "Resparkles & replies",
   },
   {
     id: "media",
@@ -53,7 +53,7 @@ export default function TabList() {
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* Equal horizontal space for each tab */
+  grid-template-columns: 1fr 1fr 1fr;
   border-bottom: 1px solid #555;
   width: 100%;
 

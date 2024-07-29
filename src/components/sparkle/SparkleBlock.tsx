@@ -54,7 +54,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     ? (activity.object as unknown as AppActivity)
     : (activity as unknown as AppActivity);
   const actor = appActivity.actor;
-  let hasLikedSparkle = checkIfHasLiked(appActivity);
+  const hasLikedSparkle = checkIfHasLiked(appActivity);
   const hasResparkled = checkIfHasResparkled(appActivity);
 
   const onToggleLike = () => toggleLike(activity, hasLikedSparkle);

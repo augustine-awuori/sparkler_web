@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { useProfile } from "../../hooks";
 import SparkleBlock from "../sparkle/SparkleBlock";
-import { Activity } from "../../utils/types";
+import { Activity } from "getstream";
 
 export default function ProfileTweets() {
   const { user } = useProfile();
@@ -15,12 +15,17 @@ export default function ProfileTweets() {
     async function getActivities() {
       const response = await feed?.get({
         withOwnReactions: true,
+        enrich: true,
+        ownReactions: true,
+        withReactionCounts: true,
+        withRecentReactions: true,
       });
 
       if (response) {
         const filteredActivities = (
           response.results as unknown as Activity[]
-        ).filter((activity) => activity.verb === "reply");
+        ).filter((activity) => activity.verb === "resparkle");
+
         setActivities(filteredActivities);
       }
     }
@@ -30,9 +35,9 @@ export default function ProfileTweets() {
 
   return (
     <>
-      {/* {activities.map((activity) => (
-        <SparkleBlock key={""} activity={activity} />
-      ))} */}
+      {activities.map((activity) => (
+        <SparkleBlock key={activity.id} activity={activity} />
+      ))}
     </>
   );
 }
