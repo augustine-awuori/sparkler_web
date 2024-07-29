@@ -112,7 +112,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const getColor = (name: string) => {
     if (name === "heart")
       return hasLikedSparkle ? "var(--theme-color)" : "#777";
-    else if (name === "resparkle") return hasResparkled ? "#e234eb" : "#777";
+    else if (name === "resparkle") return hasResparkled ? "#17BF63" : "#777";
     return "#777";
   };
 
@@ -183,7 +183,10 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                     />
                     <span
                       className={classNames("tweet__actions__value", {
-                        colored: action.id === "heart" && hasLikedSparkle,
+                        colored:
+                          (action.id === "heart" && hasLikedSparkle) ||
+                          (action.id === "resparkle" && hasResparkled),
+                        green: action.id === "resparkle",
                       })}
                     >
                       {action.value}
@@ -277,6 +280,10 @@ const Block = styled.div`
 
         &.colored {
           color: var(--theme-color);
+        }
+
+        &.green {
+          color: #17bf63;
         }
       }
     }

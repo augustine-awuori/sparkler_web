@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useRef, useState } from "react";
 import { Activity as MainActivity } from "getstream";
-import { Box } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 
 import { Activity, randomImageUrl } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
@@ -47,6 +47,7 @@ export default function SparkleContent({ activity }: Props) {
   const likesCount = appActivity.reaction_counts.like || 0;
   const resparklesCount = appActivity.reaction_counts.resparkle || "0";
   const hasLikedSparkled = checkIfHasLiked(appActivity);
+  const hasBeenResparkled = checkIfHasResparkled(appActivity);
 
   const onToggleLike = async () => {
     await toggleLike(activity, hasLikedSparkled);
@@ -98,7 +99,7 @@ export default function SparkleContent({ activity }: Props) {
           onQuote={quoteSparkle}
           onResparkle={console.log}
           position={popupPosition}
-          hasBeenResparkled={checkIfHasResparkled(appActivity)}
+          hasBeenResparkled={hasBeenResparkled}
         />
       )}
       {commentDialogOpened && (
@@ -111,7 +112,8 @@ export default function SparkleContent({ activity }: Props) {
       <Container>
         <Link to={`/${tweetActor.id}`} className="user">
           <figure className="user__image">
-            <img
+            <Image
+              objectFit="cover"
               src={tweetActor?.profileImage || randomImageUrl}
               alt="profile"
             />
@@ -173,6 +175,8 @@ export default function SparkleContent({ activity }: Props) {
                   color={
                     action.id === "heart" && hasLikedSparkled
                       ? "var(--theme-color)"
+                      : action.id === "resparkle" && hasBeenResparkled
+                      ? "#17BF63"
                       : "#888"
                   }
                   fill={action.id === "heart" && hasLikedSparkled && true}
