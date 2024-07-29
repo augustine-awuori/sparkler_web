@@ -19,7 +19,7 @@ import More from "../icons/More";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
 import ResparklePopup from "../sparkle/ResparklePopup";
-import { useActivity } from "../../hooks";
+import { useActivity, useSparkle } from "../../hooks";
 import { Box } from "@chakra-ui/react";
 
 interface Props {
@@ -37,6 +37,7 @@ export default function SparkleContent({ activity }: Props) {
   const navigate = useNavigate();
   const { setActivity } = useActivity();
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
+  const { checkIfHasResparkled } = useSparkle();
 
   const time = format(new Date(activity.time), "p");
   const date = format(new Date(activity.time), "PP");
@@ -44,7 +45,6 @@ export default function SparkleContent({ activity }: Props) {
   const appActivity = activity as unknown as Activity;
   const tweet = appActivity.object.data;
   const tweetActor = appActivity.actor.data;
-
   const likesCount = appActivity.reaction_counts.like || 0;
   const resparklesCount = appActivity.reaction_counts.resparkle || "0";
 
@@ -107,6 +107,7 @@ export default function SparkleContent({ activity }: Props) {
           onQuote={quoteSparkle}
           onResparkle={console.log}
           position={popupPosition}
+          hasBeenResparkled={checkIfHasResparkled(appActivity)}
         />
       )}
       {commentDialogOpened && (

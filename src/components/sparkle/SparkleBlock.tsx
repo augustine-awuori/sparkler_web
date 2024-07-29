@@ -216,6 +216,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
         <ResparklePopup
           onClose={() => setResparklePopupOpened(false)}
           onResparkle={handleResparkle}
+          hasBeenResparkled={hasResparkled}
           onQuote={quoteSparkle}
           position={popupPosition}
         />

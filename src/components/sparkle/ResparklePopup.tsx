@@ -3,13 +3,6 @@ import { FaPencilAlt } from "react-icons/fa";
 import styled from "styled-components";
 import Retweet from "../icons/Retweet";
 
-interface PopupProps {
-  onClose: () => void;
-  onResparkle: () => void;
-  onQuote: () => void;
-  position: { top: number; left: number };
-}
-
 interface OptionProps extends FlexProps {
   Icon: JSX.Element;
   label: string;
@@ -31,11 +24,20 @@ const Option = ({ Icon, label, ...rest }: OptionProps) => (
   </Flex>
 );
 
+interface PopupProps {
+  hasBeenResparkled: boolean;
+  onClose: () => void;
+  onQuote: () => void;
+  onResparkle: () => void;
+  position: { top: number; left: number };
+}
+
 const ResparklePopup: React.FC<PopupProps> = ({
   onClose,
   onResparkle,
   onQuote,
   position,
+  hasBeenResparkled,
 }) => {
   const handleResparkle = () => {
     onClose();
@@ -55,7 +57,7 @@ const ResparklePopup: React.FC<PopupProps> = ({
       >
         <Option
           Icon={<Retweet color="#fff" />}
-          label="Resparkle"
+          label={hasBeenResparkled ? "Undo Resparkle" : "Resparkle"}
           onClick={handleResparkle}
         />
         <Option Icon={<FaPencilAlt />} label="Quote" onClick={handleQuote} />
