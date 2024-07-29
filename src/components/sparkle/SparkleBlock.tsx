@@ -40,35 +40,28 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
   const { setActivity } = useActivity();
   const { toggleResparkle } = useResparkle();
-  const { deleteSparkle } = useSparkle();
+  const { deleteSparkle, checkIfHasResparkled } = useSparkle();
   const isAReaction = activity.foreign_id.startsWith("reaction");
-  const tweet = isAReaction
+  const sparkle = isAReaction
     ? (activity.object as unknown as AppActivity).object.data
     : (activity.object as unknown as ActivityObject).data;
 
   useEffect(() => {
-    if (isAReaction && !tweet) deleteSparkle(activity.id);
-  }, [activity.id, deleteSparkle, isAReaction, tweet]);
+    if (isAReaction && !sparkle) deleteSparkle(activity.id);
+  }, [activity.id, deleteSparkle, isAReaction, sparkle]);
 
   const appActivity = isAReaction
     ? (activity.object as unknown as AppActivity)
     : (activity as unknown as AppActivity);
   const actor = appActivity.actor;
   let hasLikedSparkle = false;
-  let hasResparkled = false;
+  const hasResparkled = checkIfHasResparkled(appActivity);
 
   if (appActivity?.own_reactions?.like && user) {
     const myReaction = appActivity.own_reactions.like.find(
       (l) => l.user.id === user?.id
     );
     hasLikedSparkle = Boolean(myReaction);
-  }
-
-  if (appActivity?.own_reactions?.resparkle && user) {
-    const myReaction = appActivity.own_reactions.resparkle.find(
-      (act) => act.user.id === user.id
-    );
-    hasResparkled = Boolean(myReaction);
   }
 
   const onToggleLike = () => toggleLike(activity, hasLikedSparkle);
@@ -166,7 +159,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                   className="tweet__text"
                   dangerouslySetInnerHTML={{
                     __html: formatStringWithLink(
-                      (tweet || { text: "" }).text,
+                      (sparkle || { text: "" }).text,
                       "tweet__text--link"
                     ).replace(/\n/g, "<br/>"),
                   }}

@@ -1,9 +1,12 @@
 import { nanoid } from "nanoid";
 import { useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
+import { Activity } from "../utils/types";
+import useUser from "./useUser";
 
 export default function useSparkle() {
   const { client } = useStreamContext();
+  const { user } = useUser();
 
   const userFeed = client?.feed("user", client.userId);
 
@@ -30,5 +33,18 @@ export default function useSparkle() {
     userFeed?.removeActivity(sparkleId);
   };
 
-  return { createSparkle, deleteSparkle };
+  const checkIfHasResparkled = (activity: Activity) => {
+    let hasResparkled = false;
+
+    if (activity?.own_reactions?.resparkle && user) {
+      const myReaction = activity.own_reactions.resparkle.find(
+        (act) => act.user.id === user._id
+      );
+      hasResparkled = Boolean(myReaction);
+    }
+
+    return hasResparkled;
+  };
+
+  return { createSparkle, deleteSparkle, checkIfHasResparkled };
 }

@@ -20,6 +20,7 @@ import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
 import ResparklePopup from "../sparkle/ResparklePopup";
 import { useActivity } from "../../hooks";
+import { Box } from "@chakra-ui/react";
 
 interface Props {
   activity: MainActivity;
@@ -44,17 +45,20 @@ export default function SparkleContent({ activity }: Props) {
   const tweet = appActivity.object.data;
   const tweetActor = appActivity.actor.data;
 
-  let hasLikedTweet = false;
+  const likesCount = appActivity.reaction_counts.like || 0;
+  const resparklesCount = appActivity.reaction_counts.resparkle || "0";
+
+  let hasLikedSparkled = false;
 
   if (appActivity?.own_reactions?.like) {
     const myReaction = appActivity.own_reactions.like.find(
       (l) => l.user.id === client?.userId
     );
-    hasLikedTweet = Boolean(myReaction);
+    hasLikedSparkled = Boolean(myReaction);
   }
 
   const onToggleLike = async () => {
-    await toggleLike(activity, hasLikedTweet);
+    await toggleLike(activity, hasLikedSparkled);
     feed.refresh();
   };
 
@@ -65,7 +69,7 @@ export default function SparkleContent({ activity }: Props) {
       onClick: () => setCommentDialogOpened(true),
     },
     {
-      id: "retweet",
+      id: "resparkle",
       Icon: Retweet,
       onClick: (_e: React.MouseEvent<HTMLButtonElement>) => {
         const buttonRect = resparkleButtonRef.current!.getBoundingClientRect();
@@ -151,12 +155,19 @@ export default function SparkleContent({ activity }: Props) {
           </div>
 
           <div className="tweet__reactions">
-            <div className="tweet__reactions__likes">
-              <span className="reaction-count">
-                {appActivity.reaction_counts.like || "0"}
+            <Box cursor="pointer" className="tweet__reactions__likes">
+              <span className="reaction-count">{likesCount}</span>
+              <span className="reaction-label">
+                Like{likesCount === 1 ? "" : "s"}
               </span>
-              <span className="reaction-label">Likes</span>
-            </div>
+            </Box>
+
+            <Box cursor="pointer" className="tweet__reactions__likes" ml={2}>
+              <span className="reaction-count">{resparklesCount}</span>
+              <span className="reaction-label">
+                Resparkle{resparklesCount === 1 ? "" : "s"}
+              </span>
+            </Box>
           </div>
 
           <div className="tweet__reactors">
@@ -164,15 +175,15 @@ export default function SparkleContent({ activity }: Props) {
               <button
                 onClick={action.onClick}
                 key={`reactor-${i}`}
-                ref={action.id === "retweet" ? resparkleButtonRef : null}
+                ref={action.id === "resparkle" ? resparkleButtonRef : null}
               >
                 <action.Icon
                   color={
-                    action.id === "heart" && hasLikedTweet
+                    action.id === "heart" && hasLikedSparkled
                       ? "var(--theme-color)"
                       : "#888"
                   }
-                  fill={action.id === "heart" && hasLikedTweet && true}
+                  fill={action.id === "heart" && hasLikedSparkled && true}
                   size={20}
                 />
               </button>
