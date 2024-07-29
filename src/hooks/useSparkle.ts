@@ -26,5 +26,9 @@ export default function useSparkle() {
     });
   };
 
-  return { createSparkle };
+  const deleteSparkle = (sparkleId: string) => {
+    userFeed?.removeActivity(sparkleId);
+  };
+
+  return { createSparkle, deleteSparkle };
 }

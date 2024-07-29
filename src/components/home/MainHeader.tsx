@@ -2,6 +2,15 @@ import styled from "styled-components";
 
 import Sparkler from "../icons/Twitter";
 
+export default function MainHeader() {
+  return (
+    <Header>
+      <h1>Home</h1>
+      <Sparkler color="white" />
+    </Header>
+  );
+}
+
 const Header = styled.header`
   display: flex;
   align-items: center;
@@ -17,12 +26,3 @@ const Header = styled.header`
     font-size: 20px;
   }
 `;
-
-export default function MainHeader() {
-  return (
-    <Header>
-      <h1>Home</h1>
-      <Sparkler color="white" />
-    </Header>
-  );
-}

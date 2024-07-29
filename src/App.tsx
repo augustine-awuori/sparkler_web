@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import { DefaultGenerics, StreamClient } from "getstream";
+import { Activity, DefaultGenerics, StreamClient } from "getstream";
 import { StreamApp } from "react-activity-feed";
 import { Box, Heading } from "@chakra-ui/react";
 
@@ -10,10 +10,11 @@ import {
   HomePage,
   NotificationsPage,
   ProfilePage,
+  QuoteSparklePage,
   ThreadPage,
 } from "./pages";
+import { ActivityContext, UserContext } from "./contexts";
 import { User } from "./users";
-import { UserContext } from "./components/contexts";
 import auth from "./services/auth";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -23,6 +24,7 @@ const key = "8hn252eegqq9";
 function App() {
   const [client, setClient] = useState<StreamClient<DefaultGenerics>>();
   const [user, setUser] = useState<User>();
+  const [activity, setActivity] = useState<Activity<DefaultGenerics>>();
 
   useEffect(() => {
     initUser();
@@ -69,13 +71,19 @@ function App() {
       <ScrollToTop />
       <Box fontFamily="quicksand">
         <UserContext.Provider value={{ setUser, user }}>
-          <Routes>
-            <Route element={<NotificationsPage />} path="/notifications" />
-            <Route element={<ThreadPage />} path="/:user_id/status/:id" />
-            <Route element={<EditProfilePage />} path="/:user_id/edit" />
-            <Route element={<ProfilePage />} path="/:user_id" />
-            <Route element={<HomePage />} path="/" />
-          </Routes>
+          <ActivityContext.Provider value={{ activity, setActivity }}>
+            <Routes>
+              <Route element={<NotificationsPage />} path="/notifications" />
+              <Route
+                element={<QuoteSparklePage />}
+                path="/:user_id/status/:id/quote"
+              />
+              <Route element={<ThreadPage />} path="/:user_id/status/:id" />
+              <Route element={<EditProfilePage />} path="/:user_id/edit" />
+              <Route element={<ProfilePage />} path="/:user_id" />
+              <Route element={<HomePage />} path="/" />
+            </Routes>
+          </ActivityContext.Provider>
         </UserContext.Provider>
       </Box>
     </StreamApp>

@@ -3,7 +3,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import styled from "styled-components";
 import Retweet from "../icons/Retweet";
 
-interface RetweetPopupProps {
+interface PopupProps {
   onClose: () => void;
   onResparkle: () => void;
   onQuote: () => void;
@@ -31,12 +31,22 @@ const Option = ({ Icon, label, ...rest }: OptionProps) => (
   </Flex>
 );
 
-const ResparklePopup: React.FC<RetweetPopupProps> = ({
+const ResparklePopup: React.FC<PopupProps> = ({
   onClose,
   onResparkle,
   onQuote,
   position,
 }) => {
+  const handleResparkle = () => {
+    onClose();
+    onResparkle();
+  };
+
+  const handleQuote = () => {
+    onClose();
+    onQuote();
+  };
+
   return (
     <PopupOverlay onClick={onClose}>
       <PopupContainer
@@ -46,9 +56,9 @@ const ResparklePopup: React.FC<RetweetPopupProps> = ({
         <Option
           Icon={<Retweet color="#fff" />}
           label="Resparkle"
-          onClick={onResparkle}
+          onClick={handleResparkle}
         />
-        <Option Icon={<FaPencilAlt />} label="Quote" onClick={onQuote} />
+        <Option Icon={<FaPencilAlt />} label="Quote" onClick={handleQuote} />
       </PopupContainer>
     </PopupOverlay>
   );

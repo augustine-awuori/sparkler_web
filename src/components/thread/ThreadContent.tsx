@@ -7,7 +7,7 @@ import { Map } from "immutable";
 import { Activity as AppActivity } from "../../utils/types";
 import { generateSparkleLink } from "../../utils/links";
 import LoadingIndicator from "../LoadingIndicator";
-import ThreadHeader from "./ThreadHeader";
+import ThreadHeader from "../Header";
 import TweetContent from "./SparkleContent";
 
 export default function ThreadContent() {

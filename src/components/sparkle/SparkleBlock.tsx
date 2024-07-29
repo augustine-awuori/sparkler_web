@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useStreamContext } from "react-activity-feed";
-import { Image } from "@chakra-ui/react";
+import { Flex, Image, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import classNames from "classnames";
@@ -9,11 +9,17 @@ import { Activity } from "getstream";
 import { Activity as AppActivity, ActivityObject } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import { generateSparkleLink } from "../../utils/links";
-import { useComment, useLike } from "../../hooks";
+import {
+  useActivity,
+  useComment,
+  useLike,
+  useResparkle,
+  useSparkle,
+} from "../../hooks";
 import Comment from "../icons/Comment";
 import CommentDialog from "./CommentDialog ";
 import Heart from "../icons/Heart";
-import More from "../icons/More";
+// import More from "../icons/More";
 import ResparklePopup from "./ResparklePopup";
 import Retweet from "../icons/Retweet";
 import TweetActorName from "./SparkleActorName";
@@ -31,12 +37,25 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
   const [retweetPopupOpened, setResparklePopupOpened] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-  const retweetButtonRef = useRef<HTMLButtonElement>(null);
+  const resparkleButtonRef = useRef<HTMLButtonElement>(null);
+  const { setActivity } = useActivity();
+  const { toggleResparkle } = useResparkle();
+  const { deleteSparkle } = useSparkle();
+  const isAReaction = activity.foreign_id.startsWith("reaction");
+  const tweet = isAReaction
+    ? (activity.object as unknown as AppActivity).object.data
+    : (activity.object as unknown as ActivityObject).data;
 
-  const appActivity = activity as unknown as AppActivity;
+  useEffect(() => {
+    if (isAReaction && !tweet) deleteSparkle(activity.id);
+  }, [activity.id, deleteSparkle, isAReaction, tweet]);
+
+  const appActivity = isAReaction
+    ? (activity.object as unknown as AppActivity)
+    : (activity as unknown as AppActivity);
   const actor = appActivity.actor;
   let hasLikedSparkle = false;
-  const tweet = (activity.object as unknown as ActivityObject).data;
+  let hasResparkled = false;
 
   if (appActivity?.own_reactions?.like && user) {
     const myReaction = appActivity.own_reactions.like.find(
@@ -45,7 +64,16 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     hasLikedSparkle = Boolean(myReaction);
   }
 
+  if (appActivity?.own_reactions?.resparkle && user) {
+    const myReaction = appActivity.own_reactions.resparkle.find(
+      (act) => act.user.id === user.id
+    );
+    hasResparkled = Boolean(myReaction);
+  }
+
   const onToggleLike = () => toggleLike(activity, hasLikedSparkle);
+
+  const handleResparkle = () => toggleResparkle(activity, hasResparkled);
 
   const actions = [
     {
@@ -56,12 +84,12 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
       onClick: () => setCommentDialogOpened(true),
     },
     {
-      id: "retweet",
+      id: "resparkle",
       Icon: Retweet,
-      alt: "Retweet",
-      value: 0,
+      alt: "Resparkle",
+      value: appActivity.reaction_counts.resparkle || 0,
       onClick: (_e: React.MouseEvent<HTMLButtonElement>) => {
-        const buttonRect = retweetButtonRef.current!.getBoundingClientRect();
+        const buttonRect = resparkleButtonRef.current!.getBoundingClientRect();
         setPopupPosition({
           top: buttonRect.top - 10,
           left: buttonRect.left,
@@ -90,76 +118,99 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const onPostComment = async (text: string) =>
     await createComment(text, activity);
 
+  const quoteSparkle = () => {
+    setActivity(activity);
+    navigate(`/${actor.data.username}/status/${activity.id}/quote`);
+  };
+
+  const getColor = (name: string) => {
+    if (name === "heart")
+      return hasLikedSparkle ? "var(--theme-color)" : "#777";
+    else if (name === "resparkle") return hasResparkled ? "#e234eb" : "#777";
+    return "#777";
+  };
+
+  const getResparklerName = () => {
+    const act = activity as unknown as AppActivity;
+    const isSparkler = user?.id === act.actor.id;
+
+    return isSparkler ? "You" : act.actor.data.name;
+  };
+
   return (
     <>
       <Block>
-        <figure className="user-image">
-          <Image
-            src={actor.data.profileImage || "https://picsum.photos/500/300"}
-            alt="profile"
-          />
-        </figure>
-        <div className="tweet">
-          <button onClick={() => navigate(sparkleLink)} className="link">
-            <TweetActorName
-              name={actor.data.name}
-              id={actor.id}
-              username={actor.data.username}
-              time={activity.time}
+        {isAReaction && (
+          <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={10}>
+            <Retweet color="#777" size={13} />
+            <Text ml={1}>{getResparklerName()} resparkled</Text>
+          </Flex>
+        )}
+        <Flex>
+          <figure className="user-image">
+            <Image
+              src={actor.data.profileImage || "https://picsum.photos/500/300"}
+              alt="profile"
             />
-            <div className="tweet__details">
-              <p
-                className="tweet__text"
-                dangerouslySetInnerHTML={{
-                  __html: formatStringWithLink(
-                    tweet.text,
-                    "tweet__text--link"
-                  ).replace(/\n/g, "<br/>"),
-                }}
+          </figure>
+          <div className="tweet">
+            <button onClick={() => navigate(sparkleLink)} className="link">
+              <TweetActorName
+                name={actor.data.name}
+                id={actor.id}
+                username={actor.data.username}
+                time={activity.time}
               />
-            </div>
-          </button>
-
-          <div className="tweet__actions">
-            {actions.map((action) => {
-              return (
-                <button
-                  ref={action.id === "retweet" ? retweetButtonRef : null}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    action.onClick?.(e);
+              <div className="tweet__details">
+                <p
+                  className="tweet__text"
+                  dangerouslySetInnerHTML={{
+                    __html: formatStringWithLink(
+                      (tweet || { text: "" }).text,
+                      "tweet__text--link"
+                    ).replace(/\n/g, "<br/>"),
                   }}
-                  key={action.id}
-                  type="button"
-                >
-                  <action.Icon
-                    color={
-                      action.id === "heart" && hasLikedSparkle
-                        ? "var(--theme-color)"
-                        : "#777"
-                    }
-                    size={17}
-                    fill={
-                      action.id === "heart" && hasLikedSparkle
-                        ? true
-                        : undefined
-                    }
-                  />
-                  <span
-                    className={classNames("tweet__actions__value", {
-                      colored: action.id === "heart" && hasLikedSparkle,
-                    })}
+                />
+              </div>
+            </button>
+
+            <div className="tweet__actions">
+              {actions.map((action) => {
+                return (
+                  <button
+                    ref={action.id === "resparkle" ? resparkleButtonRef : null}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      action.onClick?.(e);
+                    }}
+                    key={action.id}
+                    type="button"
                   >
-                    {action.value}
-                  </span>
-                </button>
-              );
-            })}
+                    <action.Icon
+                      color={getColor(action.id)}
+                      size={17}
+                      fill={
+                        action.id === "heart" && hasLikedSparkle
+                          ? true
+                          : undefined
+                      }
+                    />
+                    <span
+                      className={classNames("tweet__actions__value", {
+                        colored: action.id === "heart" && hasLikedSparkle,
+                      })}
+                    >
+                      {action.value}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
-        <button className="more">
-          <More color="#777" size={20} />
-        </button>
+          {/* <button className="more">
+            <More color="#777" size={20} />
+          </button> */}
+        </Flex>
       </Block>
       {activity.id && commentDialogOpened && (
         <CommentDialog
@@ -171,8 +222,8 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
       {retweetPopupOpened && (
         <ResparklePopup
           onClose={() => setResparklePopupOpened(false)}
-          onResparkle={() => console.log("Resparkle clicked")}
-          onQuote={() => console.log("Quote clicked")}
+          onResparkle={handleResparkle}
+          onQuote={quoteSparkle}
           position={popupPosition}
         />
       )}
@@ -181,7 +232,6 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
 };
 
 const Block = styled.div`
-  display: flex;
   border-bottom: 1px solid #333;
   padding: 15px;
 
@@ -193,6 +243,7 @@ const Block = styled.div`
     border-radius: 50%;
     overflow: hidden;
     margin-right: 10px;
+    margin-top: 5px;
 
     img {
       width: 100%;

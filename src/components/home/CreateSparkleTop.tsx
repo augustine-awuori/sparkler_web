@@ -3,11 +3,7 @@ import styled from "styled-components";
 import { useSparkle } from "../../hooks";
 import SparkleForm from "../sparkle/SparkleForm";
 
-const Container = styled.div`
-  padding: 15px;
-`;
-
-export default function CreateTweetTop() {
+export default function CreateSparkleTop() {
   const { createSparkle } = useSparkle();
 
   const onSubmit = async (text: string) => {
@@ -20,3 +16,7 @@ export default function CreateTweetTop() {
     </Container>
   );
 }
+
+const Container = styled.div`
+  padding: 15px;
+`;

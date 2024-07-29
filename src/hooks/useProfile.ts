@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { ProfileContext } from "../components/contexts";
+import { ProfileContext } from "../contexts";
 import { ActivityActor } from "../utils/types";
 
 const useProfile = () => {

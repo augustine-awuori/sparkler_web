@@ -45,6 +45,17 @@ interface Like extends Common {
   user_id: string;
 }
 
+interface Resparkle extends Common {
+  activity_id: string;
+  children_counts: object;
+  data: object;
+  kind: "resparkle";
+  latest_children: object;
+  parent: string;
+  user: ActivityActor;
+  user_id: string;
+}
+
 export type Activity = {
   id: string;
   actor: ActivityActor;
@@ -57,8 +68,9 @@ export type Activity = {
   own_reactions: {
     comment?: Comment[];
     like?: Like[];
+    resparkle?: Resparkle[];
   };
-  reaction_counts: { comment?: number; like?: number };
+  reaction_counts: { comment?: number; like?: number; resparkle?: number };
   target: string;
   verb: string;
 };

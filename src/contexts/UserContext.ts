@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { User } from "../../users";
+import { User } from "../users";
 
 export interface UserContextValue {
   user: User | undefined;

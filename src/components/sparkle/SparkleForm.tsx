@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import classNames from "classnames";
 import { useStreamContext } from "react-activity-feed";
 import styled from "styled-components";
 
@@ -10,7 +9,8 @@ import Emoji from "../icons/Emoji";
 import Gif from "../icons/Gif";
 import Image from "../icons/Image";
 import Poll from "../icons/Poll";
-import ProgressRing from "../icons/ProgressRing";
+import TextProgressRing from "../TextProgressRing";
+import TextArea from "../TextArea";
 
 interface FormProps {
   inline?: boolean;
@@ -51,6 +51,8 @@ interface SparkleFormProps {
   replyingTo?: string | null;
 }
 
+export const MAX_CHARS = 280;
+
 export default function SparkleForm({
   submitText = "Sparkle",
   onSubmit,
@@ -73,32 +75,22 @@ export default function SparkleForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldFocus, client?.currentUser, user?._id]);
 
-  const MAX_CHARS = 280;
-
-  const percentage =
-    text.length >= MAX_CHARS ? 100 : (text.length / MAX_CHARS) * 100;
-
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (exceededMax)
-      return alert("Tweet cannot exceed " + MAX_CHARS + " characters");
+      return alert("Sparkle cannot exceed " + MAX_CHARS + " characters");
 
     await onSubmit(text);
 
     setText("");
   };
 
-  const onClick = () => {
-    setExpanded(true);
-  };
+  const onClick = () => setExpanded(true);
 
   const isInputEmpty = !Boolean(text);
-
   const charsLeft = MAX_CHARS - text.length;
-  const maxAlmostReached = charsLeft <= 20;
   const exceededMax = charsLeft < 0;
-
   const isReplying = Boolean(replyingTo);
 
   return (
@@ -121,7 +113,7 @@ export default function SparkleForm({
           />
         </figure>
         <div className="input-section">
-          <textarea
+          <TextArea
             ref={inputRef}
             onChange={(e) => setText(e.target.value)}
             placeholder={placeholder}
@@ -143,32 +135,7 @@ export default function SparkleForm({
                 );
               })}
             <div className="right">
-              {!isInputEmpty && (
-                <div className="tweet-length">
-                  <ProgressRing
-                    stroke={2.2}
-                    color={
-                      exceededMax
-                        ? "red"
-                        : maxAlmostReached
-                        ? "#ffd400"
-                        : "var(--theme-color)"
-                    }
-                    radius={maxAlmostReached ? 19 : 14}
-                    progress={percentage}
-                  />
-                  {maxAlmostReached && (
-                    <span
-                      className={classNames(
-                        "tweet-length__text",
-                        exceededMax && "red"
-                      )}
-                    >
-                      {charsLeft}
-                    </span>
-                  )}
-                </div>
-              )}
+              <TextProgressRing textLength={text.length} />
               {!isInputEmpty && <hr className="divider" />}
               <button
                 type="submit"
@@ -232,19 +199,6 @@ const Form = styled.form<FormProps>`
     height: ${({ inline, minheight: minHeight }) =>
       inline ? "40px" : minHeight};
 
-    textarea {
-      padding-top: 10px;
-      background: none;
-      border: none;
-      padding-bottom: 0;
-      font-size: 18px;
-      width: 100%;
-      flex: 1;
-      resize: none;
-      outline: none;
-      color: white;
-    }
-
     .actions {
       margin-top: ${({ inline }) => (inline ? "0" : "auto")};
       display: flex;
@@ -264,37 +218,12 @@ const Form = styled.form<FormProps>`
         align-items: center;
       }
 
-      .tweet-length {
-        position: relative;
-
-        svg {
-          position: relative;
-          top: 2px;
-        }
-
-        &__text {
-          position: absolute;
-          color: #888;
-          font-size: 14px;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          margin: auto;
-          height: max-content;
-          width: max-content;
-
-          &.red {
-            color: red;
-          }
-        }
-      }
-
       .divider {
         height: 30px;
         width: 2px;
         border: none;
         background-color: #444;
+        border-radius: 5px;
         margin: 0 18px;
       }
 

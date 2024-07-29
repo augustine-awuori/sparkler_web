@@ -10,13 +10,13 @@ export default function useLike() {
   const { createNotification } = useNotification();
   const { user } = useUser();
 
-  const toggleLike = async (activity: Activity, hasLikedTweet: boolean) => {
+  const toggleLike = async (activity: Activity, hasLikedSparkle: boolean) => {
     const appActivity = activity as unknown as AppActivity;
     const actor = appActivity.actor;
 
     await feed.onToggleReaction("like", activity);
 
-    if (!hasLikedTweet && actor.id !== user?._id)
+    if (!hasLikedSparkle && actor.id !== user?._id)
       createNotification(
         actor.id,
         "like",

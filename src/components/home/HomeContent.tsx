@@ -2,10 +2,35 @@ import styled from "styled-components";
 import { Feed } from "react-activity-feed";
 
 import { useUser } from "../../hooks";
-import CreateTweetTop from "./CreateSparkleTop";
+import CreateSparkleTop from "./CreateSparkleTop";
 import MainHeader from "./MainHeader";
 import Timeline from "./Timeline";
 import LoadingIndicator from "../LoadingIndicator";
+
+export default function HomeContent() {
+  const { user } = useUser();
+
+  if (!user)
+    return (
+      <Container>
+        <LoadingIndicator />
+      </Container>
+    );
+
+  return (
+    <Container>
+      <div className="header">
+        <MainHeader />
+      </div>
+      <Feed feedGroup="user">
+        <div className="create-tweet-top">
+          <CreateSparkleTop />
+        </div>
+        <Timeline />
+      </Feed>
+    </Container>
+  );
+}
 
 const Container = styled.div`
   .header {
@@ -32,28 +57,3 @@ const Container = styled.div`
     }
   }
 `;
-
-export default function HomeContent() {
-  const { user } = useUser();
-
-  if (!user)
-    return (
-      <Container>
-        <LoadingIndicator />
-      </Container>
-    );
-
-  return (
-    <Container>
-      <div className="header">
-        <MainHeader />
-      </div>
-      <Feed feedGroup="user">
-        <div className="create-tweet-top">
-          <CreateTweetTop />
-        </div>
-        <Timeline />
-      </Feed>
-    </Container>
-  );
-}

@@ -4,8 +4,8 @@ import { useStreamContext } from "react-activity-feed";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { FeedUser } from "../contexts/ProfileContext";
-import { ProfileContext } from "../contexts";
+import { FeedUser } from "../../contexts/ProfileContext";
+import { ProfileContext } from "../../contexts";
 import { User } from "../../users";
 import ProfileHeader from "./ProfileHeader";
 import LoadingIndicator from "../LoadingIndicator";
