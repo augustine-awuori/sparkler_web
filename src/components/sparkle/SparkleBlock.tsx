@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useStreamContext } from "react-activity-feed";
-import { Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import classNames from "classnames";
@@ -131,7 +131,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   };
 
   return (
-    <>
+    <Box>
       <Block>
         {isAReaction && (
           <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={10}>
@@ -139,7 +139,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
             <Text ml={1}>{getResparklerName()} resparkled</Text>
           </Flex>
         )}
-        <Flex>
+        <Flex onClick={() => navigate(sparkleLink)} cursor="pointer">
           <figure className="user-image">
             <Image
               src={actor.data.profileImage || "https://picsum.photos/500/300"}
@@ -147,7 +147,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
             />
           </figure>
           <div className="tweet">
-            <button onClick={() => navigate(sparkleLink)} className="link">
+            <button className="link">
               <TweetActorName
                 name={actor.data.name}
                 id={actor.id}
@@ -167,7 +167,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
               </div>
             </button>
 
-            <div className="tweet__actions">
+            <div className="tweet__actions" onClick={console.log}>
               {actions.map((action) => {
                 return (
                   <button
@@ -221,7 +221,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
           position={popupPosition}
         />
       )}
-    </>
+    </Box>
   );
 };
 
