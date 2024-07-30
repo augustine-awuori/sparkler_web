@@ -57,9 +57,11 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const hasLikedSparkle = checkIfHasLiked(appActivity);
   const hasResparkled = checkIfHasResparkled(appActivity);
 
-  const onToggleLike = () => toggleLike(activity, hasLikedSparkle);
+  const onToggleLike = () =>
+    toggleLike(appActivity as unknown as Activity, hasLikedSparkle);
 
-  const handleResparkle = () => toggleResparkle(activity, hasResparkled);
+  const handleResparkle = () =>
+    toggleResparkle(appActivity as unknown as Activity, hasResparkled);
 
   const actions = [
     {
@@ -175,11 +177,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                     <action.Icon
                       color={getColor(action.id)}
                       size={17}
-                      fill={
-                        action.id === "heart" && hasLikedSparkle
-                          ? true
-                          : undefined
-                      }
+                      fill={action.id === "heart" && hasLikedSparkle}
                     />
                     <span
                       className={classNames("tweet__actions__value", {

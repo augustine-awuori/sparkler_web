@@ -36,7 +36,7 @@ export default function useComment() {
       console.error("Activity is empty or undefined.");
       return;
     }
-    console.log("comment activity", activity);
+
     const appActivity = activity as unknown as AppActivity;
     const actor = appActivity.actor;
 
