@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { FeedUser } from "../../contexts/ProfileContext";
 import { ProfileContext } from "../../contexts";
 import { User } from "../../users";
+import { useTitleChanger } from "../../hooks";
 import ProfileHeader from "./ProfileHeader";
 import LoadingIndicator from "../LoadingIndicator";
 import ProfileBio from "./ProfileBio";
@@ -18,6 +19,7 @@ export default function ProfileContent() {
   const [user, setUser] = useState<FeedUser>();
   const { user_id } = useParams();
   const navigate = useNavigate();
+  useTitleChanger((user?.data as User)?.name || "User Profile");
 
   useEffect(() => {
     if (!user_id) return;
