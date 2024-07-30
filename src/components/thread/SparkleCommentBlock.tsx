@@ -5,54 +5,6 @@ import { formatStringWithLink } from "../../utils/string";
 import More from "../icons/More";
 import SparkleActorName from "../sparkle/SparkleActorName";
 
-const Block = styled.div`
-  display: flex;
-  border-bottom: 1px solid #333;
-  padding: 15px 0;
-
-  .user-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 15px;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .comment-tweet {
-    flex: 1;
-    .link {
-      display: block;
-      padding-bottom: 5px;
-      text-decoration: none;
-    }
-
-    &__text {
-      color: white;
-      font-size: 15px;
-      line-height: 20px;
-      margin-top: 3px;
-
-      &--link {
-        color: var(--theme-color);
-        text-decoration: none;
-      }
-    }
-  }
-
-  .more {
-    width: 30px;
-    height: 20px;
-    display: flex;
-    opacity: 0.6;
-  }
-`;
-
 interface Props {
   comment: Comment;
 }
@@ -94,3 +46,53 @@ export default function SparkleCommentBlock({ comment }: Props) {
     </Block>
   );
 }
+
+const Block = styled.div`
+  display: flex;
+  border-bottom: 1px solid #333;
+  padding: 15px 0;
+
+  .user-image {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .comment-tweet {
+    flex: 1;
+    .link {
+      display: block;
+      padding-bottom: 5px;
+      text-decoration: none;
+    }
+
+    &__text {
+      color: white;
+      font-size: 15px;
+      line-height: 20px;
+      margin-top: 3px;
+
+      &--link {
+        color: var(--theme-color);
+        text-decoration: none;
+      }
+    }
+  }
+
+  .more {
+    width: 30px;
+    height: 20px;
+    display: flex;
+    opacity: 0.6;
+  }
+`;
