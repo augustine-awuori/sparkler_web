@@ -102,7 +102,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     : "#";
 
   const onPostComment = async (text: string) =>
-    await createComment(text, activity);
+    await createComment(text, appActivity as unknown as Activity);
 
   const quoteSparkle = () => {
     setActivity(activity);
@@ -186,7 +186,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                         colored:
                           (action.id === "heart" && hasLikedSparkle) ||
                           (action.id === "resparkle" && hasResparkled),
-                        green: action.id === "resparkle",
+                        green: action.id === "resparkle" && hasResparkled,
                       })}
                     >
                       {action.value}
@@ -201,11 +201,11 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
           </button> */}
         </Flex>
       </Block>
-      {activity.id && commentDialogOpened && (
+      {appActivity.id && commentDialogOpened && (
         <CommentDialog
           onPostComment={onPostComment}
           onClickOutside={() => setCommentDialogOpened(false)}
-          activity={activity}
+          activity={appActivity as unknown as Activity}
         />
       )}
       {retweetPopupOpened && (

@@ -69,7 +69,7 @@ export default function CommentDialog({
               submitText="Reply"
               placeholder="Sparkle your reply"
               onSubmit={onSubmit}
-              shouldFocus={true}
+              shouldFocus
             />
           </div>
         </BlockContent>
