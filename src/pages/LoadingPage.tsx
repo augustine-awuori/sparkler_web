@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Image, Text } from "@chakra-ui/react";
 
-import logo from "../assets/logo512.png";
+import logo from "../assets/logo.png";
 
 const LoadingPage: React.FC = () => {
   return (
@@ -11,7 +11,7 @@ const LoadingPage: React.FC = () => {
       alignItems="center"
       width="100vw"
       height="100vh"
-      bg="gray.900"
+      bg="inherit"
     >
       <Box textAlign="center">
         <Image src={logo} alt="Loading" width="80px" height="80px" />
