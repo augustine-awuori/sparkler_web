@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Activity, DefaultGenerics, StreamClient } from "getstream";
 import { StreamApp } from "react-activity-feed";
-import { Box, Heading } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import {
   AuthPages,
@@ -17,6 +17,7 @@ import { ActivityContext, UserContext } from "./contexts";
 import { User } from "./users";
 import auth from "./services/auth";
 import ScrollToTop from "./components/ScrollToTop";
+import LoadingPage from "./pages/LoadingPage";
 
 const id = "1322281";
 const key = "8hn252eegqq9";
@@ -64,7 +65,7 @@ function App() {
 
   if (!user) return <AuthPages />;
 
-  if (!client) return <Heading>Client Error</Heading>;
+  if (!client) return <LoadingPage />;
 
   return (
     <StreamApp token={user.feedToken} appId={id} apiKey={key}>
