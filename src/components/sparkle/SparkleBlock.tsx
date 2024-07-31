@@ -134,14 +134,17 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
             <Text ml={1}>{getResparklerName()} resparkled</Text>
           </Flex>
         )}
-        <Flex onClick={() => navigate(sparkleLink)} cursor="pointer">
-          <figure className="user-image">
+        <Flex cursor="pointer">
+          <figure
+            className="user-image"
+            onClick={() => navigate(`/${actor.data.username}`)}
+          >
             <Image
               src={actor.data.profileImage || "https://picsum.photos/500/300"}
               alt="profile"
             />
           </figure>
-          <div className="tweet">
+          <div className="tweet" onClick={() => navigate(sparkleLink)}>
             <button className="link">
               <TweetActorName
                 name={actor.data.name}
