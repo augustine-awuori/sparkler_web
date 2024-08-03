@@ -28,48 +28,42 @@ function App() {
   const [activity, setActivity] = useState<Activity<DefaultGenerics>>();
 
   useEffect(() => {
+    const initUser = () => {
+      if (!user) {
+        const currentUser = auth.getCurrentUser();
+        if (currentUser) setUser(currentUser);
+      }
+    };
+
+    const initClient = async () => {
+      try {
+        if (user) setClient(new StreamClient(key, user.feedToken, id));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     initUser();
     initClient();
-    updateUserDetailsWhenNecessary();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?._id]);
+  }, [user]);
 
-  const updateUserDetailsWhenNecessary = () => {
-    if (client?.currentUser?.data?.name === "Unknown" && user) {
-      client.currentUser.update({
-        id: client.userId,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        profileImage: user.avatar,
-      });
-    }
-  };
+  useEffect(() => {
+    const updateUserDetailsWhenNecessary = () => {
+      if (client?.currentUser?.data?.name === "Unknown" && user) {
+        client.currentUser.update({
+          id: client.userId,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          profileImage: user.avatar,
+        });
+      }
+    };
 
-  const initUser = () => {
-    if (!auth.getJwt()) {
-      auth.loginWithJwt(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjgzYmNkODRhMGJhZmNkOThiNDhkNzAiLCJlbWFpbCI6ImNvZGV3aXRoYXVndXN0aW5lQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYXVndXN0aW5lIiwiZmVlZFRva2VuIjoiZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SjFjMlZ5WDJsa0lqb2lOalk0TTJKalpEZzBZVEJpWVdaalpEazRZalE0WkRjd0luMC54NElVVnFSSllRa3NfeENGalVGTXNpTldobVkyREdXU0Nsbndod2NCUjBnIiwibmFtZSI6IkF1Z3VzdGluZSIsImlhdCI6MTcyMjM2OTczNH0.iXnryoCuFGJYiYipPkja0_F6sbJtgYVm5C6I3qLzc6M"
-      );
-      // eslint-disable-next-line no-self-assign
-      window.location.href = window.location.href;
+    if (client && user) {
+      updateUserDetailsWhenNecessary();
     }
-
-    if (!user) {
-      const currentUser = auth.getCurrentUser();
-      if (currentUser) setUser(currentUser);
-    }
-  };
-
-  async function initClient() {
-    try {
-      if (!user) return;
-      const client = new StreamClient(key, user.feedToken, id);
-      setClient(client);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  }, [client, user]);
 
   if (!user) return <AuthPages />;
 

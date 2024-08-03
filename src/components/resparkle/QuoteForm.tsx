@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Button } from "@chakra-ui/react";
-import { FaPaperPlane } from "react-icons/fa";
+import { BsSend } from "react-icons/bs";
 import { Navigate } from "react-router-dom";
 
 import { useActivity, useUser } from "../../hooks";
@@ -13,7 +13,7 @@ import TextProgressRing from "../TextProgressRing";
 interface QuoteFormProps {
   quote: string;
   onQuoteChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onQuoteSubmit: () => void;
+  onQuoteSubmit: () => Promise<void>;
 }
 
 const QuoteForm: React.FC<QuoteFormProps> = ({
@@ -47,7 +47,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({
                 bg="var(--theme-color)"
                 color="#fff"
                 _hover={{ bg: "var(--conc-theme-color)" }}
-                leftIcon={<FaPaperPlane />}
+                rightIcon={<BsSend />}
               >
                 Quote
               </Button>
@@ -65,6 +65,7 @@ const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
 
   .progress-ring {
     margin-left: auto;
@@ -87,19 +88,3 @@ const InputContainer = styled.div`
     margin: 0 15px;
   }
 `;
-
-// const Button = styled.button`
-//   align-self: flex-end;
-//   padding: 10px 20px;
-//   background: var(--theme-color);
-//   color: white;
-//   border: none;
-//   border-radius: 8px;
-//   cursor: pointer;
-//   font-size: 16px;
-//   font-weight: bold;
-
-//   &:hover {
-//     background: #0d8de4;
-//   }
-// `;

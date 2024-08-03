@@ -6,6 +6,10 @@ type Common = {
   updated_at: string;
 };
 
+export interface QuoteActivity extends Activity {
+  quoted_activity: Activity;
+}
+
 export interface ActivityActor extends Common {
   data: {
     id: string;

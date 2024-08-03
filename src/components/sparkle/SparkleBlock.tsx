@@ -6,20 +6,27 @@ import styled from "styled-components";
 import classNames from "classnames";
 import { Activity } from "getstream";
 
-import { Activity as AppActivity, ActivityObject } from "../../utils/types";
+import {
+  Activity as AppActivity,
+  ActivityObject,
+  QuoteActivity,
+} from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import { generateSparkleLink } from "../../utils/links";
 import {
   useActivity,
   useComment,
   useLike,
+  useQuoting,
   useResparkle,
   useSparkle,
 } from "../../hooks";
+// import More from "../icons/More";
+import { EmbeddedSparkleBlock } from "../resparkle";
 import Comment from "../icons/Comment";
 import CommentDialog from "./CommentDialog ";
 import Heart from "../icons/Heart";
-// import More from "../icons/More";
+import QuoteDialog from "../quote/QuoteDialog";
 import ResparklePopup from "./ResparklePopup";
 import Retweet from "../icons/Retweet";
 import TweetActorName from "./SparkleActorName";
@@ -35,17 +42,19 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const { createComment } = useComment();
   const navigate = useNavigate();
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
+  const [quoteDialogOpened, setQuoteDialogOpened] = useState(false);
   const [retweetPopupOpened, setResparklePopupOpened] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
   const { setActivity } = useActivity();
   const { toggleResparkle } = useResparkle();
+  const { createQuote } = useQuoting();
   const { deleteSparkle, checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const isAReaction = activity.foreign_id.startsWith("reaction");
   const sparkle = isAReaction
     ? (activity.object as unknown as AppActivity).object.data
     : (activity.object as unknown as ActivityObject).data;
-
+  console.log("Act", activity);
   useEffect(() => {
     if (isAReaction && !sparkle) deleteSparkle(activity.id);
   }, [activity.id, deleteSparkle, isAReaction, sparkle]);
@@ -56,6 +65,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const actor = appActivity.actor;
   const hasLikedSparkle = checkIfHasLiked(appActivity);
   const hasResparkled = checkIfHasResparkled(appActivity);
+  const isAQuote = activity.verb === "quote";
 
   const onToggleLike = () =>
     toggleLike(appActivity as unknown as Activity, hasLikedSparkle);
@@ -103,12 +113,12 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     ? generateSparkleLink(actor.data.username, appActivity.id)
     : "#";
 
-  const onPostComment = async (text: string) =>
+  const handlePostComment = async (text: string) =>
     await createComment(text, appActivity as unknown as Activity);
 
-  const quoteSparkle = () => {
-    setActivity(activity);
-    navigate(`/${actor.data.username}/status/${activity.id}/quote`);
+  const startQuoting = () => {
+    setActivity(appActivity as unknown as Activity);
+    setQuoteDialogOpened(true);
   };
 
   const getColor = (name: string) => {
@@ -123,6 +133,11 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     const isSparkler = user?.id === act.actor.id;
 
     return isSparkler ? "You" : act.actor.data.name;
+  };
+
+  const handleQuoteSubmit = async (quote: string) => {
+    await createComment(quote, appActivity as unknown as Activity, "quote");
+    await createQuote(quote, appActivity as unknown as Activity);
   };
 
   return (
@@ -164,7 +179,14 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                 />
               </div>
             </button>
-
+            {isAQuote && (
+              <EmbeddedSparkleBlock
+                activity={
+                  (appActivity as unknown as QuoteActivity)
+                    .quoted_activity as unknown as Activity
+                }
+              />
+            )}
             <div className="tweet__actions" onClick={console.log}>
               {actions.map((action) => {
                 return (
@@ -202,9 +224,16 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
           </button> */}
         </Flex>
       </Block>
+      {appActivity.id && quoteDialogOpened && (
+        <QuoteDialog
+          activity={appActivity as unknown as Activity}
+          onClose={() => setQuoteDialogOpened(false)}
+          onQuoteSubmit={handleQuoteSubmit}
+        />
+      )}
       {appActivity.id && commentDialogOpened && (
         <CommentDialog
-          onPostComment={onPostComment}
+          onPostComment={handlePostComment}
           onClickOutside={() => setCommentDialogOpened(false)}
           activity={appActivity as unknown as Activity}
         />
@@ -214,7 +243,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
           onClose={() => setResparklePopupOpened(false)}
           onResparkle={handleResparkle}
           hasBeenResparkled={hasResparkled}
-          onQuote={quoteSparkle}
+          onQuote={startQuoting}
           position={popupPosition}
         />
       )}

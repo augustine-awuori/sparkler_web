@@ -19,7 +19,7 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
   return (
     <EmbeddedBlock>
       <Flex fontSize="small">
-        <figure className="user-image">
+        <figure className="embedded-user-image">
           <Image
             src={actor.data.profileImage || "https://picsum.photos/500/300"}
             alt="profile"
@@ -54,12 +54,13 @@ const EmbeddedBlock = styled.div`
   border-radius: 8px;
   padding: 7px 10px;
   background-color: inherit;
+  margin-bottom: 5px;
 
-  .user-image {
-    width: 20px;
-    height: 20px;
-    min-width: 20px;
-    min-height: 20px;
+  .embedded-user-image {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
     border-radius: 50%;
     overflow: hidden;
     margin-right: 5px;

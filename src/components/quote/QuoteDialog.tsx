@@ -1,85 +1,59 @@
 import styled from "styled-components";
 import { Activity as MainActivity } from "getstream";
+import { useState } from "react";
 
 import { Activity, ActivityActor } from "../../utils/types";
-import { formatStringWithLink } from "../../utils/string";
+import { QuoteForm } from "../resparkle";
 import Modal from "../Modal";
-import SparkleActorName from "./SparkleActorName";
-import SparkleForm from "./SparkleForm";
 
 interface Props {
   activity: MainActivity;
-  onClickOutside: () => void;
-  onPostComment: (comment: string) => Promise<void>;
+  onClose: () => void;
+  onQuoteSubmit: (quote: string) => Promise<void>;
 }
 
-export default function CommentDialog({
+export default function QuoteDialog({
   activity,
-  onPostComment,
-  onClickOutside,
+  onQuoteSubmit,
+  onClose,
 }: Props) {
+  const [quote, setQuote] = useState("");
+
   const {
     object: { data: sparkle },
   } = activity as unknown as Activity;
 
   const sparkleActor = activity.actor as unknown as ActivityActor;
 
-  const handleCommentSubmit = async (text: string) => {
-    await onPostComment(text);
+  const handleQuoteSubmit = async () => {
+    await onQuoteSubmit(quote);
 
-    onClickOutside();
+    onClose();
   };
 
+  const handleQuoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+    setQuote(e.target.value);
+
   return (
-    <Container>
-      <Modal onClickOutside={onClickOutside} className="modal-block">
+    <MainContainer>
+      <Modal onClickOutside={onClose} className="modal-block">
         <BlockContent>
-          <div className="tweet">
-            <div className="img">
-              <img src={sparkleActor.data.profileImage} alt="" />
-            </div>
-            <div className="details">
-              <SparkleActorName
-                time={activity.time}
-                name={sparkleActor.data.name}
-                username={sparkleActor.data.username}
-                id={sparkleActor.data.id}
-              />
-              <p
-                className="tweet-text"
-                dangerouslySetInnerHTML={{
-                  __html: formatStringWithLink(
-                    sparkle.text,
-                    "tweet__text--link",
-                    true
-                  ).replace(/\n/g, "<br/>"),
-                }}
-              />
-              <div className="replying-info">
-                Replying to{" "}
-                <span className="replying-info--actor">
-                  @{sparkleActor.data.username}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="comment">
-            <SparkleForm
-              className="comment-form"
-              submitText="Reply"
-              placeholder="Sparkle your reply"
-              onSubmit={handleCommentSubmit}
-              shouldFocus
-            />
-          </div>
+          {/* <Container> */}
+          <QuoteForm
+            quote={quote}
+            onQuoteChange={handleQuoteChange}
+            onQuoteSubmit={handleQuoteSubmit}
+          />
+          {/* </Container> */}
         </BlockContent>
       </Modal>
-    </Container>
+    </MainContainer>
   );
 }
 
-const Container = styled.div`
+const MainContainer = styled.div`
   width: 100%;
+  max-width: 600px;
   display: flex;
   justify-content: center;
 
@@ -123,7 +97,7 @@ const BlockContent = styled.div`
     }
 
     .details {
-      width: calc(100% - 55px); /* Adjust based on img width and margin */
+      width: calc(100% - 55px);
 
       .actor-name {
         font-size: 15px;

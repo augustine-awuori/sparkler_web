@@ -6,6 +6,7 @@ export { default as useLike } from "./useLike";
 export { default as useNotification } from "./useNotification";
 export { default as useNewNotifications } from "./useNewNotifications";
 export { default as useProfile } from "./useProfile";
+export { default as useQuoting } from "./useQuoting";
 export { default as useResparkle } from "./useResparkle";
 export { default as useSparkle } from "./useSparkle";
 export { default as useTitleChanger } from "./useTitleChanger";

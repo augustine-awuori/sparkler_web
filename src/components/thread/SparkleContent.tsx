@@ -6,7 +6,8 @@ import { useRef, useState } from "react";
 import { Activity as MainActivity } from "getstream";
 import { Box, Image } from "@chakra-ui/react";
 
-import { Activity, randomImageUrl } from "../../utils/types";
+import { Activity, QuoteActivity, randomImageUrl } from "../../utils/types";
+import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
 import { useActivity, useSparkle } from "../../hooks";
 import BarChart from "../icons/BarChart";
@@ -48,6 +49,7 @@ export default function SparkleContent({ activity }: Props) {
   const resparklesCount = appActivity.reaction_counts.resparkle || "0";
   const hasLikedSparkled = checkIfHasLiked(appActivity);
   const hasBeenResparkled = checkIfHasResparkled(appActivity);
+  const isAQuote = activity.verb === "quote";
 
   const onToggleLike = async () => {
     await toggleLike(activity, hasLikedSparkled);
@@ -136,6 +138,14 @@ export default function SparkleContent({ activity }: Props) {
               ).replace(/\n/g, "<br/>"),
             }}
           />
+          {isAQuote && (
+            <EmbeddedSparkleBlock
+              activity={
+                (appActivity as unknown as QuoteActivity)
+                  .quoted_activity as unknown as MainActivity
+              }
+            />
+          )}
           <div className="tweet__time">
             <span className="tweet__time--time">{time}</span>
             <span className="tweet__time--date">{date}</span>

@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Activity } from "getstream";
+import { useNavigate } from "react-router-dom";
 
 import { QuoteForm } from "../components/resparkle";
-import { useActivity, useResparkle } from "../hooks";
-import Layout from "../components/Layout";
+import { useActivity, useComment } from "../hooks";
 import Header from "../components/Header";
+import Layout from "../components/Layout";
 
 const QuoteSparklePage: React.FC = () => {
   const [quote, setQuote] = useState("");
-  const { toggleResparkle: toggleSparkle } = useResparkle();
   const { activity } = useActivity();
+  const { createComment } = useComment();
+  const navigate = useNavigate();
 
   const handleQuoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setQuote(e.target.value);
 
-  const handleQuoteSubmit = () => {
-    // Handle quote submission logic (e.g., API call)
-    console.log("Quote submitted:", quote);
-    // if (activity) toggleSparkle(activity, quote);
+  const handleQuoteSubmit = async () => {
+    await createComment(quote, activity as unknown as Activity, "quote");
+    navigate(-1);
   };
 
   return (
