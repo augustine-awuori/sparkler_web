@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react";
-import { GiFairyWand } from "react-icons/gi";
 import { Link, useLocation } from "react-router-dom";
+import { IoSparkles } from "react-icons/io5";
 import classNames from "classnames";
 import styled from "styled-components";
 
@@ -117,7 +117,8 @@ export default function LeftSide({ onClickSparkle }: Props) {
       <Button
         onClick={onClickSparkle}
         className="tweet-btn"
-        leftIcon={<GiFairyWand color="#fff" />}
+        leftIcon={<IoSparkles color="#fff" />}
+        _hover={{ bg: "var(--conc-theme-color)" }}
       >
         Sparkle
       </Button>
