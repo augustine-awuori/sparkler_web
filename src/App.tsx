@@ -31,20 +31,20 @@ function App() {
   const [users, setUsers] = useState<Users>({});
 
   useEffect(() => {
-    const retrieveAllUsers = async () => {
+    const retrieveAllUsersInfo = async () => {
       let users: Users = {};
 
       const res = await usersService.getAllUsers();
       if (res.ok) {
-        (res.data as User[]).forEach((user) => {
-          if (!users[user.username]) users[user.username] = user._id;
+        (res.data as User[]).forEach(({ _id, username }) => {
+          if (!users[username]) users[username] = _id;
         });
       }
 
       setUsers(users);
     };
 
-    retrieveAllUsers();
+    retrieveAllUsersInfo();
   }, []);
 
   useEffect(() => {

@@ -54,7 +54,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const sparkle = isAReaction
     ? (activity.object as unknown as AppActivity).object.data
     : (activity.object as unknown as ActivityObject).data;
-  console.log("Act", activity);
+
   useEffect(() => {
     if (isAReaction && !sparkle) deleteSparkle(activity.id);
   }, [activity.id, deleteSparkle, isAReaction, sparkle]);
