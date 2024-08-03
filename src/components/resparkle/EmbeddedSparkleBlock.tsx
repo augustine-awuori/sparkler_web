@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Flex, Image } from "@chakra-ui/react";
 import { Activity, DefaultGenerics } from "getstream";
+import { useNavigate } from "react-router-dom";
 
 import { Activity as AppActivity } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
+  const navigate = useNavigate();
+
   const appActivity = activity as unknown as AppActivity;
   const actor = appActivity.actor;
   const sparkle = appActivity.object.data;
@@ -32,7 +35,12 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
           time={activity.time}
         />
       </Flex>
-      <div className="tweet__details">
+      <div
+        className="tweet__details"
+        onClick={() =>
+          navigate(`/${actor.data.username}/status/${activity.id}`)
+        }
+      >
         <p
           className="tweet__text"
           dangerouslySetInnerHTML={{
@@ -55,6 +63,7 @@ const EmbeddedBlock = styled.div`
   padding: 7px 10px;
   background-color: inherit;
   margin-bottom: 5px;
+  cursor: pointer;
 
   .embedded-user-image {
     width: 18px;
