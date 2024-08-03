@@ -158,21 +158,31 @@ export default function SparkleContent({ activity }: Props) {
             </span>
           </div>
 
-          <div className="tweet__reactions">
-            <Box cursor="pointer" className="tweet__reactions__likes">
-              <span className="reaction-count">{likesCount}</span>
-              <span className="reaction-label">
-                Like{likesCount === 1 ? "" : "s"}
-              </span>
-            </Box>
+          {(likesCount || resparklesCount) && (
+            <div className="tweet__reactions">
+              {likesCount && (
+                <Box cursor="pointer" className="tweet__reactions__likes">
+                  <span className="reaction-count">{likesCount}</span>
+                  <span className="reaction-label">
+                    Like{likesCount === 1 ? "" : "s"}
+                  </span>
+                </Box>
+              )}
 
-            <Box cursor="pointer" className="tweet__reactions__likes" ml={2}>
-              <span className="reaction-count">{resparklesCount}</span>
-              <span className="reaction-label">
-                Resparkle{resparklesCount === 1 ? "" : "s"}
-              </span>
-            </Box>
-          </div>
+              {resparklesCount && (
+                <Box
+                  cursor="pointer"
+                  className="tweet__reactions__likes"
+                  ml={2}
+                >
+                  <span className="reaction-count">{resparklesCount}</span>
+                  <span className="reaction-label">
+                    Resparkle{resparklesCount === 1 ? "" : "s"}
+                  </span>
+                </Box>
+              )}
+            </div>
+          )}
 
           <div className="tweet__reactors">
             {reactors.map((action, i) => (
