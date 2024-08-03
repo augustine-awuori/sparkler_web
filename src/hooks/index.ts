@@ -11,3 +11,4 @@ export { default as useResparkle } from "./useResparkle";
 export { default as useSparkle } from "./useSparkle";
 export { default as useTitleChanger } from "./useTitleChanger";
 export { default as useUser } from "./useUser";
+export { default as useUsers } from "./useUsers";

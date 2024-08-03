@@ -33,5 +33,16 @@ const getUserByUsername = async (username: string) => {
   }
 };
 
+const getAllUsers = async () => {
+  try {
+    return processResponse(await client.get(endpoint));
+  } catch (error) {
+    return {
+      ...emptyResponse,
+      problem: (error as ResponseError).response.data?.error || "Unknown error",
+    };
+  }
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { register, login, getUserByUsername };
+export default { getAllUsers, register, login, getUserByUsername };

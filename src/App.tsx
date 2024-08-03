@@ -15,9 +15,11 @@ import {
 } from "./pages";
 import { ActivityContext, UserContext } from "./contexts";
 import { User } from "./users";
+import UsersContext, { Users } from "./contexts/UsersContext";
 import auth from "./services/auth";
-import ScrollToTop from "./components/ScrollToTop";
 import LoadingPage from "./pages/LoadingPage";
+import ScrollToTop from "./components/ScrollToTop";
+import usersService from "./services/users";
 
 const id = "1322281";
 const key = "8hn252eegqq9";
@@ -26,6 +28,24 @@ function App() {
   const [client, setClient] = useState<StreamClient<DefaultGenerics>>();
   const [user, setUser] = useState<User>();
   const [activity, setActivity] = useState<Activity<DefaultGenerics>>();
+  const [users, setUsers] = useState<Users>({});
+
+  useEffect(() => {
+    const retrieveAllUsers = async () => {
+      let users: Users = {};
+
+      const res = await usersService.getAllUsers();
+      if (res.ok) {
+        (res.data as User[]).forEach((user) => {
+          if (!users[user.username]) users[user.username] = user._id;
+        });
+      }
+
+      setUsers(users);
+    };
+
+    retrieveAllUsers();
+  }, []);
 
   useEffect(() => {
     const initUser = () => {
@@ -73,21 +93,23 @@ function App() {
     <StreamApp token={user.feedToken} appId={id} apiKey={key}>
       <ScrollToTop />
       <Box fontFamily="quicksand">
-        <UserContext.Provider value={{ setUser, user }}>
-          <ActivityContext.Provider value={{ activity, setActivity }}>
-            <Routes>
-              <Route element={<NotificationsPage />} path="/notifications" />
-              <Route
-                element={<QuoteSparklePage />}
-                path="/:user_id/status/:id/quote"
-              />
-              <Route element={<ThreadPage />} path="/:user_id/status/:id" />
-              <Route element={<EditProfilePage />} path="/:user_id/edit" />
-              <Route element={<ProfilePage />} path="/:user_id" />
-              <Route element={<HomePage />} path="/" />
-            </Routes>
-          </ActivityContext.Provider>
-        </UserContext.Provider>
+        <UsersContext.Provider value={{ setUsers, users }}>
+          <UserContext.Provider value={{ setUser, user }}>
+            <ActivityContext.Provider value={{ activity, setActivity }}>
+              <Routes>
+                <Route element={<NotificationsPage />} path="/notifications" />
+                <Route
+                  element={<QuoteSparklePage />}
+                  path="/:user_id/status/:id/quote"
+                />
+                <Route element={<ThreadPage />} path="/:user_id/status/:id" />
+                <Route element={<EditProfilePage />} path="/:user_id/edit" />
+                <Route element={<ProfilePage />} path="/:user_id" />
+                <Route element={<HomePage />} path="/" />
+              </Routes>
+            </ActivityContext.Provider>
+          </UserContext.Provider>
+        </UsersContext.Provider>
       </Box>
     </StreamApp>
   );

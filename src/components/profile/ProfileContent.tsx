@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { FeedUser } from "../../contexts/ProfileContext";
 import { ProfileContext } from "../../contexts";
 import { User } from "../../users";
-import { useTitleChanger } from "../../hooks";
+import { useTitleChanger, useUsers } from "../../hooks";
 import ProfileHeader from "./ProfileHeader";
 import LoadingIndicator from "../LoadingIndicator";
 import ProfileBio from "./ProfileBio";
@@ -18,6 +18,7 @@ export default function ProfileContent() {
   const { client } = useStreamContext();
   const [user, setUser] = useState<FeedUser>();
   const { user_id } = useParams();
+  const { users } = useUsers();
   const navigate = useNavigate();
   useTitleChanger((user?.data as User)?.name || "User Profile");
 
@@ -26,17 +27,23 @@ export default function ProfileContent() {
 
     const getUser = async () => {
       try {
-        const res = await service.getUserByUsername(user_id);
-        if (res.ok) {
-          const user = await client
-            ?.user((res.data as User)._id)
-            .get({ with_follow_counts: true });
+        let userId = users[user_id];
 
-          if (user?.full) setUser(user.full);
-        } else {
-          toast.error("There's no user with the given username");
-          navigate(-1);
+        if (!userId) {
+          const res = await service.getUserByUsername(user_id);
+          if (res.ok) userId = (res.data as User)._id;
         }
+
+        if (!userId) {
+          toast.error("There's no user with the given username");
+          return navigate(-1);
+        }
+
+        const user = await client
+          ?.user(userId)
+          .get({ with_follow_counts: true });
+
+        if (user?.full) setUser(user.full);
       } catch (error) {}
     };
 
