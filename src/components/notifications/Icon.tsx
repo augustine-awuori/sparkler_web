@@ -30,8 +30,8 @@ const Container = styled.div`
 
   .notifications-count {
     position: absolute;
-    top: -10px;
-    right: -10px;
+    top: -5px;
+    right: -5px;
     background-color: var(--theme-color);
     color: white;
     font-size: 10px;
