@@ -3,9 +3,31 @@ import styled from "styled-components";
 
 import { useFollow } from "../hooks";
 
+export default function FollowBtn({ userId }: { userId: string }) {
+  const { isFollowing, toggleFollow } = useFollow({ userId });
+
+  return (
+    <Container>
+      <button
+        className={classNames(isFollowing ? "following" : "not-following")}
+        onClick={toggleFollow}
+      >
+        {isFollowing ? (
+          <div className="follow-text">
+            <span className="follow-text__following">Following</span>
+            <span className="follow-text__unfollow">Unfollow</span>
+          </div>
+        ) : (
+          "Follow"
+        )}
+      </button>
+    </Container>
+  );
+}
+
 const Container = styled.div`
   button {
-    background-color: #1da1f2; /* Twitter blue */
+    background-color: var(--theme-color);
     color: white;
     border: none;
     border-radius: 18px; /* Adjusted for a smaller button */
@@ -18,12 +40,12 @@ const Container = styled.div`
 
     &.following {
       background-color: white;
-      color: #1da1f2;
-      border: 1px solid #1da1f2;
+      color: var(--theme-color);
+      border: 1px solid var(--theme-color);
     }
 
     &:hover {
-      background-color: #1991da;
+      background-color: var(--conc-theme-color);
     }
 
     &.following:hover {
@@ -51,25 +73,3 @@ const Container = styled.div`
     }
   }
 `;
-
-export default function FollowBtn({ userId }: { userId: string }) {
-  const { isFollowing, toggleFollow } = useFollow({ userId });
-
-  return (
-    <Container>
-      <button
-        className={classNames(isFollowing ? "following" : "not-following")}
-        onClick={toggleFollow}
-      >
-        {isFollowing ? (
-          <div className="follow-text">
-            <span className="follow-text__following">Following</span>
-            <span className="follow-text__unfollow">Unfollow</span>
-          </div>
-        ) : (
-          "Follow"
-        )}
-      </button>
-    </Container>
-  );
-}
