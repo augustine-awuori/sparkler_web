@@ -29,7 +29,10 @@ export default function ProfileTweets() {
       if (response) {
         const filteredActivities = (
           response.results as unknown as Activity[]
-        ).filter((activity) => activity.verb === "resparkle");
+        ).filter(
+          (activity) =>
+            activity.verb === "resparkle" || activity.verb === "quote"
+        );
 
         setActivities(filteredActivities);
       }
