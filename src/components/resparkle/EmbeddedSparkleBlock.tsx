@@ -2,19 +2,29 @@ import React from "react";
 import styled from "styled-components";
 import { Flex, Image } from "@chakra-ui/react";
 import { Activity, DefaultGenerics } from "getstream";
+import { useNavigate } from "react-router-dom";
 
 import { Activity as AppActivity } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
-import TweetActorName from "../sparkle/SparkleActorName";
+import SparkleActorName from "../sparkle/SparkleActorName";
 
 interface Props {
   activity: Activity<DefaultGenerics>;
 }
 
 const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
+  const navigate = useNavigate();
+
   const appActivity = activity as unknown as AppActivity;
   const actor = appActivity.actor;
   const sparkle = appActivity.object.data;
+
+  const handleNavigation = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
+    navigate(`/${actor.data.username}/status/${activity.id}`);
+  };
 
   return (
     <EmbeddedBlock>
@@ -25,14 +35,14 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
             alt="profile"
           />
         </figure>
-        <TweetActorName
+        <SparkleActorName
           name={actor.data.name}
           id={actor.id}
           username={actor.data.username}
           time={activity.time}
         />
       </Flex>
-      <div className="tweet__details">
+      <div className="tweet__details" onClick={handleNavigation}>
         <p
           className="tweet__text"
           dangerouslySetInnerHTML={{
@@ -55,6 +65,7 @@ const EmbeddedBlock = styled.div`
   padding: 7px 10px;
   background-color: inherit;
   margin-bottom: 5px;
+  cursor: pointer;
 
   .embedded-user-image {
     width: 18px;

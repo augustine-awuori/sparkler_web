@@ -262,6 +262,7 @@ const Container = styled.div`
 
   .tweet {
     margin-top: 20px;
+    margin-bottom: 5px;
 
     a {
       text-decoration: none;
