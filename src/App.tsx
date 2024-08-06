@@ -8,6 +8,7 @@ import {
   AuthPages,
   EditProfilePage,
   FollowersPage,
+  FollowingsPage,
   HomePage,
   NotificationsPage,
   ProfilePage,
@@ -105,6 +106,10 @@ function App() {
                 />
                 <Route element={<ThreadPage />} path="/:user_id/status/:id" />
                 <Route element={<EditProfilePage />} path="/:user_id/edit" />
+                <Route
+                  element={<FollowingsPage />}
+                  path="/:user_id/followings"
+                />
                 <Route element={<FollowersPage />} path="/:user_id/followers" />
                 <Route element={<ProfilePage />} path="/:user_id" />
                 <Route element={<HomePage />} path="/" />

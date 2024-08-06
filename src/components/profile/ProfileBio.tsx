@@ -75,14 +75,21 @@ export default function ProfileBio() {
           <span className="user__joined--text">Joined {joinedDate}</span>
         </div>
         <div className="user__follows">
-          <span className="user__follows__following">
-            <b>{user.following_count || 0}</b> Followin
-            {user.following_count === 1 ? "g" : "gs"}
-          </span>
+          <Box
+            cursor="pointer"
+            onClick={() => {
+              if (user.following_count) navigate("followings");
+            }}
+            className="user__follows__following"
+          >
+            <b>{user.following_count || 0}</b> Following
+          </Box>
           <Box
             cursor="pointer"
             className="user__follows__followers"
-            onClick={() => navigate("followers")}
+            onClick={() => {
+              if (user.followers_count) navigate("followers");
+            }}
           >
             <b>{user.followers_count || 0}</b> Follower
             {user.followers_count === 1 ? "" : "s"}
