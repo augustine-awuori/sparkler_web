@@ -29,7 +29,7 @@ const UsersList = ({ loading, users }: Props) => {
             key={user.id}
             p={3}
             borderBottom="1px"
-            borderColor="gray.200"
+            borderColor="#777"
             onClick={() => navigate(`/${username}`)}
             cursor="pointer"
           >
