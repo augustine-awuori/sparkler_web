@@ -1,3 +1,4 @@
+import React from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 
@@ -6,11 +7,18 @@ import { useFollow } from "../hooks";
 export default function FollowBtn({ userId }: { userId: string }) {
   const { isFollowing, toggleFollow } = useFollow({ userId });
 
+  const handleToggle = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
+    toggleFollow();
+  };
+
   return (
     <Container>
       <button
         className={classNames(isFollowing ? "following" : "not-following")}
-        onClick={toggleFollow}
+        onClick={handleToggle}
       >
         {isFollowing ? (
           <div className="follow-text">

@@ -7,6 +7,7 @@ import { Box } from "@chakra-ui/react";
 import {
   AuthPages,
   EditProfilePage,
+  FollowersPage,
   HomePage,
   NotificationsPage,
   ProfilePage,
@@ -104,6 +105,7 @@ function App() {
                 />
                 <Route element={<ThreadPage />} path="/:user_id/status/:id" />
                 <Route element={<EditProfilePage />} path="/:user_id/edit" />
+                <Route element={<FollowersPage />} path="/:user_id/followers" />
                 <Route element={<ProfilePage />} path="/:user_id" />
                 <Route element={<HomePage />} path="/" />
               </Routes>

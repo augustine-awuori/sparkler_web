@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { format } from "date-fns";
 import { useStreamContext } from "react-activity-feed";
-import { Heading, Image } from "@chakra-ui/react";
+import { Box, Heading, Image } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 import { formatStringWithLink } from "../../utils/string";
 import { useProfile } from "../../hooks";
@@ -25,6 +26,7 @@ const actions = [
 export default function ProfileBio() {
   const { user } = useProfile();
   const { client } = useStreamContext();
+  const navigate = useNavigate();
 
   const joinedDate = format(
     new Date(user?.created_at || Date.now()),
@@ -77,10 +79,14 @@ export default function ProfileBio() {
             <b>{user.following_count || 0}</b> Followin
             {user.following_count === 1 ? "g" : "gs"}
           </span>
-          <span className="user__follows__followers">
+          <Box
+            cursor="pointer"
+            className="user__follows__followers"
+            onClick={() => navigate("followers")}
+          >
             <b>{user.followers_count || 0}</b> Follower
             {user.followers_count === 1 ? "" : "s"}
-          </span>
+          </Box>
         </div>
         {!isLoggedInUserProfile && (
           <div className="user__followed-by">
