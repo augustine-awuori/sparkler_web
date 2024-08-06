@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Spinner,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Button,
+} from "@chakra-ui/react";
 import { StreamUser } from "getstream";
 
 import { useUsers } from "../hooks";
-import Layout from "../components/Layout";
 import UsersList from "../components/UsersList";
 
 const FollowingsPage = () => {
@@ -13,6 +21,7 @@ const FollowingsPage = () => {
   const { users } = useUsers();
   const [followings, setFollowings] = useState<StreamUser[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const { user_id } = useParams();
   const navigate = useNavigate();
 
@@ -22,40 +31,74 @@ const FollowingsPage = () => {
       if (!userId) return navigate(-1);
 
       setLoading(true);
-      const followingInfo =
-        (await client?.feed("user", userId)?.following())?.results || [];
+      setError(false);
+      try {
+        const followingInfo =
+          (await client?.feed("user", userId)?.following())?.results || [];
 
-      const followingsPromises = followingInfo.map(async (following) => {
-        const user = await client
-          ?.user(following.target_id.replace("user:", ""))
-          .get();
-        return user as unknown as StreamUser;
-      });
+        const followingsPromises = followingInfo.map(async (following) => {
+          const user = await client
+            ?.user(following.feed_id.replace("timeline:", ""))
+            .get();
+          return user as unknown as StreamUser;
+        });
 
-      const followings = await Promise.all(followingsPromises);
-      setLoading(false);
-      setFollowings(followings);
+        const followings = await Promise.all(followingsPromises);
+        setFollowings(followings);
+      } catch (error) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getFollowings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_id, users]);
 
-  return (
-    <Layout>
-      <Box maxW="600px" mx="auto" mt={5}>
-        <Text
-          fontSize="2xl"
-          fontWeight="bold"
-          mb={5}
-          color="#fff"
-          textAlign="center"
-        >
-          Followings
+  if (loading) {
+    return (
+      <Box maxW="600px" mx="auto" mt={5} textAlign="center">
+        <Spinner size="xl" color="teal.500" />
+        <Text mt={4} fontSize="lg" color="#fff">
+          Loading followings...
         </Text>
-        <UsersList users={followings} loading={loading} />
       </Box>
-    </Layout>
+    );
+  }
+
+  if (error || !followings.length) {
+    return (
+      <Box maxW="600px" mx="auto" mt={5} textAlign="center">
+        <Alert status="error" borderRadius="md">
+          <AlertIcon />
+          <Box flex="1">
+            <AlertTitle>Error!</AlertTitle>
+            <AlertDescription>
+              Unable to load followings. Please try again later.
+            </AlertDescription>
+          </Box>
+        </Alert>
+        <Button mt={4} colorScheme="teal" onClick={() => navigate(-1)}>
+          Go Back
+        </Button>
+      </Box>
+    );
+  }
+
+  return (
+    <Box maxW="600px" mx="auto" mt={5}>
+      <Text
+        fontSize="2xl"
+        fontWeight="bold"
+        mb={5}
+        color="#fff"
+        textAlign="center"
+      >
+        Followings
+      </Text>
+      <UsersList users={followings} loading={loading} />
+    </Box>
   );
 };
 

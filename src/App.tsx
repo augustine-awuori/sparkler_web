@@ -22,6 +22,7 @@ import auth from "./services/auth";
 import LoadingPage from "./pages/LoadingPage";
 import ScrollToTop from "./components/ScrollToTop";
 import usersService from "./services/users";
+import Layout from "./components/Layout";
 
 const id = "1322281";
 const key = "8hn252eegqq9";
@@ -98,22 +99,30 @@ function App() {
         <UsersContext.Provider value={{ setUsers, users }}>
           <UserContext.Provider value={{ setUser, user }}>
             <ActivityContext.Provider value={{ activity, setActivity }}>
-              <Routes>
-                <Route element={<NotificationsPage />} path="/notifications" />
-                <Route
-                  element={<QuoteSparklePage />}
-                  path="/:user_id/status/:id/quote"
-                />
-                <Route element={<ThreadPage />} path="/:user_id/status/:id" />
-                <Route element={<EditProfilePage />} path="/:user_id/edit" />
-                <Route
-                  element={<FollowingsPage />}
-                  path="/:user_id/followings"
-                />
-                <Route element={<FollowersPage />} path="/:user_id/followers" />
-                <Route element={<ProfilePage />} path="/:user_id" />
-                <Route element={<HomePage />} path="/" />
-              </Routes>
+              <Layout>
+                <Routes>
+                  <Route
+                    element={<NotificationsPage />}
+                    path="/notifications"
+                  />
+                  <Route
+                    element={<QuoteSparklePage />}
+                    path="/:user_id/status/:id/quote"
+                  />
+                  <Route element={<ThreadPage />} path="/:user_id/status/:id" />
+                  <Route element={<EditProfilePage />} path="/:user_id/edit" />
+                  <Route
+                    element={<FollowingsPage />}
+                    path="/:user_id/followings"
+                  />
+                  <Route
+                    element={<FollowersPage />}
+                    path="/:user_id/followers"
+                  />
+                  <Route element={<ProfilePage />} path="/:user_id" />
+                  <Route element={<HomePage />} path="/" />
+                </Routes>
+              </Layout>
             </ActivityContext.Provider>
           </UserContext.Provider>
         </UsersContext.Provider>
