@@ -50,6 +50,7 @@ const FollowersPage = () => {
           mb={5}
           color="#fff"
           textAlign="center"
+          borderBottom="1px solid #111"
         >
           Followers
         </Text>
