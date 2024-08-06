@@ -5,7 +5,6 @@ import { useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 
 import { ActivityActor, randomImageUrl } from "../utils/types";
-import Layout from "../components/Layout";
 
 const EditProfilePage: React.FC = () => {
   const [name, setName] = useState("");
@@ -34,38 +33,36 @@ const EditProfilePage: React.FC = () => {
   };
 
   return (
-    <Layout>
-      <PageContainer>
-        <Header>
-          <BackButton onClick={() => navigate(-1)}>&larr;</BackButton>
-          <Title>Edit Profile</Title>
-          <SaveButton onClick={handleSave}>Save</SaveButton>
-        </Header>
+    <PageContainer>
+      <Header>
+        <BackButton onClick={() => navigate(-1)}>&larr;</BackButton>
+        <Title>Edit Profile</Title>
+        <SaveButton onClick={handleSave}>Save</SaveButton>
+      </Header>
 
-        <Banner>
-          <img src={randomImageUrl} alt="banner" />
-        </Banner>
+      <Banner>
+        <img src={randomImageUrl} alt="banner" />
+      </Banner>
 
-        <ProfilePicture>
-          <img src={profileImage} alt="profile" />
-        </ProfilePicture>
+      <ProfilePicture>
+        <img src={profileImage} alt="profile" />
+      </ProfilePicture>
 
-        <Form>
-          <FormControl>
-            <Label>Name</Label>
-            <Input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </FormControl>
-          <FormControl>
-            <Label>Bio</Label>
-            <TextArea value={bio} onChange={(e) => setBio(e.target.value)} />
-          </FormControl>
-        </Form>
-      </PageContainer>
-    </Layout>
+      <Form>
+        <FormControl>
+          <Label>Name</Label>
+          <Input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </FormControl>
+        <FormControl>
+          <Label>Bio</Label>
+          <TextArea value={bio} onChange={(e) => setBio(e.target.value)} />
+        </FormControl>
+      </Form>
+    </PageContainer>
   );
 };
 

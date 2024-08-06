@@ -1,7 +1,6 @@
 import { Feed, useStreamContext } from "react-activity-feed";
 import { useParams } from "react-router-dom";
 
-import Layout from "../components/Layout";
 import ThreadContent from "../components/thread/ThreadContent";
 
 const FEED_ENRICH_OPTIONS = {
@@ -16,14 +15,12 @@ export default function Thread() {
   const { user_id } = useParams();
 
   return (
-    <Layout>
-      <Feed
-        feedGroup={user?.id === user_id ? "user" : "timeline"}
-        options={FEED_ENRICH_OPTIONS}
-        notify
-      >
-        <ThreadContent />
-      </Feed>
-    </Layout>
+    <Feed
+      feedGroup={user?.id === user_id ? "user" : "timeline"}
+      options={FEED_ENRICH_OPTIONS}
+      notify
+    >
+      <ThreadContent />
+    </Feed>
   );
 }

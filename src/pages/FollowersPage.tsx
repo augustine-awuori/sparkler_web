@@ -5,7 +5,6 @@ import { Box, Text } from "@chakra-ui/react";
 import { StreamUser } from "getstream";
 
 import { useUsers } from "../hooks";
-import Layout from "../components/Layout";
 import UsersList from "../components/UsersList";
 
 const FollowersPage = () => {
@@ -42,21 +41,19 @@ const FollowersPage = () => {
   }, [user_id, users]);
 
   return (
-    <Layout>
-      <Box maxW="600px" mx="auto" mt={5}>
-        <Text
-          fontSize="2xl"
-          fontWeight="bold"
-          mb={5}
-          color="#fff"
-          textAlign="center"
-          borderBottom="1px solid #111"
-        >
-          Followers
-        </Text>
-        <UsersList users={followers} loading={loading} />
-      </Box>
-    </Layout>
+    <Box maxW="600px" mx="auto" mt={5}>
+      <Text
+        fontSize="2xl"
+        fontWeight="bold"
+        mb={5}
+        color="#fff"
+        textAlign="center"
+        borderBottom="1px solid #111"
+      >
+        Followers
+      </Text>
+      <UsersList users={followers} loading={loading} />
+    </Box>
   );
 };
 

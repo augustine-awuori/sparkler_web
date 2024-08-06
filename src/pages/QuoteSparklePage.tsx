@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { QuoteForm } from "../components/resparkle";
 import { useActivity, useComment } from "../hooks";
 import Header from "../components/Header";
-import Layout from "../components/Layout";
 
 const QuoteSparklePage: React.FC = () => {
   const [quote, setQuote] = useState("");
@@ -23,16 +22,14 @@ const QuoteSparklePage: React.FC = () => {
   };
 
   return (
-    <Layout>
-      <Container>
-        <Header title="Quote Sparkle" />
-        <QuoteForm
-          quote={quote}
-          onQuoteChange={handleQuoteChange}
-          onQuoteSubmit={handleQuoteSubmit}
-        />
-      </Container>
-    </Layout>
+    <Container>
+      <Header title="Quote Sparkle" />
+      <QuoteForm
+        quote={quote}
+        onQuoteChange={handleQuoteChange}
+        onQuoteSubmit={handleQuoteSubmit}
+      />
+    </Container>
   );
 };
 
