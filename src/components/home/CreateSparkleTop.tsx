@@ -6,13 +6,13 @@ import SparkleForm from "../sparkle/SparkleForm";
 export default function CreateSparkleTop() {
   const { createSparkle } = useSparkle();
 
-  const onSubmit = async (text: string) => {
-    createSparkle(text);
+  const handleSubmit = async (text: string) => {
+    await createSparkle(text);
   };
 
   return (
     <Container>
-      <SparkleForm placeholder="What's sparkling?" onSubmit={onSubmit} />
+      <SparkleForm placeholder="What's sparkling?" onSubmit={handleSubmit} />
     </Container>
   );
 }

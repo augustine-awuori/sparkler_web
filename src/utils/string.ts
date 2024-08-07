@@ -32,3 +32,15 @@ export function formatStringWithLink(
 
   return modifiedText;
 }
+
+export function parseHashtags(text: string) {
+  const hashtagPattern = /#(\w+)/g;
+  let match;
+  const hashtags = [];
+
+  while ((match = hashtagPattern.exec(text)) !== null) {
+    hashtags.push(match[1]);
+  }
+
+  return hashtags;
+}

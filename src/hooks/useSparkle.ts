@@ -1,7 +1,9 @@
 import { nanoid } from "nanoid";
 import { useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
+
 import { Activity } from "../utils/types";
+import { parseHashtags } from "../utils/string";
 import useUser from "./useUser";
 
 export default function useSparkle() {
@@ -20,12 +22,18 @@ export default function useSparkle() {
 
     const time = new Date().toISOString();
 
+    const hashtags = parseHashtags(text);
+    const to = hashtags.length
+      ? hashtags.map((tag) => `hashtags:${tag}`)
+      : undefined;
+
     await userFeed.addActivity({
       actor: `SU:${client.userId}`,
       verb: "tweet",
       object: `SO:tweet:${collection.id}`,
       foreign_id: client.userId + time,
       time,
+      to,
     });
   };
 
