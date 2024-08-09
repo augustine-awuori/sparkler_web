@@ -44,7 +44,7 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
       </Flex>
       <div className="tweet__details" onClick={handleNavigation}>
         <p
-          className="tweet__text"
+          className="tweet__texts"
           dangerouslySetInnerHTML={{
             __html: formatStringWithLink(
               sparkle.text,
@@ -86,7 +86,7 @@ const EmbeddedBlock = styled.div`
   .tweet {
     flex: 1;
 
-    &__text {
+    &__texts {
       color: #fff;
       font-size: 15px;
       line-height: 20px;
