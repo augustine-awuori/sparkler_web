@@ -4,6 +4,8 @@ import { NotificationFeed } from "react-activity-feed";
 import styled from "styled-components";
 
 import { NotificationGroup } from "../components/notifications";
+import { useTitleChanger } from "../hooks";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 const tabList = [
   {
@@ -18,6 +20,7 @@ const tabList = [
 
 export default function NotificationPage() {
   const [activeTab, setActiveTab] = useState(tabList[0].id);
+  useTitleChanger("Notifications");
 
   return (
     <Container>
@@ -40,7 +43,10 @@ export default function NotificationPage() {
           </button>
         ))}
       </div>
-      <NotificationFeed Group={NotificationGroup} />
+      <NotificationFeed
+        Group={NotificationGroup}
+        LoadingIndicator={LoadingIndicator}
+      />
     </Container>
   );
 }
