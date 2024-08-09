@@ -141,7 +141,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   };
 
   return (
-    <Box>
+    <Box _hover={{ bg: "#111" }}>
       <Block>
         {isAReaction && (
           <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={10}>
