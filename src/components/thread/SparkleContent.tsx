@@ -158,9 +158,9 @@ export default function SparkleContent({ activity }: Props) {
             </span>
           </div>
 
-          {(likesCount || resparklesCount) && (
+          {(likesCount > 0 || resparklesCount !== "0") && (
             <div className="tweet__reactions">
-              {likesCount && (
+              {likesCount > 0 && (
                 <Box cursor="pointer" className="tweet__reactions__likes">
                   <span className="reaction-count">{likesCount}</span>
                   <span className="reaction-label">
@@ -169,7 +169,7 @@ export default function SparkleContent({ activity }: Props) {
                 </Box>
               )}
 
-              {resparklesCount && (
+              {resparklesCount !== "0" && (
                 <Box
                   cursor="pointer"
                   className="tweet__reactions__likes"
