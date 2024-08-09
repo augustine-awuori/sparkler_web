@@ -130,7 +130,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
 
   const getResparklerName = () => {
     const act = activity as unknown as AppActivity;
-    const isSparkler = user?.id === act.actor.id;
+    const isSparkler = user?.id === act.actor.id || hasResparkled;
 
     return isSparkler ? "You" : act.actor.data.name;
   };
@@ -143,7 +143,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   return (
     <Box _hover={{ bg: "#111" }}>
       <Block>
-        {isAReaction && (
+        {(isAReaction || hasResparkled) && (
           <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={10}>
             <Retweet color="#777" size={13} />
             <Text ml={1}>{getResparklerName()} resparkled</Text>
