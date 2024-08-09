@@ -1,12 +1,20 @@
 import React from "react";
 import styled from "styled-components";
-import { Flex, Image } from "@chakra-ui/react";
+import { Flex, Image, Text } from "@chakra-ui/react";
 import { Activity, DefaultGenerics } from "getstream";
 import { useNavigate } from "react-router-dom";
 
 import { Activity as AppActivity } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import SparkleActorName from "../sparkle/SparkleActorName";
+
+// Define the type for reaction counts
+interface ReactionCounts {
+  comment?: number;
+  like?: number;
+  resparkle?: number;
+  quote?: number;
+}
 
 interface Props {
   activity: Activity<DefaultGenerics>;
@@ -18,6 +26,10 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
   const appActivity = activity as unknown as AppActivity;
   const actor = appActivity.actor;
   const sparkle = appActivity.object.data;
+
+  // Extract reaction counts with proper typing
+  const reactionCounts: ReactionCounts = activity.reaction_counts || {};
+  const { comment = 0, like = 0, resparkle = 0, quote = 0 } = reactionCounts;
 
   const handleNavigation = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -53,6 +65,28 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
           }}
         />
       </div>
+      <ReactionCountsComp>
+        {comment > 0 && (
+          <Text>
+            {comment} Comment{comment > 1 ? "s" : ""}
+          </Text>
+        )}
+        {like > 0 && (
+          <Text>
+            {like} Like{like > 1 ? "s" : ""}
+          </Text>
+        )}
+        {resparkle > 0 && (
+          <Text>
+            {resparkle} Resparkle{resparkle > 1 ? "s" : ""}
+          </Text>
+        )}
+        {quote > 0 && (
+          <Text>
+            {quote} Quote{quote > 1 ? "s" : ""}
+          </Text>
+        )}
+      </ReactionCountsComp>
     </EmbeddedBlock>
   );
 };
@@ -83,20 +117,29 @@ const EmbeddedBlock = styled.div`
     }
   }
 
-  .tweet {
-    flex: 1;
+  .tweet__details {
+    margin-top: 5px;
+  }
 
-    &__texts {
-      color: #fff;
-      font-size: 15px;
-      line-height: 20px;
-      margin-top: 3px;
-      width: 100%;
+  .tweet__texts {
+    color: #fff;
+    font-size: 15px;
+    line-height: 20px;
+    margin-top: 3px;
+    width: 100%;
 
-      &--link {
-        color: var(--theme-color);
-        text-decoration: none;
-      }
+    &--link {
+      color: var(--theme-color);
+      text-decoration: none;
     }
   }
+`;
+
+const ReactionCountsComp = styled.div`
+  margin-top: 10px;
+  font-size: 12px;
+  color: #aaa;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 `;

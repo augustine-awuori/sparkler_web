@@ -9,7 +9,7 @@ import { Box, Image } from "@chakra-ui/react";
 import { Activity, QuoteActivity, randomImageUrl } from "../../utils/types";
 import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
-import { useActivity, useSparkle } from "../../hooks";
+import { useActivity, useQuotes, useSparkle } from "../../hooks";
 import BarChart from "../icons/BarChart";
 import Comment from "../icons/Comment";
 import CommentDialog from "../sparkle/CommentDialog ";
@@ -36,6 +36,7 @@ export default function SparkleContent({ activity }: Props) {
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
   const navigate = useNavigate();
   const { setActivity } = useActivity();
+  const { setQuotes } = useQuotes();
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
   const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
 
@@ -46,7 +47,8 @@ export default function SparkleContent({ activity }: Props) {
   const tweet = appActivity.object.data;
   const tweetActor = appActivity.actor.data;
   const likesCount = appActivity.reaction_counts.like || 0;
-  const resparklesCount = appActivity.reaction_counts.resparkle || "0";
+  const resparklesCount = appActivity.reaction_counts.resparkle || 0;
+  const quotesCount = appActivity.reaction_counts.quote || 0;
   const hasLikedSparkled = checkIfHasLiked(appActivity);
   const hasBeenResparkled = checkIfHasResparkled(appActivity);
   const isAQuote = activity.verb === "quote";
@@ -91,6 +93,15 @@ export default function SparkleContent({ activity }: Props) {
   const quoteSparkle = () => {
     setActivity(activity);
     navigate(`/${tweetActor.username}/status/${activity.id}/quote`);
+  };
+
+  const viewQuotes = () => {
+    const quotes = appActivity.own_reactions.quote;
+    if (quotes) {
+      setQuotes(quotes);
+      setActivity(activity);
+      navigate("quotes");
+    }
   };
 
   return (
@@ -154,11 +165,13 @@ export default function SparkleContent({ activity }: Props) {
           <div className="tweet__analytics">
             <BarChart color="#888" />
             <span className="tweet__analytics__text">
-              View Sparkle Analytics
+              Sparkle Analytics coming sooner
             </span>
           </div>
 
-          {(likesCount > 0 || resparklesCount !== "0") && (
+          {(Boolean(likesCount) ||
+            Boolean(resparklesCount) ||
+            Boolean(quotesCount)) && (
             <div className="tweet__reactions">
               {likesCount > 0 && (
                 <Box cursor="pointer" className="tweet__reactions__likes">
@@ -169,7 +182,7 @@ export default function SparkleContent({ activity }: Props) {
                 </Box>
               )}
 
-              {resparklesCount !== "0" && (
+              {resparklesCount !== 0 && (
                 <Box
                   cursor="pointer"
                   className="tweet__reactions__likes"
@@ -178,6 +191,20 @@ export default function SparkleContent({ activity }: Props) {
                   <span className="reaction-count">{resparklesCount}</span>
                   <span className="reaction-label">
                     Resparkle{resparklesCount === 1 ? "" : "s"}
+                  </span>
+                </Box>
+              )}
+
+              {Boolean(quotesCount) && (
+                <Box
+                  cursor="pointer"
+                  className="tweet__reactions__likes"
+                  ml={2}
+                  onClick={viewQuotes}
+                >
+                  <span className="reaction-count">{quotesCount}</span>
+                  <span className="reaction-label">
+                    Quote{quotesCount === 1 ? "" : "s"}
                   </span>
                 </Box>
               )}

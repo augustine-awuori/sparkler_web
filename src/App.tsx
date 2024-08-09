@@ -12,17 +12,19 @@ import {
   HomePage,
   NotificationsPage,
   ProfilePage,
+  QuotesPage,
   QuoteSparklePage,
   ThreadPage,
 } from "./pages";
-import { ActivityContext, UserContext } from "./contexts";
+import { ActivityContext, QuotesContext, UserContext } from "./contexts";
+import { Quote } from "./utils/types";
 import { User } from "./users";
-import UsersContext, { Users } from "./contexts/UsersContext";
 import auth from "./services/auth";
+import Layout from "./components/Layout";
 import LoadingPage from "./pages/LoadingPage";
 import ScrollToTop from "./components/ScrollToTop";
+import UsersContext, { Users } from "./contexts/UsersContext";
 import usersService from "./services/users";
-import Layout from "./components/Layout";
 
 const id = "1322281";
 const key = "8hn252eegqq9";
@@ -32,6 +34,7 @@ function App() {
   const [user, setUser] = useState<User>();
   const [activity, setActivity] = useState<Activity<DefaultGenerics>>();
   const [users, setUsers] = useState<Users>({});
+  const [quotes, setQuotes] = useState<Quote[]>([]);
 
   useEffect(() => {
     const retrieveAllUsersInfo = async () => {
@@ -99,30 +102,42 @@ function App() {
         <UsersContext.Provider value={{ setUsers, users }}>
           <UserContext.Provider value={{ setUser, user }}>
             <ActivityContext.Provider value={{ activity, setActivity }}>
-              <Layout>
-                <Routes>
-                  <Route
-                    element={<NotificationsPage />}
-                    path="/notifications"
-                  />
-                  <Route
-                    element={<QuoteSparklePage />}
-                    path="/:user_id/status/:id/quote"
-                  />
-                  <Route element={<ThreadPage />} path="/:user_id/status/:id" />
-                  <Route element={<EditProfilePage />} path="/:user_id/edit" />
-                  <Route
-                    element={<FollowingsPage />}
-                    path="/:user_id/followings"
-                  />
-                  <Route
-                    element={<FollowersPage />}
-                    path="/:user_id/followers"
-                  />
-                  <Route element={<ProfilePage />} path="/:user_id" />
-                  <Route element={<HomePage />} path="/" />
-                </Routes>
-              </Layout>
+              <QuotesContext.Provider value={{ quotes, setQuotes }}>
+                <Layout>
+                  <Routes>
+                    <Route
+                      element={<NotificationsPage />}
+                      path="/notifications"
+                    />
+                    <Route
+                      element={<QuoteSparklePage />}
+                      path="/:user_id/status/:id/quote"
+                    />
+                    <Route
+                      element={<ThreadPage />}
+                      path="/:user_id/status/:id"
+                    />
+                    <Route
+                      element={<QuotesPage />}
+                      path="/:user_id/status/:id/quotes"
+                    />
+                    <Route
+                      element={<EditProfilePage />}
+                      path="/:user_id/edit"
+                    />
+                    <Route
+                      element={<FollowingsPage />}
+                      path="/:user_id/followings"
+                    />
+                    <Route
+                      element={<FollowersPage />}
+                      path="/:user_id/followers"
+                    />
+                    <Route element={<ProfilePage />} path="/:user_id" />
+                    <Route element={<HomePage />} path="/" />
+                  </Routes>
+                </Layout>
+              </QuotesContext.Provider>
             </ActivityContext.Provider>
           </UserContext.Provider>
         </UsersContext.Provider>

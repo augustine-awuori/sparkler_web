@@ -27,6 +27,17 @@ export interface ActivityObject extends Common {
   foreign_id: string;
 }
 
+export interface Quote extends Common {
+  activity_id: string;
+  children_counts: object;
+  data: { text: string };
+  kind: "quote";
+  latest_children: object;
+  parent: string;
+  user: ActivityActor;
+  user_id: string;
+}
+
 export interface Comment extends Common {
   activity_id: string;
   children_counts: object;
@@ -68,13 +79,21 @@ export type Activity = {
   latest_reactions: {
     like?: Like[];
     comment?: Comment[];
+    resparkle?: Resparkle[];
+    quote?: Quote[];
   };
   own_reactions: {
     comment?: Comment[];
     like?: Like[];
     resparkle?: Resparkle[];
+    quote?: Quote[];
   };
-  reaction_counts: { comment?: number; like?: number; resparkle?: number };
+  reaction_counts: {
+    comment?: number;
+    like?: number;
+    resparkle?: number;
+    quote?: number;
+  };
   target: string;
   verb: string;
 };

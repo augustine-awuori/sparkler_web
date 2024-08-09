@@ -7,7 +7,7 @@ import { Map } from "immutable";
 import { Activity as AppActivity } from "../../utils/types";
 import { generateSparkleLink } from "../../utils/links";
 import LoadingIndicator from "../LoadingIndicator";
-import ThreadHeader from "../Header";
+import Header from "../Header";
 import SparkleContent from "./SparkleContent";
 
 export default function ThreadContent() {
@@ -51,7 +51,7 @@ export default function ThreadContent() {
 
   return (
     <div>
-      <ThreadHeader />
+      <Header />
       <SparkleContent activity={activity} />
     </div>
   );

@@ -7,22 +7,22 @@ interface Props {
   title?: string;
 }
 
-export default function ThreadHeader({ title = "Sparkle" }: Props) {
+export default function Header({ title = "Sparkle" }: Props) {
   const navigate = useNavigate();
 
   const navigateBack = () => navigate(-1);
 
   return (
-    <Header>
+    <AppHeader>
       <button className="back-button" onClick={navigateBack}>
         <ArrowLeft size={20} color="white" />
       </button>
       <span className="title">{title}</span>
-    </Header>
+    </AppHeader>
   );
 }
 
-const Header = styled.header`
+const AppHeader = styled.header`
   display: flex;
   align-items: center;
   padding: 15px;
