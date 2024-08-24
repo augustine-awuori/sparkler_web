@@ -1,5 +1,13 @@
 import styled from "styled-components";
 
+export default function LoadingIndicator() {
+  return (
+    <Container>
+      <div className="circle" />
+    </Container>
+  );
+}
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -37,11 +45,3 @@ const Container = styled.div`
     }
   }
 `;
-
-export default function LoadingIndicator() {
-  return (
-    <Container>
-      <div className="circle"></div>
-    </Container>
-  );
-}

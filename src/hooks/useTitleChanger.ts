@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 const useTitleChanger = (title: string) => {
   useEffect(() => {
-    document.title = `Sparkler / ${title}`;
+    document.title = `Sparkler | ${title}`;
   }, [title]);
 };
 

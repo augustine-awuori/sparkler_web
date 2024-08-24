@@ -226,7 +226,7 @@ export default function SparkleContent({ activity }: Props) {
                       ? "#17BF63"
                       : "#888"
                   }
-                  fill={action.id === "heart" && hasLikedSparkled && true}
+                  fill={action.id === "heart" && hasLikedSparkled}
                   size={20}
                 />
               </button>
