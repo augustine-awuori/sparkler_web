@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 
-import { useUser } from "../../hooks";
+import { useUnreadMessages, useUser } from "../../hooks";
 import BottomTab from "./BottomTab";
 import Discover from "../icons/Discover";
 import Home from "../icons/Home";
@@ -12,6 +12,7 @@ import Mail from "../icons/Mail";
 const BottomNav = () => {
   const { user } = useUser();
   const location = useLocation();
+  const { count } = useUnreadMessages();
 
   const isCurrentPath = (path: string) => location.pathname === path;
 
@@ -38,7 +39,11 @@ const BottomNav = () => {
         pathname="/explore"
       />
       <BottomTab Icon={<NotificationIcon />} pathname="/notifications" />
-      <BottomTab Icon={<Mail color="#fff" size={23} />} pathname="/" />
+      <BottomTab
+        Icon={<Mail color="#fff" size={23} />}
+        pathname="/messages"
+        value={count}
+      />
       <BottomTab
         Icon={
           <User size={23} color="#fff" fill={isCurrentPath(`/${user?._id}`)} />

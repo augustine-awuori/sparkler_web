@@ -6,7 +6,7 @@ export const authTokenKey = "x-auth-token";
 
 export type ResponseError = {
   response: {
-    data?: DataError;
+    data: DataError;
   };
 };
 
@@ -17,6 +17,7 @@ export interface DataError {
 const apiClient = axios.create({
   baseURL: "https://campus-hub-api.onrender.com/api",
 });
+
 apiClient.interceptors.request.use((config) => {
   const authToken = auth.getJwt();
 
@@ -54,5 +55,10 @@ export const processResponse = ({ data, status }: AxiosResponse) => {
 
   return response;
 };
+
+export const getFailedResponse = (error: unknown): Response => ({
+  ...emptyResponse,
+  problem: (error as ResponseError).response.data.error || "Unknown error",
+});
 
 export default apiClient;

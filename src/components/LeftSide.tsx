@@ -4,7 +4,7 @@ import { IoLogOut, IoSparkles } from "react-icons/io5";
 import classNames from "classnames";
 import styled from "styled-components";
 
-import { useNewNotifications, useUser } from "../hooks";
+import { useNewNotifications, useUnreadMessages, useUser } from "../hooks";
 import Bell from "./icons/Bell";
 import Hashtag from "./icons/Hashtag";
 import Home from "./icons/Home";
@@ -22,6 +22,7 @@ export default function LeftSide({ onClickSparkle }: Props) {
   const location = useLocation();
   const { user } = useUser();
   const { newNotifications } = useNewNotifications();
+  const { count } = useUnreadMessages();
 
   if (!user)
     return (
@@ -57,7 +58,9 @@ export default function LeftSide({ onClickSparkle }: Props) {
       id: "messages",
       onClick: () => {},
       label: "Messages",
+      link: "/messages",
       Icon: Mail,
+      value: count,
     },
     {
       id: "profile",
@@ -95,10 +98,8 @@ export default function LeftSide({ onClickSparkle }: Props) {
               onClick={m.onClick}
             >
               <div className="btn--icon">
-                {newNotifications && m.id === "notifications" ? (
-                  <span className="notifications-count">
-                    {newNotifications}
-                  </span>
+                {m.value ? (
+                  <span className="value-count">{m.value}</span>
                 ) : null}
                 <m.Icon fill={isActiveLink} color="white" size={25} />
               </div>
@@ -167,7 +168,7 @@ const Container = styled.div`
         width: var(--icon-size);
 
         position: relative;
-        .notifications-count {
+        .value-count {
           position: absolute;
           font-size: 11px;
           background-color: var(--theme-color);

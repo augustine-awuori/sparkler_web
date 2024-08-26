@@ -12,21 +12,27 @@ import Mail from "../icons/Mail";
 import Calendar from "../icons/Calendar";
 import FollowBtn from "../FollowBtn";
 
-const actions = [
-  {
-    Icon: More,
-    id: "more",
-  },
-  {
-    Icon: Mail,
-    id: "message",
-  },
-];
-
 export default function ProfileBio() {
   const { user } = useProfile();
   const { client } = useStreamContext();
   const navigate = useNavigate();
+
+  const actions = [
+    {
+      Icon: More,
+      id: "more",
+      onClick: () => {},
+    },
+    {
+      Icon: Mail,
+      id: "message",
+      onClick: startDM,
+    },
+  ];
+
+  function startDM() {
+    navigate(`/messages?${user.id}`);
+  }
 
   const joinedDate = format(
     new Date(user?.created_at || Date.now()),
@@ -52,7 +58,11 @@ export default function ProfileBio() {
         {!isLoggedInUserProfile ? (
           <div className="actions">
             {actions.map((action) => (
-              <button className="action-btn" key={action.id}>
+              <button
+                className="action-btn"
+                key={action.id}
+                onClick={action.onClick}
+              >
                 <action.Icon color="white" size={21} />
               </button>
             ))}

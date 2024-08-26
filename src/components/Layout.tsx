@@ -18,7 +18,10 @@ export default function Layout({ children }: { children: ReactNode }) {
   const location = useLocation();
 
   useEffect(() => {
-    setHideRightSide(location.pathname === "/explore");
+    setHideRightSide(
+      location.pathname === "/explore" ||
+        location.pathname.startsWith("/messages")
+    );
   }, [location.pathname]);
 
   const showLeftSidebar = useBreakpointValue({ base: false, md: true });

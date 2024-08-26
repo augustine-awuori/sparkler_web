@@ -5,6 +5,7 @@ export { default as FollowersPage } from "./FollowersPage";
 export { default as FollowingsPage } from "./FollowingsPage";
 export { default as HomePage } from "./HomePage";
 export { default as LoginPage } from "./LoginPage";
+export { default as MessagesPage } from "./MessagesPage";
 export { default as NotificationsPage } from "./NotificationsPage";
 export { default as ProfilePage } from "./ProfilePage";
 export { default as QuotesPage } from "./QuotesPage";

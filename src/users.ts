@@ -1,8 +1,9 @@
 export type User = {
   _id: string;
-  name: string;
-  username: string;
+  avatar: string;
+  chatToken: string;
   email: string;
   feedToken: string;
-  avatar: string;
+  name: string;
+  username: string;
 };
