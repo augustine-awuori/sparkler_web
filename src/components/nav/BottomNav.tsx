@@ -4,10 +4,10 @@ import { useLocation } from "react-router-dom";
 import { useUser } from "../../hooks";
 import BottomTab from "./BottomTab";
 import Discover from "../icons/Discover";
-import Group from "../icons/Group";
 import Home from "../icons/Home";
 import NotificationIcon from "../notifications/Icon";
 import User from "../icons/User";
+import Mail from "../icons/Mail";
 
 const BottomNav = () => {
   const { user } = useUser();
@@ -37,8 +37,8 @@ const BottomNav = () => {
         Icon={<Discover color="#fff" size={23} />}
         pathname="/explore"
       />
-      <BottomTab Icon={<Group color="#fff" size={23} />} pathname="/" />
       <BottomTab Icon={<NotificationIcon />} pathname="/notifications" />
+      <BottomTab Icon={<Mail color="#fff" size={23} />} pathname="/" />
       <BottomTab
         Icon={
           <User size={23} color="#fff" fill={isCurrentPath(`/${user?._id}`)} />
