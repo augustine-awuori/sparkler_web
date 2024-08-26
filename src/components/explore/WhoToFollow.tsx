@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { User } from "../../users";
 import FollowBtn from "../FollowBtn";
 import usersService from "../../services/users";
+import { Text } from "@chakra-ui/react";
 
 const WhoToFollow = () => {
   const { client } = useStreamContext();
@@ -38,7 +39,9 @@ const WhoToFollow = () => {
                   )}
                 </div>
                 <div className="user__info">
-                  <span className="user__name">{leader.name}</span>
+                  <Text noOfLines={1} className="user__name">
+                    {leader.name}
+                  </Text>
                   <span className="user__id">@{leader.username}</span>
                 </div>
               </div>
@@ -83,6 +86,8 @@ const FollowsContainer = styled.div`
       align-items: center;
 
       .user__img {
+        min-width: 40px;
+        min-height: 40px;
         width: 40px;
         height: 40px;
         border-radius: 50%;
