@@ -1,8 +1,9 @@
 import { useState } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { useBreakpointValue, Box } from "@chakra-ui/react";
+import { useBreakpointValue, Box, Image, Flex } from "@chakra-ui/react";
 
+import logo from "../assets/logo.png";
 import Search from "../components/icons/Search";
 import More from "../components/icons/More";
 import WhoToFollow from "../components/explore/WhoToFollow";
@@ -41,6 +42,14 @@ export default function ExplorePage() {
 
   return (
     <Container>
+      <Flex
+        direction="column"
+        align="center"
+        mb={4}
+        display={{ base: "flex", md: "none" }}
+      >
+        <Image src={logo} boxSize="20px" />
+      </Flex>
       <SearchContainer>
         <Search color="#fff" />
         <input
