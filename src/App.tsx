@@ -55,7 +55,8 @@ function App() {
 
         if (res.ok) {
           initUser();
-          return window.location.reload();
+
+          return setUser({ ...user, chatToken: res.data as string });
         } else return toast.error("Failed to fetch your chat token");
       }
 
