@@ -1,10 +1,11 @@
-import classNames from "classnames";
 import { useState } from "react";
+import classNames from "classnames";
 import styled from "styled-components";
+import { useBreakpointValue, Box } from "@chakra-ui/react";
 
-import More from "./icons/More";
-import Search from "./icons/Search";
-import WhoToFollow from "./explore/WhoToFollow";
+import Search from "../components/icons/Search";
+import More from "../components/icons/More";
+import WhoToFollow from "../components/explore/WhoToFollow";
 
 const trends = [
   {
@@ -34,8 +35,9 @@ const trends = [
   },
 ];
 
-export default function RightSide() {
+export default function ExplorePage() {
   const [searchText, setSearchText] = useState("");
+  const showWhoToFollowOnRight = useBreakpointValue({ base: false, lg: true });
 
   return (
     <Container>
@@ -45,7 +47,7 @@ export default function RightSide() {
           onChange={(e) => setSearchText(e.target.value)}
           value={searchText}
           placeholder="Search Sparkler"
-          style={{ color: "#fff" }} /* Text color */
+          style={{ color: "#fff" }}
         />
         <button
           className={classNames(!Boolean(searchText) && "hide", "submit-btn")}
@@ -56,39 +58,48 @@ export default function RightSide() {
         </button>
       </SearchContainer>
 
-      <TrendsContainer>
-        <h2>Trends for you</h2>
-        <div className="trends-list">
-          {trends.map((trend, i) => (
-            <div className="trend" key={trend.title + "-" + i}>
-              <div className="trend__details">
-                <div className="trend__details__category">
-                  {trend.category}
-                  <span className="trend__details__category--label">
-                    Trending
+      <ContentContainer>
+        <TrendsContainer>
+          <h2>Trends for you</h2>
+          <div className="trends-list">
+            {trends.map((trend, i) => (
+              <div className="trend" key={trend.title + "-" + i}>
+                <div className="trend__details">
+                  <div className="trend__details__category">
+                    {trend.category}
+                    <span className="trend__details__category--label">
+                      Trending
+                    </span>
+                  </div>
+                  <span className="trend__details__title">{trend.title}</span>
+                  <span className="trend__details__tweets-count">
+                    {trend.tweetsCount} Sparkles
                   </span>
                 </div>
-                <span className="trend__details__title">{trend.title}</span>
-                <span className="trend__details__tweets-count">
-                  {trend.tweetsCount} Sparkles
-                </span>
+                <button className="more-btn">
+                  <More color="#fff" />
+                </button>
               </div>
-              <button className="more-btn">
-                <More color="#fff" />
-              </button>
-            </div>
-          ))}
-        </div>
-      </TrendsContainer>
+            ))}
+          </div>
+        </TrendsContainer>
 
-      <WhoToFollow />
+        {showWhoToFollowOnRight ? (
+          <RightSideContainer>
+            <WhoToFollow />
+          </RightSideContainer>
+        ) : (
+          <Box mt={4}>
+            <WhoToFollow />
+          </Box>
+        )}
+      </ContentContainer>
     </Container>
   );
 }
 
 const Container = styled.div`
   width: 100%;
-  max-width: 350px;
   padding: 16px;
   background-color: #000;
   border-left: 1px solid #e1e8ed;
@@ -127,11 +138,22 @@ const SearchContainer = styled.div`
   }
 `;
 
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+`;
+
 const TrendsContainer = styled.div`
   background-color: #1c1f24; /* Dark background */
   border-radius: 16px;
-  margin-bottom: 16px;
   padding: 16px;
+  flex-grow: 1;
 
   h2 {
     font-size: 20px;
@@ -182,5 +204,14 @@ const TrendsContainer = styled.div`
       cursor: pointer;
       color: #fff; /* Button color */
     }
+  }
+`;
+
+const RightSideContainer = styled.div`
+  width: 300px;
+  flex-shrink: 0;
+  margin-left: 16px;
+  @media (max-width: 1023px) {
+    display: none;
   }
 `;

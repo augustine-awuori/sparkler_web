@@ -7,6 +7,7 @@ import { Box } from "@chakra-ui/react";
 import {
   AuthPages,
   EditProfilePage,
+  ExplorePage,
   FollowersPage,
   FollowingsPage,
   HomePage,
@@ -109,6 +110,7 @@ function App() {
                       element={<NotificationsPage />}
                       path="/notifications"
                     />
+                    <Route element={<ExplorePage />} path="/explore" />
                     <Route
                       element={<QuoteSparklePage />}
                       path="/:user_id/status/:id/quote"

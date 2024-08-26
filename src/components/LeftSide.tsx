@@ -42,6 +42,7 @@ export default function LeftSide({ onClickSparkle }: Props) {
       id: "explore",
       label: "Explore",
       Icon: Hashtag,
+      link: "/explore",
       onClick: () => {},
     },
     {
@@ -227,7 +228,6 @@ const Container = styled.div`
   .profile-section {
     margin-top: auto;
     margin-bottom: 20px;
-    padding: 10px;
     display: flex;
     text-align: left;
     align-items: center;

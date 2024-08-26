@@ -1,5 +1,6 @@
 export { default as AuthPages } from "./AuthPages";
 export { default as EditProfilePage } from "./EditProfilePage";
+export { default as ExplorePage } from "./ExplorePage";
 export { default as FollowersPage } from "./FollowersPage";
 export { default as FollowingsPage } from "./FollowingsPage";
 export { default as HomePage } from "./HomePage";

@@ -1,7 +1,8 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { Box, useBreakpointValue } from "@chakra-ui/react";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 
 import LeftSide from "./LeftSide";
 import CreateTweetDialog from "./sparkle/CreateSparkleDialog";
@@ -12,9 +13,17 @@ import BottomNav from "./nav/BottomNav";
 export default function Layout({ children }: { children: ReactNode }) {
   const { user } = useStreamContext();
   const [createDialogOpened, setCreateDialogOpened] = useState(false);
+  const [hideRightSide, setHideRightSide] = useState(false);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setHideRightSide(location.pathname === "/explore");
+  }, [location.pathname]);
 
   const showLeftSidebar = useBreakpointValue({ base: false, md: true });
-  const showRightSidebar = useBreakpointValue({ base: false, lg: true });
+  const showRightSidebar =
+    useBreakpointValue({ base: false, lg: true }) && !hideRightSide;
 
   if (!user) return <LoadingIndicator />;
 
