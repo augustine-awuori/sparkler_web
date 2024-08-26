@@ -33,7 +33,10 @@ const BottomNav = () => {
         Icon={<Home color="#fff" fill={isCurrentPath("/")} size={23} />}
         pathname="/"
       />
-      <BottomTab Icon={<Discover color="#fff" size={23} />} pathname="/" />
+      <BottomTab
+        Icon={<Discover color="#fff" size={23} />}
+        pathname="/explore"
+      />
       <BottomTab Icon={<Group color="#fff" size={23} />} pathname="/" />
       <BottomTab Icon={<NotificationIcon />} pathname="/notifications" />
       <BottomTab
