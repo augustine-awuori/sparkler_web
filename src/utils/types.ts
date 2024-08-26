@@ -1,5 +1,3 @@
-export const randomImageUrl = "https://picsum.photos/500/200";
-
 type Common = {
   created_at: string;
   id: string;

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Avatar } from "react-activity-feed";
 import { Flex, Image, Text } from "@chakra-ui/react";
 import { Activity, DefaultGenerics } from "getstream";
 import { useNavigate } from "react-router-dom";
@@ -42,10 +43,11 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
     <EmbeddedBlock>
       <Flex fontSize="small">
         <figure className="embedded-user-image">
-          <Image
-            src={actor.data.profileImage || "https://picsum.photos/500/300"}
-            alt="profile"
-          />
+          {actor.data.profileImage ? (
+            <Image src={actor.data.profileImage} alt="profile" />
+          ) : (
+            <Avatar />
+          )}
         </figure>
         <SparkleActorName
           name={actor.data.name}

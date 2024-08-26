@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { format } from "date-fns";
-import { useStreamContext } from "react-activity-feed";
+import { Avatar, useStreamContext } from "react-activity-feed";
 import { Box, Heading, Image } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
@@ -43,10 +43,11 @@ export default function ProfileBio() {
     <Container>
       <div className="top">
         <figure className="image">
-          <Image
-            src={user?.data?.profileImage || "https://picsum.photos/500/200"}
-            alt="profile image"
-          />
+          {user?.data?.profileImage ? (
+            <Image src={user.data.profileImage} alt="profile image" />
+          ) : (
+            <Avatar />
+          )}
         </figure>
         {!isLoggedInUserProfile ? (
           <div className="actions">

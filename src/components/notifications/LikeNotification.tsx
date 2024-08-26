@@ -1,9 +1,9 @@
-import { useStreamContext } from "react-activity-feed";
+import { Avatar, useStreamContext } from "react-activity-feed";
 import { Link, useNavigate } from "react-router-dom";
 import { NotificationActivity } from "getstream";
 import styled from "styled-components";
 
-import { Activity, randomImageUrl } from "../../utils/types";
+import { Activity } from "../../utils/types";
 import Heart from "../icons/Heart";
 
 interface Props {
@@ -47,10 +47,11 @@ export default function LikeNotification({ likeGroupActivity }: Props) {
                     key={act.id}
                     className="liked-actors__images__image"
                   >
-                    <img
-                      src={act.actor.data.profileImage || randomImageUrl}
-                      alt="profile"
-                    />
+                    {act.actor.data.profileImage ? (
+                      <img src={act.actor.data.profileImage} alt="profile" />
+                    ) : (
+                      <Avatar />
+                    )}
                   </Link>
                 ))}
               </div>

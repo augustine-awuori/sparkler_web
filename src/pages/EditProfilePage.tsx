@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useStreamContext } from "react-activity-feed";
+import { Avatar, useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 
-import { ActivityActor, randomImageUrl } from "../utils/types";
+import { ActivityActor } from "../utils/types";
 
 const EditProfilePage: React.FC = () => {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-  const [profileImage, setProfileImage] = useState(randomImageUrl);
+  const [profileImage, setProfileImage] = useState("");
   const { client } = useStreamContext();
   const navigate = useNavigate();
 
@@ -41,11 +41,11 @@ const EditProfilePage: React.FC = () => {
       </Header>
 
       <Banner>
-        <img src={randomImageUrl} alt="banner" />
+        <Avatar />
       </Banner>
 
       <ProfilePicture>
-        <img src={profileImage} alt="profile" />
+        {profileImage ? <img src={profileImage} alt="profile" /> : <Avatar />}
       </ProfilePicture>
 
       <Form>

@@ -1,12 +1,12 @@
 import { format } from "date-fns";
-import { useFeedContext } from "react-activity-feed";
+import { Avatar, useFeedContext } from "react-activity-feed";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useRef, useState } from "react";
 import { Activity as MainActivity } from "getstream";
 import { Box, Image } from "@chakra-ui/react";
 
-import { Activity, QuoteActivity, randomImageUrl } from "../../utils/types";
+import { Activity, QuoteActivity } from "../../utils/types";
 import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
 import { useActivity, useQuotes, useSparkle } from "../../hooks";
@@ -125,11 +125,15 @@ export default function SparkleContent({ activity }: Props) {
       <Container>
         <Link to={`/${tweetActor.id}`} className="user">
           <figure className="user__image">
-            <Image
-              objectFit="cover"
-              src={tweetActor?.profileImage || randomImageUrl}
-              alt="profile"
-            />
+            {tweetActor?.profileImage ? (
+              <Image
+                objectFit="cover"
+                src={tweetActor.profileImage}
+                alt="profile"
+              />
+            ) : (
+              <Avatar />
+            )}
           </figure>
           <div className="user__name">
             <span className="user__name--name">{tweetActor.name}</span>

@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useStreamContext } from "react-activity-feed";
+import { Avatar, useStreamContext } from "react-activity-feed";
 import styled from "styled-components";
 
-import { randomImageUrl } from "../../utils/types";
 import { User } from "../../users";
 import { useUser } from "../../hooks";
 import Emoji from "../icons/Emoji";
@@ -105,10 +104,11 @@ export default function SparkleForm({
         onSubmit={submit}
       >
         <figure className="user">
-          <img
-            src={(user as User | undefined)?.avatar || randomImageUrl}
-            alt="profile"
-          />
+          {(user as User | undefined)?.avatar ? (
+            <img src={(user as User | undefined)?.avatar} alt="profile" />
+          ) : (
+            <Avatar />
+          )}
         </figure>
         <div className="input-section">
           <TextArea

@@ -1,6 +1,7 @@
+import { Avatar } from "react-activity-feed";
 import styled from "styled-components";
 
-import { Comment, randomImageUrl } from "../../utils/types";
+import { Comment } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import More from "../icons/More";
 import SparkleActorName from "../sparkle/SparkleActorName";
@@ -13,11 +14,13 @@ export default function SparkleCommentBlock({ comment }: Props) {
   const { user, data: tweetComment } = comment;
 
   return (
-    <Block
-    //   to="/"
-    >
+    <Block>
       <figure className="user-image">
-        <img src={user.data.profileImage || randomImageUrl} alt="" />
+        {user.data.profileImage ? (
+          <img src={user.data.profileImage} alt="profile" />
+        ) : (
+          <Avatar />
+        )}
       </figure>
       <div className="comment-tweet">
         <div>
