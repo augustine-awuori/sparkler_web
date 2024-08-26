@@ -91,7 +91,6 @@ const Container = styled.div`
   max-width: 350px;
   padding: 16px;
   background-color: #000;
-  border-left: 1px solid #e1e8ed;
   display: flex;
   flex-direction: column;
   height: auto;
