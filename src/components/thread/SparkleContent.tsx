@@ -123,7 +123,7 @@ export default function SparkleContent({ activity }: Props) {
         />
       )}
       <Container>
-        <Link to={`/${tweetActor.id}`} className="user">
+        <Link to={`/${tweetActor.username}`} className="user">
           <figure className="user__image">
             {tweetActor?.profileImage ? (
               <Image
