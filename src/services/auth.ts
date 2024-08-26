@@ -20,5 +20,7 @@ const getCurrentUser = () => {
   }
 };
 
+const logout = () => localStorage.removeItem(tokenKey);
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getCurrentUser, getJwt, loginWithJwt };
+export default { getCurrentUser, getJwt, loginWithJwt, logout };

@@ -1,19 +1,18 @@
 import { Button } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
-import { IoSparkles } from "react-icons/io5";
+import { IoLogOut, IoSparkles } from "react-icons/io5";
 import classNames from "classnames";
 import styled from "styled-components";
 
 import { useNewNotifications, useUser } from "../hooks";
 import Bell from "./icons/Bell";
-import Bookmark from "./icons/Bookmark";
-import Group from "./icons/Group";
 import Hashtag from "./icons/Hashtag";
 import Home from "./icons/Home";
 import LoadingIndicator from "./LoadingIndicator";
 import Mail from "./icons/Mail";
 import Sparkle from "./icons/Twitter";
 import User from "./icons/User";
+import auth from "../services/auth";
 
 interface Props {
   onClickSparkle: () => void;
@@ -46,12 +45,6 @@ export default function LeftSide({ onClickSparkle }: Props) {
       onClick: () => {},
     },
     {
-      id: "communities",
-      onClick: () => {},
-      label: "Communities",
-      Icon: Group,
-    },
-    {
       id: "notifications",
       label: "Notifications",
       Icon: Bell,
@@ -66,12 +59,6 @@ export default function LeftSide({ onClickSparkle }: Props) {
       Icon: Mail,
     },
     {
-      id: "bookmarks",
-      onClick: () => {},
-      label: "Bookmarks",
-      Icon: Bookmark,
-    },
-    {
       id: "profile",
       onClick: () => {},
       label: "Profile",
@@ -79,6 +66,11 @@ export default function LeftSide({ onClickSparkle }: Props) {
       link: `/${user.username}`,
     },
   ];
+
+  const logout = () => {
+    auth.logout();
+    window.location.reload();
+  };
 
   return (
     <Container>
@@ -122,6 +114,18 @@ export default function LeftSide({ onClickSparkle }: Props) {
       >
         Sparkle
       </Button>
+
+      {user && (
+        <div className="profile-section">
+          <Button
+            leftIcon={<IoLogOut />}
+            className="logout-button"
+            onClick={logout}
+          >
+            Logout
+          </Button>
+        </div>
+      )}
     </Container>
   );
 }
@@ -234,44 +238,25 @@ const Container = styled.div`
       background-color: #333;
     }
 
-    .details {
-      display: flex;
-      align-items: center;
-      &__img {
-        margin-right: 10px;
-        width: 40px;
-        border-radius: 50%;
-        height: 40px;
-        overflow: hidden;
+    .logout-button {
+      width: 100%; /* Take full width of the container */
+      background-color: #ff4d4d; /* Red color for emphasis */
+      border: none;
+      color: white;
+      padding: 10px 0; /* Adjust padding to make it more button-like */
+      border-radius: 30px; /* Keep the rounded corners */
+      cursor: pointer;
+      font-size: 16px; /* Adjust font size */
+      transition: background-color 0.3s ease;
+      text-align: center; /* Center text */
 
-        img {
-          width: 100%;
-          height: 100%;
-        }
+      &:hover {
+        background-color: #e60000; /* Darker red on hover */
       }
 
-      &__text {
-        span {
-          display: block;
-        }
-
-        &__name {
-          color: white;
-          font-size: 16px;
-          font-weight: bold;
-          white-space: nowrap; /* Prevent text from wrapping */
-          overflow: hidden; /* Hide text overflow */
-          text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
-        }
-
-        &__id {
-          font-size: 14px;
-          margin-top: 2px;
-          color: #aaa;
-          white-space: nowrap; /* Prevent text from wrapping */
-          overflow: hidden; /* Hide text overflow */
-          text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
-        }
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.5);
       }
     }
   }

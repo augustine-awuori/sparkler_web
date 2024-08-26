@@ -6,9 +6,7 @@ import { randomImageUrl } from "../../utils/types";
 import { User } from "../../users";
 import { useUser } from "../../hooks";
 import Emoji from "../icons/Emoji";
-import Gif from "../icons/Gif";
 import Image from "../icons/Image";
-import Poll from "../icons/Poll";
 import TextProgressRing from "../TextProgressRing";
 import TextArea from "../TextArea";
 
@@ -23,16 +21,16 @@ const actions = [
     Icon: Image,
     alt: "Image",
   },
-  {
-    id: "gif",
-    Icon: Gif,
-    alt: "GIF",
-  },
-  {
-    id: "poll",
-    Icon: Poll,
-    alt: "Poll",
-  },
+  // {
+  //   id: "gif",
+  //   Icon: Gif,
+  //   alt: "GIF",
+  // },
+  // {
+  //   id: "poll",
+  //   Icon: Poll,
+  //   alt: "Poll",
+  // },
   {
     id: "emoji",
     Icon: Emoji,
