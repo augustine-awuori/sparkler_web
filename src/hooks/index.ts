@@ -1,5 +1,6 @@
 export { default as useActivity } from "./useActivity";
 export { default as useComment } from "./useComment";
+export { default as useFiles } from "./useFiles";
 export { default as useFollow } from "./useFollow";
 export { default as useForm } from "./useForm";
 export { default as useLike } from "./useLike";

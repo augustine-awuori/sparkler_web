@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { Avatar, useFeedContext } from "react-activity-feed";
+import { Avatar, Gallery, useFeedContext } from "react-activity-feed";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useRef, useState } from "react";
@@ -52,6 +52,7 @@ export default function SparkleContent({ activity }: Props) {
   const hasLikedSparkled = checkIfHasLiked(appActivity);
   const hasBeenResparkled = checkIfHasResparkled(appActivity);
   const isAQuote = activity.verb === "quote";
+  const images: string[] = appActivity.attachments?.images || [];
 
   const onToggleLike = async () => {
     await toggleLike(activity, hasLikedSparkled);
@@ -153,6 +154,7 @@ export default function SparkleContent({ activity }: Props) {
               ).replace(/\n/g, "<br/>"),
             }}
           />
+          {Boolean(images.length) && <Gallery images={images} />}
           {isAQuote && (
             <EmbeddedSparkleBlock
               activity={

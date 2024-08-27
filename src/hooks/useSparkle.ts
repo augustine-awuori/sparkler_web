@@ -12,7 +12,7 @@ export default function useSparkle() {
 
   const userFeed = client?.feed("user", client.userId);
 
-  const createSparkle = async (text: string) => {
+  const createSparkle = async (text: string, images: string[]) => {
     if (!client || !userFeed)
       return toast.error("Sparkle could not be created");
 
@@ -30,6 +30,7 @@ export default function useSparkle() {
     await userFeed.addActivity({
       actor: `SU:${client.userId}`,
       verb: "tweet",
+      attachments: { images },
       object: `SO:tweet:${collection.id}`,
       foreign_id: client.userId + time,
       time,

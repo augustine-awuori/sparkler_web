@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Avatar, useStreamContext } from "react-activity-feed";
+import { Avatar, Gallery, useStreamContext } from "react-activity-feed";
+import { Activity } from "getstream";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import classNames from "classnames";
-import { Activity } from "getstream";
 
 import {
   Activity as AppActivity,
@@ -140,6 +140,10 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     await createQuote(quote, appActivity as unknown as Activity);
   };
 
+  const viewDetails = () => navigate(sparkleLink);
+
+  const images: string[] = appActivity.attachments?.images || [];
+
   return (
     <Box _hover={{ bg: "#111" }}>
       <Block>
@@ -160,7 +164,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
               <Avatar />
             )}
           </figure>
-          <div className="tweet" onClick={() => navigate(sparkleLink)}>
+          <div className="tweet" onClick={viewDetails}>
             <button className="link">
               <TweetActorName
                 name={actor.data.name}
@@ -179,6 +183,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                   }}
                 />
               </div>
+              {Boolean(images.length) && <Gallery images={images} />}
             </button>
             {isAQuote && (
               <EmbeddedSparkleBlock

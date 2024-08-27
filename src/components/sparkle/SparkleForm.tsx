@@ -1,45 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Avatar, useStreamContext } from "react-activity-feed";
+import { Avatar, EmojiPicker, useStreamContext } from "react-activity-feed";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 
 import { User } from "../../users";
-import { useUser } from "../../hooks";
-import Emoji from "../icons/Emoji";
+import { useFiles, useUser } from "../../hooks";
+import filesStorage from "../../storage/files";
 import Image from "../icons/Image";
 import TextProgressRing from "../TextProgressRing";
 import TextArea from "../TextArea";
+import ImageInputList from "../common/ImageInputList";
 
 interface FormProps {
   inline?: boolean;
   minheight?: string;
 }
 
-const actions = [
-  {
-    id: "image",
-    Icon: Image,
-    alt: "Image",
-  },
-  // {
-  //   id: "gif",
-  //   Icon: Gif,
-  //   alt: "GIF",
-  // },
-  // {
-  //   id: "poll",
-  //   Icon: Poll,
-  //   alt: "Poll",
-  // },
-  {
-    id: "emoji",
-    Icon: Emoji,
-    alt: "Emoji",
-  },
-];
-
 interface SparkleFormProps {
   submitText?: string;
-  onSubmit: (text: string) => Promise<void>;
+  onSubmit: (text: string, images: string[]) => Promise<void>;
   className?: string;
   placeholder?: string;
   collapsedOnMount?: boolean;
@@ -49,6 +28,7 @@ interface SparkleFormProps {
 }
 
 export const MAX_CHARS = 280;
+export const IMAGES_LIMIT = 3;
 
 export default function SparkleForm({
   submitText = "Sparkle",
@@ -65,22 +45,66 @@ export default function SparkleForm({
   const [expanded, setExpanded] = useState(!collapsedOnMount);
   const [text, setText] = useState("");
   const { user } = useUser();
+  const [isSelectingImages, setIsSelectingImages] = useState(false);
+  const { files, removeAllFiles, filesCount } = useFiles(IMAGES_LIMIT);
+
+  useEffect(() => {
+    if (filesCount) removeAllFiles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (shouldFocus && inputRef.current) inputRef.current.focus();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldFocus, client?.currentUser, user?._id]);
 
+  const actions = [
+    {
+      id: "image",
+      Icon: Image,
+      alt: "Image",
+      onclick: () => setIsSelectingImages((value) => !value),
+    },
+    {
+      id: "emoji-picker",
+      Icon: EmojiPicker,
+      alt: "Emoji",
+    },
+  ];
+
+  const handleEmojiSelect = (emojiData: any) => {
+    const emoji = emojiData.native;
+    if (inputRef.current) {
+      const start = inputRef.current.selectionStart;
+      const end = inputRef.current.selectionEnd;
+      const newText =
+        text.substring(0, start) + emoji + text.substring(end, text.length);
+      setText(newText);
+
+      inputRef.current.selectionStart = inputRef.current.selectionEnd =
+        start + emoji.length;
+    } else {
+      setText(text + emoji);
+    }
+  };
+
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    let imagesUrl: string[] = [];
 
-    if (exceededMax)
-      return alert("Sparkle cannot exceed " + MAX_CHARS + " characters");
+    try {
+      e.preventDefault();
 
-    await onSubmit(text);
+      if (exceededMax)
+        return alert("Sparkle cannot exceed " + MAX_CHARS + " characters");
 
-    setText("");
+      if (filesCount) imagesUrl = await filesStorage.saveFiles(files);
+      await onSubmit(text, imagesUrl);
+
+      removeAllFiles();
+      setText("");
+    } catch (error) {
+      toast.error("Sparkle couldn't be posted");
+      if (filesCount) await filesStorage.deleteFiles(imagesUrl);
+    }
   };
 
   const onClick = () => setExpanded(true);
@@ -124,11 +148,15 @@ export default function SparkleForm({
                 return (
                   <button
                     type="button"
-                    disabled={action.id === "location"}
                     key={action.id}
                     style={{ margin: "0 8px" }}
+                    onClick={action?.onclick}
                   >
-                    <action.Icon size={19} color="var(--theme-color)" />
+                    <action.Icon
+                      size={19}
+                      color="var(--theme-color)"
+                      onSelect={handleEmojiSelect}
+                    />
                   </button>
                 );
               })}
@@ -146,6 +174,7 @@ export default function SparkleForm({
           </div>
         </div>
       </Form>
+      {isSelectingImages && <ImageInputList imagesLimit={IMAGES_LIMIT} />}
     </Container>
   );
 }

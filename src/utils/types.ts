@@ -69,10 +69,16 @@ interface Resparkle extends Common {
   user_id: string;
 }
 
+export type Video = { mimeType: "video/mp4"; name: string; url: string };
+
 export type Activity = {
   id: string;
   actor: ActivityActor;
   object: ActivityObject;
+  attachments?: {
+    files?: Video[];
+    images?: string[];
+  };
   time: string;
   latest_reactions: {
     like?: Like[];
