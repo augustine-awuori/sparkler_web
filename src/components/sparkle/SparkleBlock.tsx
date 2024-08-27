@@ -183,7 +183,11 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                   }}
                 />
               </div>
-              {Boolean(images.length) && <Gallery images={images} />}
+              {Boolean(images.length) && (
+                <Box mt={2}>
+                  <Gallery images={images} />
+                </Box>
+              )}
             </button>
             {isAQuote && (
               <EmbeddedSparkleBlock

@@ -154,7 +154,11 @@ export default function SparkleContent({ activity }: Props) {
               ).replace(/\n/g, "<br/>"),
             }}
           />
-          {Boolean(images.length) && <Gallery images={images} />}
+          {Boolean(images.length) && (
+            <Box mt={2}>
+              <Gallery images={images} />
+            </Box>
+          )}
           {isAQuote && (
             <EmbeddedSparkleBlock
               activity={
