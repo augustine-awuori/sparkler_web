@@ -25,12 +25,15 @@ export default function Header({ title = "Sparkle" }: Props) {
 const AppHeader = styled.header`
   display: flex;
   align-items: center;
+  justify-content: center;
+  position: relative;
   padding: 15px;
 
   .back-button {
+    position: absolute;
+    left: 15px; /* Adjust this value as needed */
     width: 25px;
     height: 20px;
-    margin-right: 40px;
   }
 
   .title {

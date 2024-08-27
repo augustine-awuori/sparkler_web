@@ -10,7 +10,7 @@ import { Activity, QuoteActivity } from "../../utils/types";
 import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
 import { useActivity, useQuotes, useSparkle } from "../../hooks";
-import BarChart from "../icons/BarChart";
+// import BarChart from "../icons/BarChart";
 import Comment from "../icons/Comment";
 import CommentDialog from "../sparkle/CommentDialog ";
 import Heart from "../icons/Heart";
@@ -166,12 +166,12 @@ export default function SparkleContent({ activity }: Props) {
             <span className="tweet__time--date">{date}</span>
           </div>
 
-          <div className="tweet__analytics">
+          {/* <div className="tweet__analytics">
             <BarChart color="#888" />
             <span className="tweet__analytics__text">
               Sparkle Analytics coming sooner
             </span>
-          </div>
+          </div> */}
 
           {(Boolean(likesCount) ||
             Boolean(resparklesCount) ||

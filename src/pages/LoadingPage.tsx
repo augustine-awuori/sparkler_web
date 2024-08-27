@@ -1,7 +1,6 @@
 import React from "react";
-import { Box, Image, Text } from "@chakra-ui/react";
-
-import logo from "../assets/logo.png";
+import { Box, Text } from "@chakra-ui/react";
+import { LuWand } from "react-icons/lu";
 
 const LoadingPage: React.FC = () => {
   return (
@@ -11,11 +10,16 @@ const LoadingPage: React.FC = () => {
       alignItems="center"
       width="100vw"
       height="100vh"
-      bg="inherit"
+      bg="black"
     >
-      <Box textAlign="center">
-        <Image src={logo} alt="Loading" width="80px" height="80px" />
-        <Text mt={1} color="white">
+      <Box
+        textAlign="center"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+      >
+        <LuWand color="var(--theme-color)" size={55} />
+        <Text mt={2} color="white" fontFamily="quicksand" letterSpacing={0.3}>
           Sparkler
         </Text>
       </Box>

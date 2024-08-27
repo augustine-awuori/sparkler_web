@@ -241,7 +241,7 @@ const Container = styled.div`
 
     .logout-button {
       width: 100%; /* Take full width of the container */
-      background-color: #ff4d4d; /* Red color for emphasis */
+      background-color: #e33437; /* Red color for emphasis */
       border: none;
       color: white;
       padding: 10px 0; /* Adjust padding to make it more button-like */

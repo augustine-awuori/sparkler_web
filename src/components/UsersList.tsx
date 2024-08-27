@@ -1,9 +1,10 @@
 import { StreamUser } from "getstream";
 import { Flex, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { Avatar } from "react-activity-feed";
 
 import { ActivityActor } from "../utils/types";
-import Avatar from "./Avatar";
+import AppAvatar from "./Avatar";
 import FollowBtn from "./FollowBtn";
 import LoadingIndicator from "./LoadingIndicator";
 
@@ -33,14 +34,26 @@ const UsersList = ({ loading, users }: Props) => {
             onClick={() => navigate(`/${username}`)}
             cursor="pointer"
           >
-            <Avatar
-              mr={3}
-              name={name}
-              src={profileImage}
-              w={50}
-              h={50}
-              borderRadius="full"
-            />
+            {profileImage ? (
+              <AppAvatar
+                mr={3}
+                name={name}
+                src={profileImage}
+                w={50}
+                h={50}
+                borderRadius="full"
+              />
+            ) : (
+              <Avatar
+                circle
+                style={{
+                  marginRight: 5,
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
+                }}
+              />
+            )}
             <Flex flex="1" direction="column" justify="center">
               <Text fontWeight="bold" fontSize="md" color="#ccc">
                 {name}
