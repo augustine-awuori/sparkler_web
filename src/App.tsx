@@ -63,11 +63,7 @@ function App() {
       const client = StreamChat.getInstance(key);
 
       await client.connectUser(
-        {
-          id: user._id,
-          name: user.name,
-          image: user.avatar,
-        },
+        { id: user._id, name: user.name, image: user.avatar, },
         user.chatToken
       );
 
@@ -76,7 +72,7 @@ function App() {
 
     initChatClient();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, chatClient]);
 
   useEffect(() => {
     const retrieveAllUsersInfo = async () => {
