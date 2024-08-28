@@ -1,20 +1,23 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import ProfileSparkles from "./ProfileSparkles";
 import ProfileReplies from "./ProfileReplies";
 import ProfileMedia from "./ProfileMedia";
 
-type TabId = "tweets" | "tweet-replies" | "media";
+type TabId = "sparkles" | "sparkles-replies" | "media";
 
-const tabs: { id: TabId; label: string }[] = [
+type Tab = { id: TabId; label: string };
+
+const tabs: Tab[] = [
   {
-    id: "tweets",
+    id: "sparkles",
     label: "Sparkles",
   },
   {
-    id: "tweet-replies",
+    id: "sparkles-replies",
     label: "Resparkles & replies",
   },
   {
@@ -24,14 +27,35 @@ const tabs: { id: TabId; label: string }[] = [
 ];
 
 export default function TabList() {
+  const { user_id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState<TabId>(tabs[0].id);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tabLabel = params.get("tab");
+
+    const foundTab = tabs.find((tab) => tab.label === tabLabel);
+    if (foundTab && activeTab !== foundTab.id) {
+      setActiveTab(foundTab.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only trigger useEffect when location.search changes
+
+  const handleTabChange = (tab: Tab) => {
+    if (activeTab !== tab.id) {
+      setActiveTab(tab.id);
+      navigate(`/${user_id}?tab=${tab.label}`);
+    }
+  };
 
   return (
     <div>
       <Container>
         {tabs.map((tab) => (
           <button
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabChange(tab)}
             className="tab"
             key={tab.id}
           >
@@ -46,8 +70,8 @@ export default function TabList() {
           </button>
         ))}
       </Container>
-      {activeTab === "tweets" && <ProfileSparkles />}
-      {activeTab === "tweet-replies" && <ProfileReplies />}
+      {activeTab === "sparkles" && <ProfileSparkles />}
+      {activeTab === "sparkles-replies" && <ProfileReplies />}
       {activeTab === "media" && <ProfileMedia />}
     </div>
   );
