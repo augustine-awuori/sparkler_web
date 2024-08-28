@@ -1,11 +1,12 @@
 import classNames from "classnames";
 import { useState } from "react";
-import { NotificationFeed } from "react-activity-feed";
+import { LoadMorePaginator, NotificationFeed } from "react-activity-feed";
 import styled from "styled-components";
 
 import { NotificationGroup } from "../components/notifications";
 import { useTitleChanger } from "../hooks";
 import LoadingIndicator from "../components/LoadingIndicator";
+import { LoadMoreButton } from "../components/profile/ProfileSparkles";
 
 const tabList = [
   {
@@ -46,6 +47,12 @@ export default function NotificationPage() {
       <NotificationFeed
         Group={NotificationGroup}
         LoadingIndicator={LoadingIndicator}
+        Paginator={(props) => (
+          <LoadMorePaginator
+            {...props}
+            LoadMoreButton={(props) => <LoadMoreButton {...props} />}
+          />
+        )}
       />
     </Container>
   );

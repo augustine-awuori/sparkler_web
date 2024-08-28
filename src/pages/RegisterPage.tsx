@@ -70,9 +70,16 @@ const RegisterForm = ({ onSignInRequest }: Props) => {
       p={6}
       borderWidth={1}
       borderRadius="lg"
+      fontFamily="quicksand"
       boxShadow="lg"
     >
-      <Heading as="h1" size="lg" textAlign="center" mb={6}>
+      <Heading
+        as="h1"
+        size="lg"
+        textAlign="center"
+        mb={6}
+        fontFamily="quicksand"
+      >
         Sign Up to Sparkler
       </Heading>
       <Form handleSubmit={handleSubmit} onSubmit={doSubmit}>

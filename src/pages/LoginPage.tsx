@@ -61,9 +61,16 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
       p={6}
       borderWidth={1}
       borderRadius="lg"
+      fontFamily="quicksand"
       boxShadow="lg"
     >
-      <Heading as="h2" size="xl" textAlign="center" mb={6}>
+      <Heading
+        as="h2"
+        size="lg"
+        textAlign="center"
+        mb={6}
+        fontFamily="quicksand"
+      >
         Sign in to Sparkler
       </Heading>
 
