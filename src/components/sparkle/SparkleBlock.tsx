@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Avatar, Gallery, useStreamContext } from "react-activity-feed";
 import { Activity } from "getstream";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
@@ -49,15 +49,11 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const { setActivity } = useActivity();
   const { toggleResparkle } = useResparkle();
   const { createQuote } = useQuoting();
-  const { deleteSparkle, checkIfHasLiked, checkIfHasResparkled } = useSparkle();
+  const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const isAReaction = activity.foreign_id.startsWith("reaction");
   const sparkle = isAReaction
     ? (activity.object as unknown as AppActivity).object.data
     : (activity.object as unknown as ActivityObject).data;
-
-  useEffect(() => {
-    if (isAReaction && !sparkle) deleteSparkle(activity.id);
-  }, [activity.id, deleteSparkle, isAReaction, sparkle]);
 
   const appActivity = isAReaction
     ? (activity.object as unknown as AppActivity)

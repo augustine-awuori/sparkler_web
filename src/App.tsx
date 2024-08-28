@@ -100,7 +100,8 @@ function App() {
   useEffect(() => {
     const initClient = async () => {
       try {
-        if (user) setClient(new StreamClient(key, user.feedToken, id));
+        if (user && !client)
+          setClient(new StreamClient(key, user.feedToken, id));
       } catch (error) {
         console.error(error);
       }
