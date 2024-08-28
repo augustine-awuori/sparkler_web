@@ -8,7 +8,10 @@ import { useProfile } from "../../hooks";
 import LoadingIndicator from "../LoadingIndicator";
 import SparkleBlock from "../sparkle/SparkleBlock";
 
-const LoadMoreButton = ({ onClick, refreshing }: LoadMoreButtonProps) => (
+export const LoadMoreButton = ({
+  onClick,
+  refreshing,
+}: LoadMoreButtonProps) => (
   <Box textAlign="center" mt={4}>
     <Button
       borderRadius="full"

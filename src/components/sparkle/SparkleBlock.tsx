@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Avatar, Gallery, useStreamContext } from "react-activity-feed";
 import { Activity } from "getstream";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import classNames from "classnames";
 
@@ -31,6 +31,7 @@ import ResparklePopup from "./ResparklePopup";
 import Retweet from "../icons/Retweet";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
+import { TabId } from "../profile/TabList";
 
 interface Props {
   activity: Activity;
@@ -49,6 +50,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const { setActivity } = useActivity();
   const { toggleResparkle } = useResparkle();
   const { createQuote } = useQuoting();
+  const location = useLocation();
   const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const isAReaction = activity.foreign_id.startsWith("reaction");
   const sparkle = isAReaction
@@ -139,6 +141,15 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const viewDetails = () => navigate(sparkleLink);
 
   const images: string[] = appActivity.attachments?.images || [];
+
+  const params = new URLSearchParams(location.search);
+  const tabLabel = params.get("tab");
+  if (
+    tabLabel &&
+    (tabLabel as TabId).toLowerCase() === "media" &&
+    !images.length
+  )
+    return null;
 
   return (
     <Box _hover={{ bg: "#111" }}>

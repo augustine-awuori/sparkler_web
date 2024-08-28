@@ -7,7 +7,7 @@ import ProfileSparkles from "./ProfileSparkles";
 import ProfileReplies from "./ProfileReplies";
 import ProfileMedia from "./ProfileMedia";
 
-type TabId = "sparkles" | "sparkles-replies" | "media";
+export type TabId = "sparkles" | "sparkles-replies" | "media";
 
 type Tab = { id: TabId; label: string };
 
@@ -37,9 +37,8 @@ export default function TabList() {
     const tabLabel = params.get("tab");
 
     const foundTab = tabs.find((tab) => tab.label === tabLabel);
-    if (foundTab && activeTab !== foundTab.id) {
-      setActiveTab(foundTab.id);
-    }
+    if (foundTab && activeTab !== foundTab.id) setActiveTab(foundTab.id);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only trigger useEffect when location.search changes
 
