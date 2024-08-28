@@ -69,7 +69,9 @@ export default function LikeNotification({ likeGroupActivity }: Props) {
                 </Link>
               </span>
 
-              <p className="tweet-text">{lastActivity.object.data.text}</p>
+              <p className="tweet-text">
+                {lastActivity.object.data?.text || ""}
+              </p>
             </div>
           </Block>
         );
