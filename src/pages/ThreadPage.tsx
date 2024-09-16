@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Feed, useStreamContext } from "react-activity-feed";
 import { useParams } from "react-router-dom";
 
@@ -13,6 +14,10 @@ const FEED_ENRICH_OPTIONS = {
 export default function Thread() {
   const { user } = useStreamContext();
   const { user_id } = useParams();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Feed
