@@ -5,14 +5,14 @@ import { useUnreadMessages, useUser } from "../../hooks";
 import BottomTab from "./BottomTab";
 import Discover from "../icons/Discover";
 import Home from "../icons/Home";
+import Mail from "../icons/Mail";
 import NotificationIcon from "../notifications/Icon";
 import User from "../icons/User";
-import Mail from "../icons/Mail";
 
 const BottomNav = () => {
   const { user } = useUser();
-  const location = useLocation();
   const { count } = useUnreadMessages();
+  const location = useLocation();
 
   const isCurrentPath = (path: string) => location.pathname === path;
 
@@ -41,14 +41,14 @@ const BottomNav = () => {
       <BottomTab Icon={<NotificationIcon />} pathname="/notifications" />
       <BottomTab
         Icon={<Mail color="#fff" size={23} />}
-        pathname="/messages"
+        pathname={user ? "/messages" : "/auth"}
         value={count}
       />
       <BottomTab
         Icon={
           <User size={23} color="#fff" fill={isCurrentPath(`/${user?._id}`)} />
         }
-        pathname={`/${user?.username}`}
+        pathname={user ? `/${user?.username}` : "/auth"}
       />
     </Box>
   );

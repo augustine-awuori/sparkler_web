@@ -87,7 +87,7 @@ export default function LeftSide({ onClickSparkle }: Props) {
     const isValidNavigation =
       user || menuItem.id === "home" || menuItem.id === "explore";
 
-    if (isValidNavigation) menuItem.onClick();
+    isValidNavigation ? menuItem.onClick() : navigate("/auth");
   };
 
   return (
