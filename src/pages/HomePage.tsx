@@ -1,22 +1,13 @@
 import styled from "styled-components";
 import { Feed } from "react-activity-feed";
 
-import { useTitleChanger, useUser } from "../hooks";
-import LoadingIndicator from "../components/LoadingIndicator";
+import { useTitleChanger } from "../hooks";
 import MainHeader from "../components/home/MainHeader";
 import CreateSparkleTop from "../components/home/CreateSparkleTop";
 import Timeline from "../components/home/Timeline";
 
 export default function HomePage() {
-  const { user } = useUser();
   useTitleChanger("Home");
-
-  if (!user)
-    return (
-      <Container>
-        <LoadingIndicator />
-      </Container>
-    );
 
   return (
     <Container>

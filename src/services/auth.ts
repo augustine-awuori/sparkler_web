@@ -22,5 +22,7 @@ const getCurrentUser = () => {
 
 const logout = () => localStorage.removeItem(tokenKey);
 
+const decode = (jwt: string) => jwtDecode(jwt);
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getCurrentUser, getJwt, loginWithJwt, logout };
+export default { decode, getCurrentUser, getJwt, loginWithJwt, logout };

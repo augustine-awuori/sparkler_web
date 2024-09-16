@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { Box, Heading } from "@chakra-ui/react";
-
 import { z } from "zod";
 
 import { ResponseError } from "../services/client";

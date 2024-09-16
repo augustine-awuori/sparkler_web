@@ -40,7 +40,7 @@ export default function TabList() {
     if (foundTab && activeTab !== foundTab.id) setActiveTab(foundTab.id);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only trigger useEffect when location.search changes
+  }, []);
 
   const handleTabChange = (tab: Tab) => {
     if (activeTab !== tab.id) {

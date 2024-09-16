@@ -1,37 +1,44 @@
 import { Button } from "@chakra-ui/react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoLogOut, IoSparkles } from "react-icons/io5";
+import { FcGoogle } from "react-icons/fc";
 import classNames from "classnames";
 import styled from "styled-components";
 
 import { useNewNotifications, useUnreadMessages, useUser } from "../hooks";
+import auth from "../services/auth";
 import Bell from "./icons/Bell";
 import Hashtag from "./icons/Hashtag";
 import Home from "./icons/Home";
-import LoadingIndicator from "./LoadingIndicator";
 import Mail from "./icons/Mail";
 import Sparkle from "./icons/Twitter";
 import User from "./icons/User";
-import auth from "../services/auth";
 
 interface Props {
   onClickSparkle: () => void;
 }
+
+type Menu = {
+  id: "home" | "explore" | "notifications" | "messages" | "profile";
+  label: string;
+  Icon: (props: {
+    color?: string | undefined;
+    size?: number | undefined;
+    fill?: boolean | undefined;
+  }) => JSX.Element;
+  link: string;
+  onClick: () => void;
+  value?: number;
+};
 
 export default function LeftSide({ onClickSparkle }: Props) {
   const location = useLocation();
   const { user } = useUser();
   const { newNotifications } = useNewNotifications();
   const { count } = useUnreadMessages();
+  const navigate = useNavigate();
 
-  if (!user)
-    return (
-      <Container>
-        <LoadingIndicator />
-      </Container>
-    );
-
-  const menus = [
+  const menus: Menu[] = [
     {
       id: "home",
       label: "Home",
@@ -67,13 +74,20 @@ export default function LeftSide({ onClickSparkle }: Props) {
       onClick: () => {},
       label: "Profile",
       Icon: User,
-      link: `/${user.username}`,
+      link: `/${user?.username || ""}`,
     },
   ];
 
   const logout = () => {
     auth.logout();
     window.location.reload();
+  };
+
+  const handleItemClick = (menuItem: Menu) => {
+    const isValidNavigation =
+      user || menuItem.id === "home" || menuItem.id === "explore";
+
+    if (isValidNavigation) menuItem.onClick();
   };
 
   return (
@@ -85,20 +99,20 @@ export default function LeftSide({ onClickSparkle }: Props) {
         {menus.map((m) => {
           const isActiveLink =
             location.pathname === `/${m.id}` ||
-            (m.id === "profile" && location.pathname === `/${user._id}`);
+            (m.id === "profile" && location.pathname === `/${user?._id || ""}`);
 
           return (
             <Link
-              to={m.link ?? "#"}
+              to={user ? m.link : ""}
               className={classNames(
                 `btn--${m.id} new-tweets`,
                 isActiveLink && "active"
               )}
               key={m.id}
-              onClick={m.onClick}
+              onClick={() => handleItemClick(m)}
             >
               <div className="btn--icon">
-                {m.value ? (
+                {m.value && user ? (
                   <span className="value-count">{m.value}</span>
                 ) : null}
                 <m.Icon fill={isActiveLink} color="white" size={25} />
@@ -117,8 +131,8 @@ export default function LeftSide({ onClickSparkle }: Props) {
         Sparkle
       </Button>
 
-      {user && (
-        <div className="profile-section">
+      <div className="profile-section">
+        {user ? (
           <Button
             leftIcon={<IoLogOut />}
             className="logout-button"
@@ -126,8 +140,17 @@ export default function LeftSide({ onClickSparkle }: Props) {
           >
             Logout
           </Button>
-        </div>
-      )}
+        ) : (
+          <Button
+            leftIcon={<FcGoogle size={20} />}
+            className="login-button"
+            _hover={{ bg: "#db4437", color: "white" }}
+            onClick={() => navigate("/auth")}
+          >
+            Login with Google
+          </Button>
+        )}
+      </div>
     </Container>
   );
 }
@@ -213,6 +236,28 @@ const Container = styled.div`
         overflow: hidden; /* Hide text overflow */
         text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
       }
+    }
+  }
+
+  .login-button {
+    width: 100%;
+    background-color: white;
+    color: #db4437;
+    border: 1px solid #db4437;
+    border-radius: 30px;
+    font-size: 16px;
+    padding: 10px 0;
+    font-weight: bold;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #db4437; /* Background color on hover */
+      color: white; /* Change text color to white */
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.5); /* Focus shadow */
     }
   }
 
