@@ -34,6 +34,8 @@ import { AppData } from "./utils/app";
 import { Quote } from "./utils/types";
 import { User } from "./users";
 
+import { authTokenKey, processResponse } from "./services/client";
+import { useUser } from "./hooks";
 import appService from "./services/appData";
 import auth from "./services/auth";
 import chatTokenService from "./services/chatToken";
@@ -53,6 +55,31 @@ function App() {
   const [files, setFiles] = useState<File[]>([]);
   const [appData, setAppData] = useState<AppData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { googleUser } = useUser();
+
+  useEffect(() => {
+    if (!user && googleUser) initUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleUser, user]);
+
+  async function initUser() {
+    if (!googleUser) return;
+    const { email, displayName, photoURL } = googleUser;
+    if (!email || !displayName || !photoURL) return;
+
+    const res = await usersService.quickAuth({
+      email,
+      name: displayName,
+      avatar: photoURL,
+    });
+
+    const { data, ok } = processResponse(res);
+    if (ok) {
+      auth.loginWithJwt(res.headers[authTokenKey]);
+      setUser(data as User);
+      window.location.reload();
+    } else toast.error("Login failed");
+  }
 
   useEffect(() => {
     const initApp = async () => {

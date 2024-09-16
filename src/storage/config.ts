@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import {
   deleteObject,
   ref,
@@ -18,6 +19,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+export const googleAuth = getAuth(app);
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {

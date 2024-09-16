@@ -1,5 +1,7 @@
 import { jwtDecode } from "jwt-decode";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
+import { googleAuth } from "../storage/config";
 import { User } from "../users";
 
 const tokenKey = "token";
@@ -20,9 +22,26 @@ const getCurrentUser = () => {
   }
 };
 
-const logout = () => localStorage.removeItem(tokenKey);
+const logout = async () => {
+  localStorage.removeItem(tokenKey);
+  await googleSignOut();
+};
 
 const decode = (jwt: string) => jwtDecode(jwt);
 
+const loginWithGoogle = () =>
+  signInWithPopup(googleAuth, new GoogleAuthProvider());
+
+async function googleSignOut() {
+  await signOut(googleAuth);
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { decode, getCurrentUser, getJwt, loginWithJwt, logout };
+export default {
+  decode,
+  getCurrentUser,
+  getJwt,
+  loginWithGoogle,
+  loginWithJwt,
+  logout,
+};

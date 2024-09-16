@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Button, Heading } from "@chakra-ui/react";
 import { z } from "zod";
+import { IoLogoGoogle } from "react-icons/io5";
 
 import { ResponseError } from "../services/client";
 import {
@@ -53,6 +54,8 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
     }
   };
 
+  const handleGoogleSignIn = async () => await auth.loginWithGoogle();
+
   return (
     <Box
       maxW="md"
@@ -84,10 +87,27 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
           register={register}
         />
         <SubmitButton label="Sign In" isLoading={loading} />
-        <Text cursor="pointer" textAlign="center" onClick={onSignUpRequest}>
-          Don't have an account? Sign Up
-        </Text>
       </Form>
+
+      <Button
+        leftIcon={<IoLogoGoogle />}
+        colorScheme="blue"
+        variant="outline"
+        mt={4}
+        width="full"
+        onClick={handleGoogleSignIn}
+      >
+        Sign in with Google
+      </Button>
+
+      <Text
+        cursor="pointer"
+        textAlign="center"
+        mt={4}
+        onClick={onSignUpRequest}
+      >
+        Don't have an account? Sign Up
+      </Text>
     </Box>
   );
 };
