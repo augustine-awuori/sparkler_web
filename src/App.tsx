@@ -58,11 +58,15 @@ function App() {
   const { googleUser } = useUser();
 
   useEffect(() => {
-    if (!user && googleUser) initUser();
+    initUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [googleUser, user]);
 
   async function initUser() {
+    if (user) return;
+    const cachedUser = auth.getCurrentUser();
+    if (cachedUser) return setUser(cachedUser);
+
     if (!googleUser) return;
     const { email, displayName, photoURL } = googleUser;
     if (!email || !displayName || !photoURL) return;
