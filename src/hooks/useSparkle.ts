@@ -13,6 +13,8 @@ export default function useSparkle() {
   const userFeed = client?.feed("user", client.userId);
 
   const createSparkle = async (text: string, images: string[]) => {
+    if (!user) return toast.info("Login to sparkle");
+
     if (!client || !userFeed)
       return toast.error("Sparkle could not be created");
 

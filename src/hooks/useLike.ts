@@ -1,5 +1,6 @@
 import { Activity } from "getstream";
 import { useFeedContext } from "react-activity-feed";
+import { toast } from "react-toastify";
 
 import { Activity as AppActivity } from "../utils/types";
 import useNotification from "./useNotification";
@@ -11,6 +12,8 @@ export default function useLike() {
   const { user } = useUser();
 
   const toggleLike = async (activity: Activity, hasLikedSparkle: boolean) => {
+    if (!user) return toast.info("Login to like a sparkle");
+
     const appActivity = activity as unknown as AppActivity;
     const actor = appActivity.actor;
 

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
+import { toast } from "react-toastify";
+
 import useNotification from "./useNotification";
+import useUser from "./useUser";
 
 interface Props {
   userId: string;
@@ -10,6 +13,7 @@ export default function useFollow({ userId }: Props) {
   const { client } = useStreamContext();
   const [isFollowing, setIsFollowing] = useState(false);
   const { createNotification } = useNotification();
+  const { user } = useUser();
 
   useEffect(() => {
     async function init() {
@@ -26,6 +30,8 @@ export default function useFollow({ userId }: Props) {
   }, [userId, client]);
 
   const toggleFollow = async () => {
+    if (!user) return toast.info("Login to follow user");
+
     const action = isFollowing ? "unfollow" : "follow";
 
     if (action === "follow") await createNotification(userId, action);
