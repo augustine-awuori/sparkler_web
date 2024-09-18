@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+
+import { useUser } from "../hooks";
 import LoginForm from "./LoginPage";
 import RegisterForm from "./RegisterPage";
 
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: black;
-  color: white;
-`;
-
 const AuthPages = () => {
   const [isLoggingIn, setIsLogginIn] = useState(true);
+  const { user } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) navigate("/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <Container>
@@ -25,5 +26,14 @@ const AuthPages = () => {
     </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: black;
+  color: white;
+`;
 
 export default AuthPages;
