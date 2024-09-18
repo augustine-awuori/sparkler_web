@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { IoLogOut, IoSparkles } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 import classNames from "classnames";
@@ -27,7 +27,6 @@ type Menu = {
     fill?: boolean | undefined;
   }) => JSX.Element;
   link: string;
-  onClick: () => void;
   value?: number;
 };
 
@@ -44,26 +43,22 @@ export default function LeftSide({ onClickSparkle }: Props) {
       label: "Home",
       Icon: Home,
       link: "/",
-      onClick: () => {},
     },
     {
       id: "explore",
       label: "Explore",
       Icon: Hashtag,
       link: "/explore",
-      onClick: () => {},
     },
     {
       id: "notifications",
       label: "Notifications",
       Icon: Bell,
-      onClick: () => {},
       link: "/notifications",
       value: newNotifications,
     },
     {
       id: "messages",
-      onClick: () => {},
       label: "Messages",
       link: "/messages",
       Icon: Mail,
@@ -71,7 +66,6 @@ export default function LeftSide({ onClickSparkle }: Props) {
     },
     {
       id: "profile",
-      onClick: () => {},
       label: "Profile",
       Icon: User,
       link: `/${user?.username || ""}`,
@@ -83,12 +77,13 @@ export default function LeftSide({ onClickSparkle }: Props) {
     window.location.reload();
   };
 
-  const handleItemClick = (menuItem: Menu) => {
-    const isValidNavigation =
-      user || menuItem.id === "home" || menuItem.id === "explore";
+  const checkIsValidNavigation = (menuItem: Menu): boolean =>
+    Boolean(user || menuItem.id === "home" || menuItem.id === "explore");
 
-    isValidNavigation ? menuItem.onClick() : navigate("/auth");
-  };
+  const getRoute = (menuItem: Menu): To =>
+    checkIsValidNavigation(menuItem) ? menuItem.link : "/auth";
+
+  const handleItemClick = (menuItem: Menu) => navigate(getRoute(menuItem));
 
   return (
     <Container>
@@ -103,7 +98,7 @@ export default function LeftSide({ onClickSparkle }: Props) {
 
           return (
             <Link
-              to={user ? m.link : ""}
+              to={getRoute(m)}
               className={classNames(
                 `btn--${m.id} new-tweets`,
                 isActiveLink && "active"
