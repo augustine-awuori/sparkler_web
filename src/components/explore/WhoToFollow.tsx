@@ -32,8 +32,8 @@ const WhoToFollow = () => {
             <Link to={`/${leader.username}`} className="user" key={leader._id}>
               <div className="user__details">
                 <div className="user__img">
-                  {leader.avatar ? (
-                    <img src={leader.avatar} alt="" />
+                  {leader.profileImage ? (
+                    <img src={leader.profileImage} alt="" />
                   ) : (
                     <Avatar />
                   )}

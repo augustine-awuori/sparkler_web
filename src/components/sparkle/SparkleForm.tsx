@@ -130,11 +130,7 @@ export default function SparkleForm({
         onSubmit={submit}
       >
         <figure className="user">
-          {(user as User | undefined)?.avatar ? (
-            <img src={(user as User | undefined)?.avatar} alt="profile" />
-          ) : (
-            <Avatar />
-          )}
+          <Avatar image={(user as User | undefined)?.profileImage} />
         </figure>
         <div className="input-section">
           <TextArea

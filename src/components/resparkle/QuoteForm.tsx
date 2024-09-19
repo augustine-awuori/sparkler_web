@@ -29,7 +29,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({
   return (
     <FormContainer>
       <InputContainer>
-        <Avatar size="sm" name={user?.name} src={user?.avatar} />
+        <Avatar size="sm" name={user?.name} src={user?.profileImage} />
         <section>
           <article>
             <TextArea

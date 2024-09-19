@@ -74,7 +74,7 @@ function App() {
     const res = await usersService.quickAuth({
       email,
       name: displayName,
-      avatar: photoURL,
+      profileImage: photoURL,
     });
 
     const { data, ok } = processResponse(res);
@@ -128,7 +128,7 @@ function App() {
         }
 
         await client.connectUser(
-          { id: user._id, name: user.name, image: user.avatar },
+          { id: user._id, name: user.name, image: user.profileImage },
           user.chatToken
         );
         setChatClient(client);
@@ -189,7 +189,7 @@ function App() {
         name: user.name,
         username: user.username,
         email: user.email,
-        profileImage: user.avatar,
+        profileImage: user.profileImage,
       });
     }
   }, [feedClient, user]);

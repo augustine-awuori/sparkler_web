@@ -1,6 +1,6 @@
 export type User = {
   _id: string;
-  avatar: string;
+  profileImage: string;
   chatToken: string;
   email: string;
   feedToken: string;

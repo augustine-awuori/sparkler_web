@@ -44,8 +44,11 @@ const getAllUsers = async () => {
   }
 };
 
-const quickAuth = (info: { email: string; avatar: string; name: string }) =>
-  client.post(`${endpoint}/quick`, info);
+const quickAuth = (info: {
+  email: string;
+  profileImage: string;
+  name: string;
+}) => client.post(`${endpoint}/quick`, info);
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default { getAllUsers, register, login, getUserByUsername, quickAuth };
