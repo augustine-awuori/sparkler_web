@@ -3,9 +3,10 @@ import { format } from "date-fns";
 import { Avatar, useStreamContext } from "react-activity-feed";
 import { Box, Heading, Image } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { formatStringWithLink } from "../../utils/string";
-import { useProfile } from "../../hooks";
+import { useProfile, useUser } from "../../hooks";
 import EditProfileButton from "../profile/EditProfileButton";
 import More from "../icons/More";
 import Mail from "../icons/Mail";
@@ -16,6 +17,7 @@ export default function ProfileBio() {
   const { user } = useProfile();
   const { client } = useStreamContext();
   const navigate = useNavigate();
+  const { user: currentUser } = useUser();
 
   const actions = [
     {
@@ -31,7 +33,9 @@ export default function ProfileBio() {
   ];
 
   function startDM() {
-    navigate(`/messages?${user.id}`);
+    currentUser
+      ? navigate(`/messages?${user.id}`)
+      : toast.info("Login to send message");
   }
 
   const joinedDate = format(
