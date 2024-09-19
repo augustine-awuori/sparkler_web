@@ -12,7 +12,7 @@ export default function RightSide() {
     <Container>
       <SearchInput onQueryChange={setQuery} query={query} />
       <Trends query={query} />
-      <WhoToFollow />
+      <WhoToFollow query={query} />
     </Container>
   );
 }

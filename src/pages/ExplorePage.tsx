@@ -19,11 +19,11 @@ export default function ExplorePage() {
 
         {showWhoToFollowOnRight ? (
           <RightSideContainer>
-            <WhoToFollow />
+            <WhoToFollow query={query} />
           </RightSideContainer>
         ) : (
           <Box mt={4}>
-            <WhoToFollow />
+            <WhoToFollow query={query} />
           </Box>
         )}
       </ContentContainer>

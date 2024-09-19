@@ -8,7 +8,11 @@ import { User } from "../../users";
 import FollowBtn from "../FollowBtn";
 import usersService from "../../services/users";
 
-const WhoToFollow = () => {
+interface Props {
+  query: string;
+}
+
+const WhoToFollow = ({ query }: Props) => {
   const { client } = useStreamContext();
   const [isLoading, setIsLoading] = useState(false);
   const [leaderSuggestions, setLeadersSuggestions] = useState<User[]>([]);
@@ -25,17 +29,32 @@ const WhoToFollow = () => {
     if (res.ok) setLeadersSuggestions(res.data as User[]);
   }
 
+  const leaders = query
+    ? leaderSuggestions.filter(
+        ({ name, username }) =>
+          name.toLowerCase().includes(query.toLowerCase()) ||
+          username.toLowerCase().includes(query.toLowerCase())
+      )
+    : leaderSuggestions;
+
   return (
     <FollowsContainer>
       <h2>Who to follow</h2>
+
+      {/* Spinner while loading */}
       {isLoading && (
         <div className="flex justify-center">
           <Spinner size="md" color="teal.500" />
         </div>
       )}
 
+      {/* No results text if no users match the query */}
+      {!isLoading && leaders.length === 0 && query && (
+        <p className="no-results-text">No results</p>
+      )}
+
       <div className="follows-list">
-        {leaderSuggestions
+        {leaders
           .filter((user) => user._id !== client?.userId)
           .map((leader) => (
             <Link to={`/${leader.username}`} className="user" key={leader._id}>
@@ -58,6 +77,8 @@ const WhoToFollow = () => {
             </Link>
           ))}
       </div>
+
+      {/* Show more link */}
       <span className="show-more-text">Show more</span>
     </FollowsContainer>
   );
@@ -126,6 +147,12 @@ const FollowsContainer = styled.div`
         }
       }
     }
+  }
+
+  .no-results-text {
+    color: #657786;
+    text-align: center;
+    margin-top: 16px;
   }
 
   .show-more-text {
