@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { Avatar, useStreamContext } from "react-activity-feed";
+import { Spinner, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import { User } from "../../users";
 import FollowBtn from "../FollowBtn";
 import usersService from "../../services/users";
-import { Text } from "@chakra-ui/react";
 
 const WhoToFollow = () => {
   const { client } = useStreamContext();
+  const [isLoading, setIsLoading] = useState(false);
   const [leaderSuggestions, setLeadersSuggestions] = useState<User[]>([]);
 
   useEffect(() => {
@@ -17,14 +18,17 @@ const WhoToFollow = () => {
   }, []);
 
   async function getAllUsers() {
+    setIsLoading(true);
     const res = await usersService.getAllUsers();
+    setIsLoading(false);
+
     if (res.ok) setLeadersSuggestions(res.data as User[]);
   }
 
   return (
     <FollowsContainer>
       <h2>Who to follow</h2>
-
+      {isLoading && <Spinner size="md" color="teal.500" />}
       <div className="follows-list">
         {leaderSuggestions
           .filter((user) => user._id !== client?.userId)
@@ -55,16 +59,16 @@ const WhoToFollow = () => {
 };
 
 const FollowsContainer = styled.div`
-  background-color: #1c1f24; /* Dark background */
+  background-color: #1c1f24;
   border-radius: 16px;
   padding: 16px;
-  width: 100%; /* Make the follows container full width */
+  width: 100%;
 
   h2 {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 16px;
-    color: #fff; /* Header text color */
+    color: #fff;
   }
 
   .user {
@@ -73,12 +77,12 @@ const FollowsContainer = styled.div`
     align-items: center;
     margin-bottom: 16px;
     padding: 5px 8px;
-    border-radius: 8px; /* Rounded corners for hover effect */
-    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.3s;
 
     &:hover {
-      background-color: #2a2f35; /* Darker background on hover */
-      transform: scale(1.02); /* Slightly enlarge the user card */
+      background-color: #2a2f35;
+      transform: scale(1.02);
     }
 
     .user__details {
@@ -104,7 +108,7 @@ const FollowsContainer = styled.div`
         .user__name {
           font-size: 16px;
           font-weight: bold;
-          color: #fff; /* Text color */
+          color: #fff;
         }
 
         .user__id {
@@ -113,7 +117,7 @@ const FollowsContainer = styled.div`
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 100px; /* Adjust the width as needed */
+          max-width: 100px;
         }
       }
     }
