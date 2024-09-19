@@ -27,7 +27,7 @@ export default function useSparkle() {
 
     const hashtags = parseHashtags(text);
     const to = hashtags.length
-      ? hashtags.map((tag) => `hashtags:${tag}`)
+      ? [...hashtags.map((tag) => `hashtags:${tag}`), "hashtags:general"]
       : undefined;
 
     await userFeed.addActivity({
