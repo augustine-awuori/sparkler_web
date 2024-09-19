@@ -28,7 +28,12 @@ const WhoToFollow = () => {
   return (
     <FollowsContainer>
       <h2>Who to follow</h2>
-      {isLoading && <Spinner size="md" color="teal.500" />}
+      {isLoading && (
+        <div className="flex justify-center">
+          <Spinner size="md" color="teal.500" />
+        </div>
+      )}
+
       <div className="follows-list">
         {leaderSuggestions
           .filter((user) => user._id !== client?.userId)

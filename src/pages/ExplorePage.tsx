@@ -1,44 +1,18 @@
 import { useState } from "react";
+import { useBreakpointValue, Box, Image, Flex } from "@chakra-ui/react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { useBreakpointValue, Box, Image, Flex } from "@chakra-ui/react";
 
+import { useTrendingHashtags } from "../hooks";
 import logo from "../assets/logo.png";
 import Search from "../components/icons/Search";
 import More from "../components/icons/More";
 import WhoToFollow from "../components/explore/WhoToFollow";
 
-const trends = [
-  {
-    title: "iPhone 12",
-    tweetsCount: "11.6k",
-    category: "Technology",
-  },
-  {
-    title: "LinkedIn",
-    tweetsCount: "51.1K",
-    category: "Business & finance",
-  },
-  {
-    title: "John Cena",
-    tweetsCount: "1,200",
-    category: "Sports",
-  },
-  {
-    title: "#Microsoft",
-    tweetsCount: "3,022",
-    category: "Business & finance",
-  },
-  {
-    title: "#DataScience",
-    tweetsCount: "18.6k",
-    category: "Technology",
-  },
-];
-
 export default function ExplorePage() {
   const [searchText, setSearchText] = useState("");
   const showWhoToFollowOnRight = useBreakpointValue({ base: false, lg: true });
+  const { hashtags } = useTrendingHashtags();
 
   return (
     <Container>
@@ -71,18 +45,12 @@ export default function ExplorePage() {
         <TrendsContainer>
           <h2>Trends for you</h2>
           <div className="trends-list">
-            {trends.map((trend, i) => (
-              <div className="trend" key={trend.title + "-" + i}>
+            {Object.entries(hashtags).map(([hashtag, count], index) => (
+              <div className="trend" key={index}>
                 <div className="trend__details">
-                  <div className="trend__details__category">
-                    {trend.category}
-                    <span className="trend__details__category--label">
-                      Trending
-                    </span>
-                  </div>
-                  <span className="trend__details__title">{trend.title}</span>
+                  <span className="trend__details__title">#{hashtag}</span>
                   <span className="trend__details__tweets-count">
-                    {trend.tweetsCount} Sparkles
+                    {count} Sparkle{count === 1 ? "" : "s"}
                   </span>
                 </div>
                 <button className="more-btn">
