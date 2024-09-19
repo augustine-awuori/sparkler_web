@@ -38,7 +38,6 @@ export default function useSparkle() {
       time,
       to,
     });
-    toast.success("Sparkle was a success");
   };
 
   const deleteSparkle = (sparkleId: string) => {

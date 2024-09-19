@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Avatar, EmojiPicker, useStreamContext } from "react-activity-feed";
-import styled from "styled-components";
 import { toast } from "react-toastify";
+import styled from "styled-components";
 
 import { User } from "../../users";
 import { useFiles, useUser } from "../../hooks";
@@ -101,6 +101,8 @@ export default function SparkleForm({
 
       removeAllFiles();
       setText("");
+      setIsSelectingImages(false);
+      toast.success("Sparkle was a success");
     } catch (error) {
       toast.error("Sparkle couldn't be posted");
       if (filesCount) await filesStorage.deleteFiles(imagesUrl);
