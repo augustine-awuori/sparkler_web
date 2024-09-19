@@ -11,12 +11,15 @@ type Hashtags = {
 const useTrendingHashtags = () => {
   const { client } = useStreamContext();
   const [hashtags, setHashtags] = useState<Hashtags>({});
+  const [isLoading, setIsLoading] = useState(false);
   const [sparklesWithHashtags, setSparklesWithHashtags] = useState<Activity[]>(
     []
   );
 
   useEffect(() => {
+    setIsLoading(true);
     initHashtags();
+    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -55,7 +58,7 @@ const useTrendingHashtags = () => {
     return hashtags;
   }
 
-  return { sparklesWithHashtags, hashtags };
+  return { sparklesWithHashtags, hashtags, isLoading };
 };
 
 export default useTrendingHashtags;
