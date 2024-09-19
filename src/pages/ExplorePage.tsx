@@ -7,15 +7,15 @@ import WhoToFollow from "../components/explore/WhoToFollow";
 import SearchInput from "../components/trends/SearchInput";
 
 export default function ExplorePage() {
-  const [searchText, setSearchText] = useState("");
+  const [query, setQuery] = useState("");
   const showWhoToFollowOnRight = useBreakpointValue({ base: false, lg: true });
 
   return (
     <Container>
-      <SearchInput onQueryChange={setSearchText} query={searchText} />
+      <SearchInput onQueryChange={setQuery} query={query} />
 
       <ContentContainer>
-        <Trends />
+        <Trends query={query} />
 
         {showWhoToFollowOnRight ? (
           <RightSideContainer>

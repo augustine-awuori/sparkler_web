@@ -6,12 +6,12 @@ import Trends from "./trends";
 import WhoToFollow from "./explore/WhoToFollow";
 
 export default function RightSide() {
-  const [searchText, setSearchText] = useState("");
+  const [query, setQuery] = useState("");
 
   return (
     <Container>
-      <SearchInput onQueryChange={setSearchText} query={searchText} />
-      <Trends />
+      <SearchInput onQueryChange={setQuery} query={query} />
+      <Trends query={query} />
       <WhoToFollow />
     </Container>
   );

@@ -4,19 +4,37 @@ import styled from "styled-components";
 import { useTrendingHashtags } from "../../hooks";
 import More from "../icons/More";
 
-const Trends = () => {
+interface Props {
+  query: string;
+}
+
+const Trends = ({ query }: Props) => {
   const { hashtags, isLoading } = useTrendingHashtags();
+
+  const populated = Object.entries(hashtags);
+
+  const queried = query
+    ? populated.filter(([hashtag]) =>
+        hashtag.toLowerCase().includes(query.toLowerCase())
+      )
+    : populated;
 
   return (
     <TrendsContainer>
       <h2>Trends for you</h2>
+
       {isLoading && (
-        <div className="flex justify-center">
+        <div className="spinner-container">
           <Spinner size="md" color="teal.500" />
         </div>
       )}
+
+      {!isLoading && !queried.length && query && (
+        <p className="text-sm text-center">No results</p>
+      )}
+
       <div className="trends-list">
-        {Object.entries(hashtags).map(([hashtag, count], index) => (
+        {queried.map(([hashtag, count], index) => (
           <div className="trend" key={index}>
             <div className="trend__details">
               <span className="trend__details__title">#{hashtag}</span>
@@ -46,6 +64,12 @@ const TrendsContainer = styled.div`
     font-weight: bold;
     margin-bottom: 16px;
     color: #fff;
+  }
+
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
   }
 
   .trend {
@@ -79,6 +103,15 @@ const TrendsContainer = styled.div`
       cursor: pointer;
       color: #fff;
     }
+  }
+
+  .text-center {
+    text-align: center;
+    color: #657786;
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
   }
 `;
 
