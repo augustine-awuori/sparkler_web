@@ -19,6 +19,8 @@ const Trends = ({ query }: Props) => {
       )
     : populated;
 
+  const sorted = queried.sort((a, b) => b[1] - a[1]);
+
   return (
     <TrendsContainer>
       <h2>Trends for you</h2>
@@ -34,7 +36,7 @@ const Trends = ({ query }: Props) => {
       )}
 
       <div className="trends-list">
-        {queried.map(([hashtag, count], index) => (
+        {sorted.map(([hashtag, count], index) => (
           <div className="trend" key={index}>
             <div className="trend__details">
               <span className="trend__details__title">#{hashtag}</span>
