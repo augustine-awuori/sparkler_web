@@ -3,7 +3,6 @@ import { Avatar, EmojiPicker, useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
-import { User } from "../../users";
 import { useFiles, useUser } from "../../hooks";
 import filesStorage from "../../storage/files";
 import Image from "../icons/Image";
@@ -115,7 +114,7 @@ export default function SparkleForm({
   const charsLeft = MAX_CHARS - text.length;
   const exceededMax = charsLeft < 0;
   const isReplying = Boolean(replyingTo);
-
+  console.log(user);
   return (
     <Container>
       {isReplying && expanded && (
@@ -130,7 +129,7 @@ export default function SparkleForm({
         onSubmit={submit}
       >
         <figure className="user">
-          <Avatar image={(user as User | undefined)?.profileImage} />
+          <Avatar image={user?.profileImage} />
         </figure>
         <div className="input-section">
           <TextArea

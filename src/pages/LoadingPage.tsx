@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Text } from "@chakra-ui/react";
-import { LuWand } from "react-icons/lu";
 
 const LoadingPage: React.FC = () => {
   return (
@@ -18,8 +17,13 @@ const LoadingPage: React.FC = () => {
         flexDirection="column"
         alignItems="center"
       >
-        <LuWand color="var(--theme-color)" size={55} />
-        <Text mt={2} color="white" fontFamily="quicksand" letterSpacing={0.3}>
+        <Text
+          mt={2}
+          color="white"
+          fontFamily="quicksand"
+          letterSpacing={0.3}
+          fontSize={25}
+        >
           Sparkler
         </Text>
       </Box>
