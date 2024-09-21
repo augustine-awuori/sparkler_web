@@ -5,15 +5,14 @@ import LoadingIndicator from "../LoadingIndicator";
 import SparkleBlock from "../sparkle/SparkleBlock";
 
 const Placeholder = () => (
-  <Flex
-    direction="column"
-    align="center"
-    justify="center"
-    height="100vh"
-    bg="gray.100"
-    p={4}
-  >
-    <Heading fontWeight={800} textAlign="center" mb={4} color="gray.700">
+  <Flex direction="column" align="center" justify="center" height="100vh" p={4}>
+    <Heading
+      fontWeight={800}
+      textAlign="center"
+      mb={4}
+      color="gray.700"
+      fontFamily="Quicksand"
+    >
       Your Feed is Looking a Little Empty
     </Heading>
     <Text fontSize="lg" textAlign="center" color="gray.500" mb={2}>
