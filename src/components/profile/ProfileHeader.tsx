@@ -11,6 +11,7 @@ export interface ProfileUser {
   name: string;
   email: string;
   profileImage?: string;
+  coverImage?: string;
 }
 
 export default function ProfileHeader() {
@@ -45,10 +46,7 @@ export default function ProfileHeader() {
           <ArrowLeft size={20} color="white" />
         </button>
         <div className="info">
-          <h1>
-            {(user?.data as unknown as ProfileUser).name ||
-              "Display user name here"}
-          </h1>
+          <h1>{(user?.data).name || "Display user name here"}</h1>
           <span className="info__tweets-count">
             {activitiesCount} Sparkle{activitiesCount === 1 ? "" : "s"}
           </span>
@@ -56,7 +54,10 @@ export default function ProfileHeader() {
       </StickyHeader>
       <Header>
         <div className="cover">
-          <img src="https://picsum.photos/500/200" alt="" />
+          <img
+            src={user.data.coverImage || "https://picsum.photos/500/200"}
+            alt="cover"
+          />
         </div>
       </Header>
     </>

@@ -3,14 +3,15 @@ import { useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import { FeedUser } from "../contexts/ProfileContext";
-import { useTitleChanger, useUsers } from "../hooks";
-import { User } from "../users";
-import service from "../services/users";
-import LoadingIndicator from "../components/LoadingIndicator";
 import { ProfileContext } from "../contexts";
-import ProfileHeader from "../components/profile/ProfileHeader";
+import { User } from "../users";
+import { useTitleChanger, useUsers } from "../hooks";
+import LoadingIndicator from "../components/LoadingIndicator";
 import ProfileBio from "../components/profile/ProfileBio";
+import ProfileHeader from "../components/profile/ProfileHeader";
+import service from "../services/users";
 import TabList from "../components/profile/TabList";
 
 export default function ProfilePage() {

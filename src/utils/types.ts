@@ -16,6 +16,7 @@ export interface ActivityActor extends Common {
     name: string;
     username: string;
     profileImage?: string;
+    coverImage?: string;
   };
 }
 

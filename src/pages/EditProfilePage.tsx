@@ -1,35 +1,69 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { Avatar, useStreamContext } from "react-activity-feed";
+import { useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 
 import { ActivityActor } from "../utils/types";
+import storage from "../storage/files";
 
 const EditProfilePage: React.FC = () => {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-  const [profileImage, setProfileImage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [profileImage, setProfileImage] = useState<File | string>("");
+  const [coverImage, setCoverImage] = useState<File | string>("");
   const { client } = useStreamContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { name, bio, profileImage } = (
+    const { name, bio, profileImage, coverImage } = (
       client?.currentUser as unknown as ActivityActor
-    )?.data || { name: "", bio: "", profileImage: "" };
+    )?.data || { name: "", bio: "", profileImage: "", coverImage: "" };
     setName(name);
     if (bio) setBio(bio);
     if (profileImage) setProfileImage(profileImage);
+    if (coverImage) setCoverImage(coverImage);
   }, [client?.currentUser]);
 
   const handleSave = async () => {
+    setIsLoading(true);
     const info = (client?.currentUser as unknown as ActivityActor)?.data;
 
     toast.loading("Saving your profile info...");
-    await client?.currentUser?.update({ ...info, name, bio });
+    let uploadedProfileImageUrl = "";
+    let uploadedBannerImageUrl = "";
+
+    if (profileImage instanceof File) {
+      uploadedProfileImageUrl = await storage.saveFile(profileImage); // Implement image upload logic
+    }
+    if (coverImage instanceof File) {
+      uploadedBannerImageUrl = await storage.saveFile(coverImage); // Implement image upload logic
+    }
+
+    await client?.currentUser?.update({
+      ...info,
+      name,
+      bio,
+      profileImage:
+        uploadedProfileImageUrl || client.currentUser.data?.profileImage,
+      coverImage: uploadedBannerImageUrl || client.currentUser.data?.coverImage,
+    });
+    setIsLoading(false);
     toast.dismiss();
 
     navigate(-1);
+  };
+
+  const handleImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: string
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (type === "profile") setProfileImage(file);
+      else if (type === "banner") setCoverImage(file);
+    }
   };
 
   return (
@@ -37,15 +71,33 @@ const EditProfilePage: React.FC = () => {
       <Header>
         <BackButton onClick={() => navigate(-1)}>&larr;</BackButton>
         <Title>Edit Profile</Title>
-        <SaveButton onClick={handleSave}>Save</SaveButton>
+        <SaveButton onClick={handleSave}>
+          {isLoading ? "Saving" : "Save"}
+        </SaveButton>
       </Header>
 
       <Banner>
-        <Avatar />
+        <img
+          src={
+            coverImage instanceof File
+              ? URL.createObjectURL(coverImage)
+              : coverImage
+          }
+          alt="Banner"
+        />
+        <input type="file" onChange={(e) => handleImageChange(e, "banner")} />
       </Banner>
 
       <ProfilePicture>
-        <Avatar image={profileImage} />
+        <img
+          src={
+            profileImage instanceof File
+              ? URL.createObjectURL(profileImage)
+              : profileImage
+          }
+          alt="Profile"
+        />
+        <input type="file" onChange={(e) => handleImageChange(e, "profile")} />
       </ProfilePicture>
 
       <Form>
@@ -123,11 +175,24 @@ const Banner = styled.div`
   background-color: #e1e8ed;
   margin-top: 0;
   overflow: hidden;
+  position: relative;
 
   img {
     height: 100%;
     object-fit: cover;
     width: 100%;
+  }
+
+  input {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    opacity: 0.8;
+    background-color: #000;
+    color: #fff;
+    padding: 6px;
+    border-radius: 8px;
+    cursor: pointer;
   }
 `;
 
@@ -146,6 +211,18 @@ const ProfilePicture = styled.div`
     height: 100%;
     object-fit: cover;
     width: 100%;
+  }
+
+  input {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    opacity: 0.8;
+    background-color: #000;
+    color: #fff;
+    padding: 4px;
+    border-radius: 8px;
+    cursor: pointer;
   }
 `;
 
