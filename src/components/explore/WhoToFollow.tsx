@@ -12,6 +12,8 @@ interface Props {
   query: string;
 }
 
+const ANONYMOUS_USER_ID = "6685aed25e91a51c0361251f";
+
 const WhoToFollow = ({ query }: Props) => {
   const { client } = useStreamContext();
   const [isLoading, setIsLoading] = useState(false);
@@ -41,14 +43,12 @@ const WhoToFollow = ({ query }: Props) => {
     <FollowsContainer>
       <h2>Who to follow</h2>
 
-      {/* Spinner while loading */}
       {isLoading && (
         <div className="flex justify-center">
           <Spinner size="md" color="teal.500" />
         </div>
       )}
 
-      {/* No results text if no users match the query */}
       {!isLoading && leaders.length === 0 && query && (
         <p className="no-results-text">No results</p>
       )}
@@ -56,6 +56,7 @@ const WhoToFollow = ({ query }: Props) => {
       <div className="follows-list">
         {leaders
           .filter((user) => user._id !== client?.userId)
+          .filter((user) => user._id !== ANONYMOUS_USER_ID)
           .map((leader) => (
             <Link to={`/${leader.username}`} className="user" key={leader._id}>
               <div className="user__details">
