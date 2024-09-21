@@ -7,9 +7,15 @@ const ProfileResparklesPlaceholder = () => (
     justify="center"
     height="100vh"
     bg="inherit"
-    p={4}
+    px={4}
   >
-    <Heading fontWeight={800} textAlign="center" mb={4} color="white">
+    <Heading
+      fontWeight={800}
+      textAlign="center"
+      mb={4}
+      color="white"
+      fontFamily="quicksand"
+    >
       No Resparkles Yet
     </Heading>
     <Text fontSize="lg" textAlign="center" color="gray.500" mb={2}>
