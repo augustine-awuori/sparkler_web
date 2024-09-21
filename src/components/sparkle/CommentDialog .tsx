@@ -44,6 +44,7 @@ export default function CommentDialog({
                 name={sparkleActor.data.name}
                 username={sparkleActor.data.username}
                 id={sparkleActor.data.id}
+                verified={Boolean(sparkleActor.data.verified)}
               />
               <p
                 className="tweet-text"

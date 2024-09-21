@@ -1,4 +1,5 @@
 export type User = {
+  verified?: boolean;
   _id: string;
   profileImage: string;
   chatToken: string;

@@ -12,6 +12,7 @@ import More from "../icons/More";
 import Mail from "../icons/Mail";
 import Calendar from "../icons/Calendar";
 import FollowBtn from "../FollowBtn";
+import verificationIcon from "../../assets/verified.svg"; // Import the verification icon
 
 export default function ProfileBio() {
   const { user } = useProfile();
@@ -75,7 +76,16 @@ export default function ProfileBio() {
         )}
       </div>
       <div className="details">
-        <span className="user__name">{user.data?.name as string}</span>
+        <span className="user__name">
+          {user.data?.name as string}
+          {user.data?.verified && (
+            <img
+              src={verificationIcon}
+              alt="Verified"
+              className="verified-icon"
+            />
+          )}
+        </span>
         <span className="user__id">@{user?.data?.username as string}</span>
         <span
           className="user__bio"
@@ -166,6 +176,14 @@ const Container = styled.div`
       &__name {
         color: white;
         font-weight: bold;
+        display: flex;
+        align-items: center;
+
+        .verified-icon {
+          width: 16px; /* Adjust icon size */
+          height: 16px;
+          margin-left: 5px;
+        }
       }
 
       &__id {

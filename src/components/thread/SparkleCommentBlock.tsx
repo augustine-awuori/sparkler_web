@@ -25,6 +25,7 @@ export default function SparkleCommentBlock({ comment }: Props) {
       <div className="comment-tweet">
         <div>
           <SparkleActorName
+            verified={Boolean(user.data.verified)}
             name={user.data.name}
             username={user.data.username}
             id={user.id}

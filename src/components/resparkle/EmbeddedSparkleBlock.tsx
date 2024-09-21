@@ -54,6 +54,7 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
           id={actor.id}
           username={actor.data.username}
           time={activity.time}
+          verified={Boolean(actor.data.verified)}
         />
       </Flex>
       <div className="tweet__details" onClick={handleNavigation}>

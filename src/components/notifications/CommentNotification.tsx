@@ -40,6 +40,7 @@ export default function CommentNotification({ activity }: Props) {
             id={actor.id}
             name={actor.data.name}
             time={time}
+            verified={Boolean(actor.data.verified)}
             username={actor.data.username}
           />
           <span className="user__reply-to">

@@ -24,7 +24,13 @@ const QuotesPage = () => {
       <Header title="Quotes" />
       <div style={{ width: "100%" }}>
         {quotes.map(({ id, user, created_at, data }) => {
-          const { id: userId, name, username, profileImage } = user.data;
+          const {
+            id: userId,
+            name,
+            username,
+            profileImage,
+            verified,
+          } = user.data;
 
           return (
             <Flex
@@ -43,6 +49,7 @@ const QuotesPage = () => {
                   id={userId}
                   name={name}
                   username={username}
+                  verified={Boolean(verified)}
                   time={created_at}
                 />
                 <Text mb={1.5} color="#fff">

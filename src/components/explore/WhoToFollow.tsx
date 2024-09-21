@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { User } from "../../users";
 import FollowBtn from "../FollowBtn";
 import usersService from "../../services/users";
+import verificationIcon from "../../assets/verified.svg"; // Import the verification icon
 
 interface Props {
   query: string;
@@ -70,6 +71,13 @@ const WhoToFollow = ({ query }: Props) => {
                 <div className="user__info">
                   <Text noOfLines={1} className="user__name">
                     {leader.name}
+                    {leader.verified && (
+                      <img
+                        src={verificationIcon}
+                        alt="Verified"
+                        className="verified-icon"
+                      />
+                    )}
                   </Text>
                   <span className="user__id">@{leader.username}</span>
                 </div>
@@ -137,6 +145,14 @@ const FollowsContainer = styled.div`
           font-size: 16px;
           font-weight: bold;
           color: #fff;
+          display: flex;
+          align-items: center;
+
+          .verified-icon {
+            width: 16px; /* Adjust icon size */
+            height: 16px;
+            margin-left: 5px;
+          }
         }
 
         .user__id {

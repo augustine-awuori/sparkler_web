@@ -2,21 +2,29 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import verificationIcon from "../../assets/verified.svg"; // Make sure this path is correct
+
 interface Props {
   time: string;
   name: string;
   username: string;
   id: string;
+  verified: boolean;
 }
 
-export default function SparkleActorName({ time, name, id, username }: Props) {
+export default function SparkleActorName({
+  time,
+  name,
+  id,
+  username,
+  verified,
+}: Props) {
   const timeDiff = Date.now() - new Date(time).getTime();
 
-  // convert ms to hours
+  // Convert ms to hours
   const hoursBetweenDates = timeDiff / (60 * 60 * 1000);
 
   const lessThan24hrs = hoursBetweenDates < 24;
-
   const lessThan1hr = hoursBetweenDates < 1;
 
   const timeText = lessThan1hr
@@ -28,6 +36,9 @@ export default function SparkleActorName({ time, name, id, username }: Props) {
   return (
     <TextBlock to={`/${username}`}>
       <span className="user--name">{name}</span>
+      {verified && (
+        <img src={verificationIcon} alt="Verified" className="verified-icon" />
+      )}
       <span className="user--id">@{username}</span>
       <span className="tweet-date">{timeText}</span>
     </TextBlock>
@@ -60,6 +71,13 @@ const TextBlock = styled(Link)`
       max-width: 150px; /* Adjust as needed */
     }
   }
+
+  .verified-icon {
+    width: 16px; /* Adjust icon size as needed */
+    height: 16px;
+    margin-left: 5px;
+  }
+
   .tweet-date {
     margin-left: 15px;
     color: #777;

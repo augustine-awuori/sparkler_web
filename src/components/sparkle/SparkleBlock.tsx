@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Avatar, Gallery, useStreamContext } from "react-activity-feed";
 import { Activity } from "getstream";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import classNames from "classnames";
@@ -164,11 +164,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
             className="user-image"
             onClick={() => navigate(`/${actor.data.username}`)}
           >
-            {actor.data.profileImage ? (
-              <Image src={actor.data.profileImage} alt="profile" />
-            ) : (
-              <Avatar />
-            )}
+            <Avatar image={actor.data.profileImage} />
           </figure>
           <div className="tweet" onClick={viewDetails}>
             <button className="link">
@@ -177,6 +173,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                 id={actor.id}
                 username={actor.data.username}
                 time={activity.time}
+                verified={Boolean(actor.data.verified)}
               />
               <div className="tweet__details">
                 <p
