@@ -5,6 +5,7 @@ import { useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 
 import { ActivityActor } from "../utils/types";
+import service from "../services/users";
 import storage from "../storage/files";
 
 const EditProfilePage: React.FC = () => {
@@ -48,14 +49,17 @@ const EditProfilePage: React.FC = () => {
       if (prevCover) await storage.deleteFile(prevCover as string);
     }
 
+    const newProfileImage =
+      uploadedProfileImageUrl || client?.currentUser?.data?.profileImage;
+
     await client?.currentUser?.update({
       ...info,
       name,
       bio,
-      profileImage:
-        uploadedProfileImageUrl || client.currentUser.data?.profileImage,
+      profileImage: newProfileImage,
       coverImage: uploadedBannerImageUrl || client.currentUser.data?.coverImage,
     });
+    await service.updateUserInfo({ name, profileImage: newProfileImage });
     setIsLoading(false);
     toast.dismiss();
 

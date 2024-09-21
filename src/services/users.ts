@@ -22,6 +22,8 @@ const login = async (userInfo: LoginInfo) => {
   }
 };
 
+const updateUserInfo = (userInfo: object) => client.patch(endpoint, userInfo);
+
 const getUserByUsername = async (username: string) => {
   try {
     return processResponse(await client.get(`${endpoint}/${username}`));
@@ -51,4 +53,11 @@ const quickAuth = (info: {
 }) => client.post(`${endpoint}/quick`, info);
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAllUsers, register, login, getUserByUsername, quickAuth };
+export default {
+  getAllUsers,
+  register,
+  login,
+  getUserByUsername,
+  quickAuth,
+  updateUserInfo,
+};
