@@ -21,8 +21,8 @@ import {
   useResparkle,
   useSparkle,
 } from "../../hooks";
-// import More from "../icons/More";
 import { EmbeddedSparkleBlock } from "../resparkle";
+import { TabId } from "../profile/TabList";
 import Comment from "../icons/Comment";
 import CommentDialog from "./CommentDialog ";
 import Heart from "../icons/Heart";
@@ -31,7 +31,6 @@ import ResparklePopup from "./ResparklePopup";
 import Retweet from "../icons/Retweet";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
-import { TabId } from "../profile/TabList";
 
 interface Props {
   activity: Activity;

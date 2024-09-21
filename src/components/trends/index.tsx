@@ -64,6 +64,7 @@ const TrendsContainer = styled.div`
   h2 {
     font-size: 20px;
     font-weight: bold;
+    text-align: center;
     margin-bottom: 16px;
     color: #fff;
   }

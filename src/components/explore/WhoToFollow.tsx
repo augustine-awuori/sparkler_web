@@ -94,6 +94,7 @@ const FollowsContainer = styled.div`
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 16px;
+    text-align: center;
     color: #fff;
   }
 
