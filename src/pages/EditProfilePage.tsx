@@ -27,7 +27,7 @@ const EditProfilePage: React.FC = () => {
   }, [client?.currentUser]);
 
   const handleSave = async () => {
-    if (isLoading) return;
+    // if (isLoading) return;
 
     setIsLoading(true);
     const info = (client?.currentUser as unknown as ActivityActor)?.data;
@@ -39,7 +39,8 @@ const EditProfilePage: React.FC = () => {
     if (profileImage instanceof File) {
       uploadedProfileImageUrl = await storage.saveFile(profileImage);
       const prevProfile = client?.currentUser?.data?.profileImage;
-      if (prevProfile) await storage.deleteFile(prevProfile);
+      if (prevProfile && !prevProfile.includes("googleusercontent"))
+        await storage.deleteFile(prevProfile);
     }
     if (coverImage instanceof File) {
       uploadedBannerImageUrl = await storage.saveFile(coverImage);
