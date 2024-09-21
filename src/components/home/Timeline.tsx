@@ -5,7 +5,14 @@ import LoadingIndicator from "../LoadingIndicator";
 import SparkleBlock from "../sparkle/SparkleBlock";
 
 const Placeholder = () => (
-  <Flex direction="column" align="center" justify="center" height="100vh" p={4}>
+  <Flex
+    direction="column"
+    align="center"
+    justify="center"
+    height="100vh"
+    p={4}
+    pt={0}
+  >
     <Heading
       fontWeight={800}
       textAlign="center"

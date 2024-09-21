@@ -12,7 +12,7 @@ const AuthPages = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) navigate("/");
+    if (user) navigate(`/${user.username}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 

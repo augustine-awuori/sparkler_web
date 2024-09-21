@@ -143,7 +143,8 @@ function App() {
 
   useEffect(() => {
     const initFeedClient = async () => {
-      if (feedClient || !appData) return;
+      if (!appData || (user && user._id === feedClient?.userId)) return;
+
       try {
         const client = new StreamClient(
           appData.key,
@@ -155,9 +156,8 @@ function App() {
         console.error("Error initializing feed client:", error);
       }
     };
-    if (appData) {
-      initFeedClient();
-    }
+
+    initFeedClient();
   }, [appData, user, feedClient]);
 
   useEffect(() => {
@@ -177,22 +177,6 @@ function App() {
     };
     retrieveAllUsersInfo();
   }, []);
-
-  useEffect(() => {
-    if (
-      feedClient &&
-      user &&
-      feedClient?.currentUser?.data?.name === "Unknown"
-    ) {
-      feedClient.currentUser.update({
-        id: feedClient.userId,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        profileImage: user.profileImage,
-      });
-    }
-  }, [feedClient, user]);
 
   if (loading || !feedClient || !chatClient || !appData) return <LoadingPage />;
 

@@ -23,6 +23,34 @@ export default function ProfilePage() {
   useTitleChanger((user?.data as User)?.name || "User Profile");
 
   useEffect(() => {
+    const updateUserInfo = async () => {
+      if (user_id && user && client?.currentUser?.data?.name === "Unknown") {
+        const res = await service.getUserByUsername(user_id);
+
+        if (res.ok) {
+          const {
+            _id: id,
+            email,
+            name,
+            profileImage,
+            username,
+          } = res.data as User;
+
+          await client.currentUser.update({
+            id,
+            email,
+            name,
+            profileImage,
+            username,
+          });
+        }
+      }
+    };
+
+    updateUserInfo();
+  }, [client?.currentUser, user, user_id]);
+
+  useEffect(() => {
     if (!user_id) return;
 
     const getUser = async () => {
