@@ -27,7 +27,7 @@ const EditProfilePage: React.FC = () => {
   }, [client?.currentUser]);
 
   const handleSave = async () => {
-    // if (isLoading) return;
+    if (isLoading) return;
 
     setIsLoading(true);
     const info = (client?.currentUser as unknown as ActivityActor)?.data;
