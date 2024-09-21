@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { format } from "date-fns";
 import { Avatar, useStreamContext } from "react-activity-feed";
-import { Box, Heading, Image } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -53,11 +53,7 @@ export default function ProfileBio() {
     <Container>
       <div className="top">
         <figure className="image">
-          {user?.data?.profileImage ? (
-            <Image src={user.data.profileImage} alt="profile image" />
-          ) : (
-            <Avatar />
-          )}
+          <Avatar image={user.data.profileImage} alt="profile" />
         </figure>
         {!isLoggedInUserProfile ? (
           <div className="actions">

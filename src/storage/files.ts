@@ -16,18 +16,18 @@ export const saveFiles = (files: File[]) => {
   return Promise.all(promises);
 };
 
-export const deletefile = async (url: string) =>
+export const deleteFile = async (url: string) =>
   await db.deleteObject(db.ref(db.storage, url));
 
 export const deleteFiles = async (urls: string[]) => {
-  const promises = urls.map(async (url) => await deletefile(url));
+  const promises = urls.map(async (url) => await deleteFile(url));
 
   Promise.all(promises);
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  deletefile,
+  deleteFile,
   deleteFiles,
   saveFile,
   saveFiles: saveFiles,

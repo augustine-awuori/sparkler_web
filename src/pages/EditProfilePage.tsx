@@ -27,6 +27,8 @@ const EditProfilePage: React.FC = () => {
   }, [client?.currentUser]);
 
   const handleSave = async () => {
+    if (isLoading) return;
+
     setIsLoading(true);
     const info = (client?.currentUser as unknown as ActivityActor)?.data;
 
@@ -35,10 +37,14 @@ const EditProfilePage: React.FC = () => {
     let uploadedBannerImageUrl = "";
 
     if (profileImage instanceof File) {
-      uploadedProfileImageUrl = await storage.saveFile(profileImage); // Implement image upload logic
+      uploadedProfileImageUrl = await storage.saveFile(profileImage);
+      const prevProfile = client?.currentUser?.data?.profileImage;
+      if (prevProfile) await storage.deleteFile(prevProfile);
     }
     if (coverImage instanceof File) {
-      uploadedBannerImageUrl = await storage.saveFile(coverImage); // Implement image upload logic
+      uploadedBannerImageUrl = await storage.saveFile(coverImage);
+      const prevCover = client?.currentUser?.data?.coverImage;
+      if (prevCover) await storage.deleteFile(prevCover as string);
     }
 
     await client?.currentUser?.update({
@@ -72,7 +78,7 @@ const EditProfilePage: React.FC = () => {
         <BackButton onClick={() => navigate(-1)}>&larr;</BackButton>
         <Title>Edit Profile</Title>
         <SaveButton onClick={handleSave}>
-          {isLoading ? "Saving" : "Save"}
+          {isLoading ? "Saving..." : "Save"}
         </SaveButton>
       </Header>
 
