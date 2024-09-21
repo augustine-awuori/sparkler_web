@@ -114,7 +114,7 @@ export default function SparkleForm({
   const charsLeft = MAX_CHARS - text.length;
   const exceededMax = charsLeft < 0;
   const isReplying = Boolean(replyingTo);
-  console.log(user);
+
   return (
     <Container>
       {isReplying && expanded && (

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 
 import { useUnreadMessages, useUser } from "../../hooks";
 import BottomTab from "./BottomTab";
-import Discover from "../icons/Discover";
+import Hashtag from "../icons/Hashtag";
 import Home from "../icons/Home";
 import Mail from "../icons/Mail";
 import NotificationIcon from "../notifications/Icon";
@@ -35,7 +35,7 @@ const BottomNav = () => {
         pathname="/"
       />
       <BottomTab
-        Icon={<Discover color="#fff" size={23} />}
+        Icon={<Hashtag color="#fff" size={23} />}
         pathname="/explore"
       />
       <BottomTab Icon={<NotificationIcon />} pathname="/notifications" />
