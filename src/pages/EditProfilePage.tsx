@@ -16,7 +16,7 @@ const EditProfilePage: React.FC = () => {
   useEffect(() => {
     const { name, bio, profileImage } = (
       client?.currentUser as unknown as ActivityActor
-    )?.data;
+    )?.data || { name: "", bio: "", profileImage: "" };
     setName(name);
     if (bio) setBio(bio);
     if (profileImage) setProfileImage(profileImage);
@@ -45,7 +45,7 @@ const EditProfilePage: React.FC = () => {
       </Banner>
 
       <ProfilePicture>
-        {profileImage ? <img src={profileImage} alt="profile" /> : <Avatar />}
+        <Avatar image={profileImage} />
       </ProfilePicture>
 
       <Form>
@@ -136,7 +136,7 @@ const ProfilePicture = styled.div`
   height: 72px;
   border-radius: 50%;
   background-color: #e1e8ed;
-  border: 4px solid #ffffff;
+  border: 1px solid #fff;
   overflow: hidden;
   position: relative;
   top: -36px;
