@@ -62,11 +62,7 @@ const WhoToFollow = ({ query }: Props) => {
             <Link to={`/${leader.username}`} className="user" key={leader._id}>
               <div className="user__details">
                 <div className="user__img">
-                  {leader.profileImage ? (
-                    <img src={leader.profileImage} alt="" />
-                  ) : (
-                    <Avatar />
-                  )}
+                  <Avatar image={leader.profileImage} />
                 </div>
                 <div className="user__info">
                   <Text noOfLines={1} className="user__name">
