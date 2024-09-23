@@ -92,6 +92,10 @@ export default function SparkleForm({
 
     try {
       e.preventDefault();
+      if (!user) {
+        toast.info("Login to sparkle");
+        return;
+      }
 
       if (exceededMax)
         return alert("Sparkle cannot exceed " + MAX_CHARS + " characters");

@@ -13,10 +13,15 @@ export default function useSparkle() {
   const userFeed = client?.feed("user", client.userId);
 
   const createSparkle = async (text: string, images: string[]) => {
-    if (!user) return toast.info("Login to sparkle");
+    if (!user) {
+      toast.info("Login to sparkle");
+      return;
+    }
 
-    if (!client || !userFeed)
-      return toast.error("Sparkle could not be created");
+    if (!client || !userFeed) {
+      toast.error("Sparkle could not be created");
+      return;
+    }
 
     const collection = await client.collections.add("tweet", nanoid(), {
       text,
