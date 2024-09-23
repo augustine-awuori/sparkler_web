@@ -4,6 +4,7 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "stream-chat-react/dist/css/index.css";
 import "react-activity-feed/dist/index.css";
 
