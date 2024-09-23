@@ -4,6 +4,7 @@ import useNotification from "./useNotification";
 import useUser from "./useUser";
 import { nanoid } from "nanoid";
 import { ActivityActor } from "../utils/types";
+import { getEATZone } from "../utils/funcs";
 
 const verb = "quote";
 
@@ -21,7 +22,7 @@ const useQuote = () => {
       text: quote,
     });
 
-    const time = new Date().toISOString();
+    const time = getEATZone();
 
     // Add the new activity to the feed
     const newActivity = await userFeed?.addActivity({
@@ -30,6 +31,7 @@ const useQuote = () => {
       object: `SO:quote:${collection.id}`,
       foreign_id: client.userId + time,
       quoted_activity: activity,
+      time,
     });
 
     // Create a notification for the original activity's actor
