@@ -9,7 +9,7 @@ import { Box, Image } from "@chakra-ui/react";
 import { Activity, QuoteActivity } from "../../utils/types";
 import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
-import { useActivity, useQuotes, useSparkle } from "../../hooks";
+import { useActivity, useQuotes, useSparkle, useUser } from "../../hooks";
 // import BarChart from "../icons/BarChart";
 import Comment from "../icons/Comment";
 import CommentDialog from "../sparkle/CommentDialog ";
@@ -22,6 +22,7 @@ import TweetForm from "../sparkle/SparkleForm";
 import Upload from "../icons/Upload";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
+import { toast } from "react-toastify";
 
 interface Props {
   activity: MainActivity;
@@ -39,6 +40,7 @@ export default function SparkleContent({ activity }: Props) {
   const { setQuotes } = useQuotes();
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
   const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
+  const { user } = useUser();
 
   const time = format(new Date(activity.time), "p");
   const date = format(new Date(activity.time), "PP");
@@ -86,6 +88,11 @@ export default function SparkleContent({ activity }: Props) {
   ];
 
   const onPostComment = async (text: string) => {
+    if (!user) {
+      toast.info("Login to send reply");
+      return;
+    }
+
     await createComment(text, activity);
 
     feed.refresh();
