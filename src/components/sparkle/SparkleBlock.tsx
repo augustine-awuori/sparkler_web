@@ -188,7 +188,10 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
               </div>
               {Boolean(images.length) && (
                 <Box mt={2}>
-                  <Gallery images={images} style={{ borderRadius: 15 }} />
+                  <Gallery
+                    images={images}
+                    style={{ borderRadius: 15, border: "none" }}
+                  />
                 </Box>
               )}
             </button>
