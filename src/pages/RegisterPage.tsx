@@ -35,17 +35,14 @@ const schema = z.object({
 export type RegistrationInfo = z.infer<typeof schema>;
 
 interface Props {
+  onSignInWithGoogle: () => void;
   onSignInRequest: () => void;
 }
 
-const RegisterForm = ({ onSignInRequest }: Props) => {
+const RegisterForm = ({ onSignInRequest, onSignInWithGoogle }: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { errors, handleSubmit, register } = useForm(schema);
-
-  const handleGoogleSignIn = async () => {
-    await auth.loginWithGoogle();
-  };
 
   const doSubmit = async (info: RegistrationInfo) => {
     try {
@@ -99,7 +96,7 @@ const RegisterForm = ({ onSignInRequest }: Props) => {
           variant="outline"
           mb={1}
           width="full"
-          onClick={handleGoogleSignIn}
+          onClick={onSignInWithGoogle}
         >
           Sign up with Google
         </Button>

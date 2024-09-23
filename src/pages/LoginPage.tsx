@@ -27,9 +27,10 @@ export type LoginInfo = z.infer<typeof schema>;
 
 interface Props {
   onSignUpRequest: () => void;
+  onSignInWithGoogle: () => void;
 }
 
-const LoginForm = ({ onSignUpRequest }: Props) => {
+const LoginForm = ({ onSignUpRequest, onSignInWithGoogle }: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { errors, handleSubmit, register } = useForm(schema);
@@ -59,8 +60,6 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
     }
   };
 
-  const handleGoogleSignIn = async () => await auth.loginWithGoogle();
-
   return (
     <Box
       maxW="md"
@@ -88,7 +87,7 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
           variant="outline"
           mb={1}
           width="full"
-          onClick={handleGoogleSignIn}
+          onClick={onSignInWithGoogle}
         >
           Sign in with Google
         </Button>
