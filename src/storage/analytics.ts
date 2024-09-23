@@ -47,5 +47,5 @@ export const events = {
 };
 
 export function logEvent(event: string, eventParams?: object) {
-  // logAppEvent(getAnalytics(app), event, eventParams);
+  logAppEvent(getAnalytics(app), event, eventParams);
 }
