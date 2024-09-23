@@ -15,7 +15,6 @@ export default function useComment() {
     activity: Activity,
     verb = "comment"
   ) => {
-    // Type guard to ensure activity is of the correct type
     if (!activity) {
       console.error("Activity is empty or undefined.");
       return;
@@ -30,18 +29,26 @@ export default function useComment() {
     }
 
     try {
+      const currentTime = new Date();
+      const eatTime = new Date(
+        currentTime.getTime() + 3 * 60 * 60 * 1000
+      ).toISOString();
+
       await feed.onAddReaction(verb, appActivity as unknown as Activity, {
         text,
+        eatTime,
       });
 
       if (actor.id !== user?._id) {
         createNotification(
           actor.id,
           verb,
-          { text },
+          { text, time: eatTime },
           `SO:tweet:${appActivity.object.id}`
         );
       }
+
+      console.log("Comment added at EAT time:", eatTime);
     } catch (error) {
       console.error("Failed to add comment reaction:", error);
     }
