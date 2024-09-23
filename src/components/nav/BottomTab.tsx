@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button, Box } from "@chakra-ui/react";
-import { logEvent } from "../../storage/analytics";
+import { events, logEvent } from "../../storage/analytics";
 
 interface TabProps {
   children?: ReactNode;
@@ -16,7 +16,7 @@ const BottomTab = ({ children, Icon: TabIcon, pathname, value }: TabProps) => {
   const isActive = location.pathname.startsWith(pathname);
 
   const handleNavigation = () => {
-    logEvent("page_view", { pageLink: pathname });
+    logEvent(events.general.PAGE_VIEW, { pageLink: pathname });
     navigate(pathname);
   };
 

@@ -3,7 +3,7 @@ import { Avatar, EmojiPicker, useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
-import { logEvent } from "../../storage/analytics";
+import { events, logEvent } from "../../storage/analytics";
 import { useFiles, useUser } from "../../hooks";
 import filesStorage from "../../storage/files";
 import Image from "../icons/Image";
@@ -104,7 +104,7 @@ export default function SparkleForm({
       await onSubmit(text, imagesUrl);
 
       removeAllFiles();
-      logEvent("sparkle", { userId: user?._id });
+      logEvent(events.userInteraction.SPARKLE, { userId: user?._id });
       setText("");
       setIsSelectingImages(false);
       toast.success("Sparkle was a success");

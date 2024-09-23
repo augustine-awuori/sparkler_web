@@ -11,7 +11,7 @@ import {
   FormField,
   SubmitButton,
 } from "../components/form";
-import { logEvent } from "../storage/analytics";
+import { events, logEvent } from "../storage/analytics";
 import { useForm } from "../hooks";
 import { User } from "../users";
 import auth from "../services/auth";
@@ -43,7 +43,9 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
 
       if (ok) {
         auth.loginWithJwt(data as string);
-        logEvent("login", { userId: (data as User)._id });
+        logEvent(events.userInteraction.LOGIN, {
+          userId: (data as User)._id,
+        });
         window.location.href = "/";
       } else {
         setError(problem);
