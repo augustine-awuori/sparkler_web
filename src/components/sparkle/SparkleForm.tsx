@@ -3,13 +3,13 @@ import { Avatar, EmojiPicker, useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
+import { logEvent } from "../../storage/analytics";
 import { useFiles, useUser } from "../../hooks";
 import filesStorage from "../../storage/files";
 import Image from "../icons/Image";
 import TextProgressRing from "../TextProgressRing";
 import TextArea from "../TextArea";
 import ImageInputList from "../common/ImageInputList";
-import { logEvent } from "../../storage/analytics";
 
 interface FormProps {
   inline?: boolean;
@@ -104,7 +104,6 @@ export default function SparkleForm({
       setText("");
       setIsSelectingImages(false);
       toast.success("Sparkle was a success");
-      //TODO: show sparkle was a success
     } catch (error) {
       toast.error("Sparkle couldn't be posted");
       if (filesCount) await filesStorage.deleteFiles(imagesUrl);

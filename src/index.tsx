@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
+import { ToastContainer } from "react-toastify";
 import "stream-chat-react/dist/css/index.css";
 import "react-activity-feed/dist/index.css";
 
@@ -18,6 +19,7 @@ root.render(
     <BrowserRouter>
       <ChakraProvider>
         <App />
+        <ToastContainer />
       </ChakraProvider>
     </BrowserRouter>
   </React.StrictMode>
