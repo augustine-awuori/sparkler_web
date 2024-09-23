@@ -176,7 +176,8 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                 verified={Boolean(actor.data.verified)}
               />
               <div className="tweet__details">
-                <p
+                <Text
+                  noOfLines={3}
                   className="tweet__text"
                   dangerouslySetInnerHTML={{
                     __html: formatStringWithLink(
