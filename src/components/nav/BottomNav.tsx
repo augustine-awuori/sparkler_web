@@ -16,6 +16,8 @@ const BottomNav = () => {
 
   const isCurrentPath = (path: string) => location.pathname === path;
 
+  const getPathName = (path: string) => (user ? path : "/auth");
+
   return (
     <Box
       position="fixed"
@@ -38,17 +40,20 @@ const BottomNav = () => {
         Icon={<Hashtag color="#fff" size={23} />}
         pathname="/explore"
       />
-      <BottomTab Icon={<NotificationIcon />} pathname="/notifications" />
+      <BottomTab
+        Icon={<NotificationIcon />}
+        pathname={getPathName("/notifications")}
+      />
       <BottomTab
         Icon={<Mail color="#fff" size={23} />}
-        pathname={user ? "/messages" : "/auth"}
+        pathname={getPathName("/messages")}
         value={count}
       />
       <BottomTab
         Icon={
           <User size={23} color="#fff" fill={isCurrentPath(`/${user?._id}`)} />
         }
-        pathname={user ? `/${user?.username}` : "/auth"}
+        pathname={getPathName(`/${user?.username}`)}
       />
     </Box>
   );
