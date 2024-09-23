@@ -45,6 +45,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const [quoteDialogOpened, setQuoteDialogOpened] = useState(false);
   const [retweetPopupOpened, setResparklePopupOpened] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+  const [showMore, setShowMore] = useState(false);
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
   const { setActivity } = useActivity();
   const { toggleResparkle } = useResparkle();
@@ -177,7 +178,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
               />
               <div className="tweet__details">
                 <Text
-                  noOfLines={3}
+                  noOfLines={showMore ? undefined : 3}
                   className="tweet__text"
                   dangerouslySetInnerHTML={{
                     __html: formatStringWithLink(
@@ -186,6 +187,22 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                     ).replace(/\n/g, "<br/>"),
                   }}
                 />
+                {/* Conditionally show the "Read more" button */}
+                {!showMore && (sparkle?.text?.length || 0) > 150 && (
+                  <button
+                    onClick={() => setShowMore(true)}
+                    style={{
+                      color: "var(--theme-color)",
+                      cursor: "pointer",
+                      background: "transparent",
+                      border: "none",
+                      padding: 0,
+                      fontSize: "15px",
+                    }}
+                  >
+                    Read more
+                  </button>
+                )}
               </div>
               {Boolean(images.length) && (
                 <Box mt={2}>
@@ -236,9 +253,6 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
               })}
             </div>
           </div>
-          {/* <button className="more">
-            <More color="#777" size={20} />
-          </button> */}
         </Flex>
       </Block>
       {appActivity.id && quoteDialogOpened && (
