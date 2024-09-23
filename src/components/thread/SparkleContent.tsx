@@ -163,7 +163,7 @@ export default function SparkleContent({ activity }: Props) {
           />
           {Boolean(images.length) && (
             <Box mt={2}>
-              <Gallery images={images} />
+              <Gallery images={images} style={{ borderRadius: 15 }} />
             </Box>
           )}
           {isAQuote && (
