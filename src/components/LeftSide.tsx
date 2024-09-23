@@ -157,6 +157,7 @@ const Container = styled.div`
   height: 100%;
   overflow-y: auto; /* Enable vertical scrolling */
   overflow-x: hidden; /* Hide horizontal scrolling */
+  border-right: 1px solid #333;
 
   .header {
     padding: 15px;

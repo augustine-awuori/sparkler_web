@@ -80,7 +80,6 @@ const Container = styled.div`
   .main-content {
     position: relative;
     width: 100%;
-    border-left: 1px solid #333;
     border-right: 1px solid #333;
     min-height: 100vh;
     padding-bottom: 56px;

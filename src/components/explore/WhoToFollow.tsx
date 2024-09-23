@@ -120,6 +120,8 @@ const FollowsContainer = styled.div`
     .user__details {
       display: flex;
       align-items: center;
+      flex-grow: 1; /* Make the details container take up available space */
+      min-width: 0; /* Prevent overflow issues */
 
       .user__img {
         min-width: 40px;
@@ -137,17 +139,25 @@ const FollowsContainer = styled.div`
       }
 
       .user__info {
+        max-width: 100%; /* Make the user info container grow */
+        flex-grow: 1;
+        min-width: 0; /* Prevent overflow issues */
+
         .user__name {
           font-size: 16px;
           font-weight: bold;
           color: #fff;
           display: flex;
           align-items: center;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
 
           .verified-icon {
             width: 16px; /* Adjust icon size */
             height: 16px;
             margin-left: 5px;
+            flex-shrink: 0; /* Prevent icon from shrinking */
           }
         }
 
@@ -157,9 +167,14 @@ const FollowsContainer = styled.div`
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 100px;
+          max-width: 100%;
         }
       }
+    }
+
+    /* Ensure the button stays in place */
+    .follow-btn {
+      flex-shrink: 0; /* Prevent the button from shrinking */
     }
   }
 
