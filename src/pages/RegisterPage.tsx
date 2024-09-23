@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Button, Heading } from "@chakra-ui/react";
+import { IoLogoGoogle } from "react-icons/io5";
 
 import {
   authTokenKey,
@@ -41,6 +42,10 @@ const RegisterForm = ({ onSignInRequest }: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { errors, handleSubmit, register } = useForm(schema);
+
+  const handleGoogleSignIn = async () => {
+    await auth.loginWithGoogle();
+  };
 
   const doSubmit = async (info: RegistrationInfo) => {
     try {
@@ -86,6 +91,18 @@ const RegisterForm = ({ onSignInRequest }: Props) => {
         Sign Up to Sparkler
       </Heading>
       <Form handleSubmit={handleSubmit} onSubmit={doSubmit}>
+        <Button
+          leftIcon={<IoLogoGoogle />}
+          colorScheme="pink"
+          variant="outline"
+          mb={1}
+          width="full"
+          onClick={handleGoogleSignIn}
+        >
+          Sign up with Google
+        </Button>
+        <Text textAlign="center">or</Text>
+
         <ErrorMessage error={error} visible />
         <FormField register={register} error={errors.email} label="Email" />
         <FormField register={register} error={errors.name} label="Name" />
