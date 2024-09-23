@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { Activity } from "../utils/types";
 import { parseHashtags } from "../utils/string";
 import useUser from "./useUser";
+import { getEATZone } from "../utils/funcs";
 
 export default function useSparkle() {
   const { client } = useStreamContext();
@@ -27,8 +28,7 @@ export default function useSparkle() {
       text,
     });
 
-    const time = new Date();
-    const eatTime = new Date(time.getTime() + 3 * 60 * 60 * 1000).toISOString(); // Add 3 hours to current time
+    const time = getEATZone();
 
     const hashtags = parseHashtags(text);
     const to = hashtags.length
@@ -40,8 +40,8 @@ export default function useSparkle() {
       verb: "tweet",
       attachments: { images },
       object: `SO:tweet:${collection.id}`,
-      foreign_id: client.userId + eatTime,
-      time: eatTime,
+      foreign_id: client.userId + time,
+      time: time,
       to,
     });
   };
