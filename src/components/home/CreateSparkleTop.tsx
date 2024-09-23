@@ -1,13 +1,15 @@
 import styled from "styled-components";
+import { toast } from "react-toastify";
 
-import { useSparkle } from "../../hooks";
+import { useSparkle, useUser } from "../../hooks";
 import SparkleForm from "../sparkle/SparkleForm";
 
 export default function CreateSparkleTop() {
   const { createSparkle } = useSparkle();
+  const { user } = useUser();
 
   const handleSubmit = async (text: string, images: string[]) => {
-    await createSparkle(text, images);
+    user ? await createSparkle(text, images) : toast.info("Login to sparkle");
   };
 
   return (
