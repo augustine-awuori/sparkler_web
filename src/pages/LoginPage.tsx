@@ -80,6 +80,18 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
       </Heading>
 
       <Form handleSubmit={handleSubmit} onSubmit={doSubmit}>
+        <Button
+          leftIcon={<IoLogoGoogle />}
+          colorScheme="pink"
+          variant="outline"
+          mb={1}
+          width="full"
+          onClick={handleGoogleSignIn}
+        >
+          Sign in with Google
+        </Button>
+        <Text textAlign="center">or</Text>
+
         <ErrorMessage error={error} visible />
         <FormField register={register} error={errors.email} label="Email" />
         <FormField
@@ -91,17 +103,6 @@ const LoginForm = ({ onSignUpRequest }: Props) => {
         />
         <SubmitButton label="Sign In" isLoading={loading} />
       </Form>
-
-      <Button
-        leftIcon={<IoLogoGoogle />}
-        colorScheme="blue"
-        variant="outline"
-        mt={4}
-        width="full"
-        onClick={handleGoogleSignIn}
-      >
-        Sign in with Google
-      </Button>
 
       <Text
         cursor="pointer"
