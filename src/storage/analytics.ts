@@ -18,6 +18,7 @@ export const events = {
     SEARCH: "search",
     SELECT_CONTENT: "select_content",
     VIEW_SEARCH_RESULTS: "view_search_results",
+    SPARKLE: "sparkle",
   },
   ads: {
     AD_IMPRESSION: "ad_impression",
@@ -46,5 +47,5 @@ export const events = {
 };
 
 export function logEvent(event: string, eventParams?: object) {
-  logAppEvent(getAnalytics(app), event, eventParams);
+  // logAppEvent(getAnalytics(app), event, eventParams);
 }
