@@ -5,6 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import classNames from "classnames";
 import styled from "styled-components";
 
+import { logEvent } from "../storage/analytics";
 import { useNewNotifications, useUnreadMessages, useUser } from "../hooks";
 import auth from "../services/auth";
 import Bell from "./icons/Bell";
@@ -83,7 +84,10 @@ export default function LeftSide({ onClickSparkle }: Props) {
   const getRoute = (menuItem: Menu): To =>
     checkIsValidNavigation(menuItem) ? menuItem.link : "/auth";
 
-  const handleItemClick = (menuItem: Menu) => navigate(getRoute(menuItem));
+  const handleItemClick = (menuItem: Menu) => {
+    logEvent("page_view", { pageLink: menuItem.link });
+    navigate(getRoute(menuItem));
+  };
 
   return (
     <Container>

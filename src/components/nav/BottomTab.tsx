@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button, Box } from "@chakra-ui/react";
+import { logEvent } from "../../storage/analytics";
 
 interface TabProps {
   children?: ReactNode;
@@ -14,9 +15,14 @@ const BottomTab = ({ children, Icon: TabIcon, pathname, value }: TabProps) => {
   const location = useLocation();
   const isActive = location.pathname.startsWith(pathname);
 
+  const handleNavigation = () => {
+    logEvent("page_view", { pageLink: pathname });
+    navigate(pathname);
+  };
+
   return (
     <Button
-      onClick={() => navigate(pathname)}
+      onClick={handleNavigation}
       bg="transparent"
       color={isActive ? "blue.500" : "gray.500"}
       _hover={{ bg: "transparent", color: "blue.600" }}

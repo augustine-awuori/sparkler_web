@@ -18,7 +18,7 @@ const firebaseConfig = {
   measurementId: "G-1XHR8RYP6H",
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const googleAuth = getAuth(app);
 
 // eslint-disable-next-line import/no-anonymous-default-export

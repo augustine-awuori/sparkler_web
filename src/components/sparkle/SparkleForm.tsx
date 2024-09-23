@@ -9,6 +9,7 @@ import Image from "../icons/Image";
 import TextProgressRing from "../TextProgressRing";
 import TextArea from "../TextArea";
 import ImageInputList from "../common/ImageInputList";
+import { logEvent } from "../../storage/analytics";
 
 interface FormProps {
   inline?: boolean;
@@ -99,9 +100,11 @@ export default function SparkleForm({
       await onSubmit(text, imagesUrl);
 
       removeAllFiles();
+      logEvent("sparkle", { userId: user?._id });
       setText("");
       setIsSelectingImages(false);
       toast.success("Sparkle was a success");
+      //TODO: show sparkle was a success
     } catch (error) {
       toast.error("Sparkle couldn't be posted");
       if (filesCount) await filesStorage.deleteFiles(imagesUrl);
