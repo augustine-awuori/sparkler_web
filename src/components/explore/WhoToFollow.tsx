@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Avatar, useStreamContext } from "react-activity-feed";
 import { Spinner, Text } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { User } from "../../users";
@@ -19,6 +19,7 @@ const WhoToFollow = ({ query }: Props) => {
   const { client } = useStreamContext();
   const [isLoading, setIsLoading] = useState(false);
   const [leaderSuggestions, setLeadersSuggestions] = useState<User[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllUsers();
@@ -59,8 +60,11 @@ const WhoToFollow = ({ query }: Props) => {
           .filter((user) => user._id !== client?.userId)
           .filter((user) => user._id !== ANONYMOUS_USER_ID)
           .map((leader) => (
-            <Link to={`/${leader.username}`} className="user" key={leader._id}>
-              <div className="user__details">
+            <div className="user" key={leader._id}>
+              <div
+                onClick={() => navigate(`/${leader.username}`)}
+                className="user__details"
+              >
                 <div className="user__img">
                   <Avatar image={leader.profileImage} />
                 </div>
@@ -79,7 +83,7 @@ const WhoToFollow = ({ query }: Props) => {
                 </div>
               </div>
               <FollowBtn userId={leader._id} />
-            </Link>
+            </div>
           ))}
       </div>
 
