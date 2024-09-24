@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Activity, DefaultGenerics, StreamClient } from "getstream";
-import { StreamApp } from "react-activity-feed";
+import { StreamApp, useStreamContext } from "react-activity-feed";
 import { Box } from "@chakra-ui/react";
 import { Chat } from "stream-chat-react";
 import { toast } from "react-toastify";
@@ -53,11 +53,29 @@ function App() {
   const [users, setUsers] = useState<Users>({});
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-  const [appData, setAppData] = useState<AppData | null>(null);
+  const [appData, setAppData] = useState<AppData>();
   const [loading, setLoading] = useState(true);
   const { googleUser } = useUser();
+  const { client } = useStreamContext();
 
   useEffect(() => {
+    const updateUserInfo = async () => {
+      const shouldUpdate =
+        client?.userId === user?._id &&
+        user &&
+        client?.currentUser?.data?.name === "Unknown";
+
+      if (shouldUpdate) {
+        const userData = { ...user, id: user._id };
+        try {
+          await client?.currentUser?.update(userData);
+        } catch (error) {
+          await client.user(user._id).getOrCreate(userData);
+        }
+      }
+    };
+
+    updateUserInfo();
     initUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [googleUser, user]);

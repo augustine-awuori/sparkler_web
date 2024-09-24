@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { FeedUser } from "../contexts/ProfileContext";
 import { ProfileContext } from "../contexts";
 import { User } from "../users";
-import { useTitleChanger, useUsers } from "../hooks";
+import { useTitleChanger, useUser, useUsers } from "../hooks";
 import LoadingIndicator from "../components/LoadingIndicator";
 import ProfileBio from "../components/profile/ProfileBio";
 import ProfileHeader from "../components/profile/ProfileHeader";
@@ -17,67 +17,78 @@ import TabList from "../components/profile/TabList";
 export default function ProfilePage() {
   const { client } = useStreamContext();
   const [user, setUser] = useState<FeedUser>();
-  const { user_id } = useParams();
+  const { user_id: user_username } = useParams();
   const { users } = useUsers();
   const navigate = useNavigate();
+  const { user: currentUser } = useUser();
   useTitleChanger((user?.data as User)?.name || "User Profile");
 
   useEffect(() => {
     const updateUserInfo = async () => {
-      if (user_id && user && client?.currentUser?.data?.name === "Unknown") {
-        const res = await service.getUserByUsername(user_id);
+      const userDetailsNeedUpdate =
+        client?.userId === currentUser?._id &&
+        user_username &&
+        user &&
+        client?.currentUser?.data?.name === "Unknown";
+
+      if (userDetailsNeedUpdate) {
+        const res = await service.getUserByUsername(user_username);
 
         if (res.ok) {
-          const {
-            _id: id,
-            email,
-            name,
-            profileImage,
-            username,
-          } = res.data as User;
+          const userData = {
+            ...(res.data as User),
+            id: (res.data as User)._id,
+          };
 
-          await client.currentUser.update({
-            id,
-            email,
-            name,
-            profileImage,
-            username,
-          });
+          try {
+            await client?.currentUser?.update(userData);
+          } catch (error) {
+            if (client.userId && client.userId === currentUser?._id)
+              await client.user(client.userId).getOrCreate(userData);
+          }
         }
       }
     };
 
     updateUserInfo();
-  }, [client?.currentUser, user, user_id]);
+  }, [client, client?.currentUser, currentUser?._id, user, user_username]);
 
   useEffect(() => {
-    if (!user_id) return;
+    if (!user_username) return navigate(-1);
 
     const getUser = async () => {
+      let userId = users[user_username];
+
+      if (!userId) {
+        const res = await service.getUserByUsername(user_username);
+        if (res.ok) userId = (res.data as User)._id;
+      }
+
+      if (!userId) {
+        toast.error("There's no user with the given username");
+        return navigate(-1);
+      }
+
       try {
-        let userId = users[user_id];
-
-        if (!userId) {
-          const res = await service.getUserByUsername(user_id);
-          if (res.ok) userId = (res.data as User)._id;
-        }
-
-        if (!userId) {
-          toast.error("There's no user with the given username");
-          return navigate(-1);
-        }
-
         const user = await client
           ?.user(userId)
           .get({ with_follow_counts: true });
 
         if (user?.full) setUser(user.full);
-      } catch (error) {}
+      } catch (error) {
+        if (client?.userId !== currentUser?._id) return;
+
+        let fetchedUser: User | undefined = undefined;
+        const res = await service.getUserByUsername(user_username);
+        if (res.ok) fetchedUser = res.data as User;
+        if (fetchedUser)
+          client?.user(userId).getOrCreate({ ...fetchedUser, id: userId });
+      }
     };
 
     getUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user_id]);
+  }, [user_username]);
 
   if (!client || !user) return <LoadingIndicator />;
 
