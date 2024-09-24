@@ -23,6 +23,7 @@ import Upload from "../icons/Upload";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
 import { toast } from "react-toastify";
+import FollowBtn from "../FollowBtn";
 
 interface Props {
   activity: MainActivity;
@@ -47,7 +48,7 @@ export default function SparkleContent({ activity }: Props) {
 
   const appActivity = activity as unknown as Activity;
   const tweet = appActivity.object.data;
-  const tweetActor = appActivity.actor.data;
+  const sparkleActor = appActivity.actor.data;
   const likesCount = appActivity.reaction_counts.like || 0;
   const resparklesCount = appActivity.reaction_counts.resparkle || 0;
   const quotesCount = appActivity.reaction_counts.quote || 0;
@@ -100,7 +101,7 @@ export default function SparkleContent({ activity }: Props) {
 
   const quoteSparkle = () => {
     setActivity(activity);
-    navigate(`/${tweetActor.username}/status/${activity.id}/quote`);
+    navigate(`/${sparkleActor.username}/status/${activity.id}/quote`);
   };
 
   const viewQuotes = () => {
@@ -131,12 +132,12 @@ export default function SparkleContent({ activity }: Props) {
         />
       )}
       <Container>
-        <Link to={`/${tweetActor.username}`} className="user">
+        <Link to={`/${sparkleActor.username}`} className="user">
           <figure className="user__image">
-            {tweetActor?.profileImage ? (
+            {sparkleActor?.profileImage ? (
               <Image
                 objectFit="cover"
-                src={tweetActor.profileImage}
+                src={sparkleActor.profileImage}
                 alt="profile"
               />
             ) : (
@@ -144,11 +145,16 @@ export default function SparkleContent({ activity }: Props) {
             )}
           </figure>
           <div className="user__name">
-            <span className="user__name--name">{tweetActor.name}</span>
-            <span className="user__name--id">@{tweetActor.username}</span>
+            <span className="user__name--name">{sparkleActor.name}</span>
+            <span className="user__name--id">@{sparkleActor.username}</span>
           </div>
           <div className="user__option">
-            <More color="#777" size={20} />
+            {user?._id !== sparkleActor.id && (
+              <div className="user__actions">
+                <FollowBtn userId={sparkleActor.id} />
+                <More color="#777" size={20} />
+              </div>
+            )}
           </div>
         </Link>
         <div className="tweet">
@@ -260,7 +266,7 @@ export default function SparkleContent({ activity }: Props) {
             submitText="Reply"
             collapsedOnMount={true}
             placeholder="Sparkle your reply"
-            replyingTo={tweetActor.id}
+            replyingTo={sparkleActor.id}
           />
         </div>
         {appActivity.latest_reactions?.comment?.map((comment) => (
@@ -384,5 +390,20 @@ const Container = styled.div`
     align-items: center;
     padding: 15px 0;
     border-bottom: 1px solid #555;
+  }
+
+  .user__option {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+
+  .user__actions {
+    display: flex;
+    gap: 10px; /* Space between Follow button and More icon */
+  }
+
+  .user__actions button {
+    padding: 5px 10px;
   }
 `;
