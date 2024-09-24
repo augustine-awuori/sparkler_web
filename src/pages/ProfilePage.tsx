@@ -42,6 +42,7 @@ export default function ProfilePage() {
 
           try {
             await client?.currentUser?.update(userData);
+            window.location.reload();
           } catch (error) {}
         }
       }
