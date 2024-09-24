@@ -42,10 +42,7 @@ export default function ProfilePage() {
 
           try {
             await client?.currentUser?.update(userData);
-          } catch (error) {
-            if (client.userId && client.userId === currentUser?._id)
-              await client.user(client.userId).getOrCreate(userData);
-          }
+          } catch (error) {}
         }
       }
     };

@@ -136,10 +136,11 @@ function App() {
           return;
         }
 
-        if (!user?.chatToken) {
+        if (!user?.chatToken || !user?.feedToken) {
           const res = await chatTokenService.getChatToken();
           if (res.ok) {
-            setUser({ ...user, chatToken: res.data as string });
+            const token = res.data as string;
+            setUser({ ...user, chatToken: token, feedToken: token });
           } else {
             toast.error("Failed to fetch your chat token");
           }
