@@ -4,6 +4,7 @@ import { useFeedContext } from "react-activity-feed";
 import { Activity as AppActivity } from "../utils/types";
 import useNotification from "./useNotification";
 import useUser from "./useUser";
+import { toast } from "react-toastify";
 
 export default function useComment() {
   const feed = useFeedContext();
@@ -15,6 +16,11 @@ export default function useComment() {
     activity: Activity,
     verb = "comment"
   ) => {
+    if (!text) {
+      toast.info("Add a valid comment");
+      return;
+    }
+
     if (!activity) {
       console.error("Activity is empty or undefined.");
       return;

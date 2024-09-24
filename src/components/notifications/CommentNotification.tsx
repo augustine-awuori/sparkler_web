@@ -46,7 +46,7 @@ export default function CommentNotification({ activity }: Props) {
           <span className="user__reply-to">
             Replying to{" "}
             <Link to={`/${user?.id}`}>@{user?.data?.username as string}</Link>
-            <p className="user__text">{object.data.text}</p>
+            <p className="user__text">{object.data?.text}</p>
           </span>
         </div>
       </div>
