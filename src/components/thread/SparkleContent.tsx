@@ -10,7 +10,13 @@ import { Box } from "@chakra-ui/react";
 import { Activity, QuoteActivity } from "../../utils/types";
 import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
-import { useActivity, useQuotes, useSparkle, useUser } from "../../hooks";
+import {
+  useActivity,
+  useQuotes,
+  useResparkle,
+  useSparkle,
+  useUser,
+} from "../../hooks";
 // import BarChart from "../icons/BarChart";
 import Comment from "../icons/Comment";
 import CommentDialog from "../sparkle/CommentDialog ";
@@ -43,6 +49,7 @@ export default function SparkleContent({ activity }: Props) {
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
   const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const { user } = useUser();
+  const { toggleResparkle } = useResparkle();
 
   const time = format(new Date(activity.time), "p");
   const date = format(new Date(activity.time), "PP");
@@ -57,6 +64,7 @@ export default function SparkleContent({ activity }: Props) {
   const hasBeenResparkled = checkIfHasResparkled(appActivity);
   const isAQuote = activity.verb === "quote";
   const images: string[] = appActivity.attachments?.images || [];
+  const hasResparkled = checkIfHasResparkled(appActivity);
 
   const onToggleLike = async () => {
     await toggleLike(activity, hasLikedSparkled);
@@ -114,13 +122,16 @@ export default function SparkleContent({ activity }: Props) {
     }
   };
 
+  const handleResparkle = () =>
+    toggleResparkle(activity as unknown as MainActivity, hasResparkled);
+
   return (
     <>
       {resparklePopupOpened && (
         <ResparklePopup
           onClose={() => setResparklePopupOpened(false)}
           onQuote={quoteSparkle}
-          onResparkle={console.log}
+          onResparkle={handleResparkle}
           position={popupPosition}
           hasBeenResparkled={hasBeenResparkled}
         />
