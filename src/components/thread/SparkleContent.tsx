@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useRef, useState } from "react";
 import { Activity as MainActivity } from "getstream";
 import { toast } from "react-toastify";
-import { Box, Image } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import { Activity, QuoteActivity } from "../../utils/types";
 import { EmbeddedSparkleBlock } from "../resparkle";
@@ -135,15 +135,7 @@ export default function SparkleContent({ activity }: Props) {
       <Container>
         <Link to={`/${sparkleActor.username}`} className="user">
           <figure className="user__image">
-            {sparkleActor?.profileImage ? (
-              <Image
-                objectFit="cover"
-                src={sparkleActor.profileImage}
-                alt="profile"
-              />
-            ) : (
-              <Avatar />
-            )}
+            <Avatar image={sparkleActor.profileImage} />
           </figure>
           <div className="user__name">
             <span className="user__name--name">
