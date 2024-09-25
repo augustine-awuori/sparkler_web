@@ -309,13 +309,20 @@ const Container = styled.div`
     }
 
     &__name {
+      display: flex; /* Make the name section a flex container */
+      align-items: center; /* Center items vertically */
+
       &--name {
         color: white;
         font-weight: bold;
+        display: flex; /* Make the name a flex container */
+        align-items: center; /* Align items vertically */
       }
+
       &--id {
         color: #52575b;
         font-size: 14px;
+        margin-left: 5px; /* Add space between name and username */
       }
     }
 
