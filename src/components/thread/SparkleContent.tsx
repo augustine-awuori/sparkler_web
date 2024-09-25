@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useRef, useState } from "react";
 import { Activity as MainActivity } from "getstream";
+import { toast } from "react-toastify";
 import { Box, Image } from "@chakra-ui/react";
 
 import { Activity, QuoteActivity } from "../../utils/types";
@@ -22,7 +23,7 @@ import TweetForm from "../sparkle/SparkleForm";
 import Upload from "../icons/Upload";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
-import { toast } from "react-toastify";
+import verifiedIcon from "../../assets/verified.svg";
 import FollowBtn from "../FollowBtn";
 
 interface Props {
@@ -145,7 +146,16 @@ export default function SparkleContent({ activity }: Props) {
             )}
           </figure>
           <div className="user__name">
-            <span className="user__name--name">{sparkleActor.name}</span>
+            <span className="user__name--name">
+              {sparkleActor.name}
+              {sparkleActor.verified && (
+                <img
+                  src={verifiedIcon}
+                  alt="Verified"
+                  className="verified-icon"
+                />
+              )}
+            </span>
             <span className="user__name--id">@{sparkleActor.username}</span>
           </div>
           <div className="user__option">
@@ -157,6 +167,7 @@ export default function SparkleContent({ activity }: Props) {
             )}
           </div>
         </Link>
+
         <div className="tweet">
           <p
             className="tweet__text"
@@ -311,6 +322,12 @@ const Container = styled.div`
     &__option {
       margin-left: auto;
     }
+  }
+
+  .verified-icon {
+    width: 16px; /* Adjust size as needed */
+    height: 16px; /* Adjust size as needed */
+    margin-left: 5px; /* Space between name and icon */
   }
 
   .tweet {
