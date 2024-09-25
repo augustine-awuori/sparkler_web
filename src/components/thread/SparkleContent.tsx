@@ -309,20 +309,21 @@ const Container = styled.div`
     }
 
     &__name {
-      display: flex; /* Make the name section a flex container */
-      align-items: center; /* Center items vertically */
+      display: flex;
+      flex-direction: column; /* Align items vertically */
+      justify-content: center; /* Center the text vertically */
 
       &--name {
         color: white;
         font-weight: bold;
-        display: flex; /* Make the name a flex container */
-        align-items: center; /* Align items vertically */
+        display: flex; /* Make this a flex container to align the icon */
+        align-items: center; /* Align items center to keep the icon on the same line */
       }
 
       &--id {
         color: #52575b;
         font-size: 14px;
-        margin-left: 5px; /* Add space between name and username */
+        margin-top: 2px; /* Space between name and username */
       }
     }
 
