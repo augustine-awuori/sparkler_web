@@ -1,11 +1,13 @@
-import styled from "styled-components";
+import { useState } from "react";
 import { Activity as MainActivity } from "getstream";
+import styled from "styled-components";
 
 import { Activity, ActivityActor } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import Modal from "../Modal";
 import SparkleActorName from "./SparkleActorName";
 import SparkleForm from "./SparkleForm";
+import { toast } from "react-toastify";
 
 interface Props {
   activity: MainActivity;
@@ -18,6 +20,8 @@ export default function CommentDialog({
   onPostComment,
   onClickOutside,
 }: Props) {
+  const [commenting, setCommenting] = useState(false);
+
   const {
     object: { data: sparkle },
   } = activity as unknown as Activity;
@@ -25,7 +29,13 @@ export default function CommentDialog({
   const sparkleActor = activity.actor as unknown as ActivityActor;
 
   const handleCommentSubmit = async (text: string) => {
+    if (commenting) return;
+
+    setCommenting(true);
+    toast.loading("Saving comment...");
     await onPostComment(text);
+    toast.dismiss();
+    setCommenting(false);
 
     onClickOutside();
   };
@@ -70,6 +80,7 @@ export default function CommentDialog({
               submitText="Reply"
               placeholder="Sparkle your reply"
               onSubmit={handleCommentSubmit}
+              sparkling={commenting}
               shouldFocus
             />
           </div>

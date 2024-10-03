@@ -25,6 +25,7 @@ interface SparkleFormProps {
   minHeight?: number;
   shouldFocus?: boolean;
   replyingTo?: string | null;
+  sparkling: boolean;
 }
 
 export const MAX_CHARS = 280;
@@ -39,6 +40,7 @@ export default function SparkleForm({
   minHeight = 120,
   shouldFocus = false,
   replyingTo = null,
+  sparkling,
 }: SparkleFormProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { client } = useStreamContext();
@@ -169,7 +171,7 @@ export default function SparkleForm({
               <button
                 type="submit"
                 className="submit-btn"
-                disabled={isInputEmpty}
+                disabled={isInputEmpty || sparkling}
               >
                 {submitText}
               </button>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
@@ -14,6 +14,7 @@ interface Props {
 export default function CreateTweetDialog({ onClickOutside }: Props) {
   const { createSparkle } = useSparkle();
   const { files, filesCount, removeAllFiles } = useFiles(IMAGES_LIMIT);
+  const [sparkling, setSparkling] = useState(false);
 
   useEffect(() => {
     if (filesCount) removeAllFiles();
@@ -21,18 +22,24 @@ export default function CreateTweetDialog({ onClickOutside }: Props) {
   }, []);
 
   const onSubmit = async (text: string) => {
+    if (sparkling) return;
+
     let imagesUrl: string[] = [];
 
+    setSparkling(true);
+    toast.loading("Sparkling...");
     try {
       if (filesCount) imagesUrl = await filesStorage.saveFiles(files);
       await createSparkle(text, imagesUrl);
-      onClickOutside();
 
+      onClickOutside();
       removeAllFiles();
     } catch (error) {
       toast.error("Sparkle couldn't be posted");
       await filesStorage.deleteFiles(imagesUrl);
     }
+    toast.dismiss();
+    setSparkling(false);
   };
 
   return (
@@ -44,6 +51,7 @@ export default function CreateTweetDialog({ onClickOutside }: Props) {
           minHeight={240}
           className="tweet-form"
           placeholder="What's sparkling?"
+          sparkling={sparkling}
         />
       </Modal>
     </Container>

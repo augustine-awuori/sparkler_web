@@ -50,6 +50,7 @@ export default function SparkleContent({ activity }: Props) {
   const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const { user } = useUser();
   const { toggleResparkle } = useResparkle();
+  const [commenting, setCommenting] = useState(false);
 
   const time = format(new Date(activity.time), "p");
   const date = format(new Date(activity.time), "PP");
@@ -103,7 +104,13 @@ export default function SparkleContent({ activity }: Props) {
       return;
     }
 
+    if (commenting) return;
+
+    setCommenting(true);
+    toast.loading("Saving comment...");
     await createComment(text, activity);
+    toast.dismiss();
+    setCommenting(false);
 
     feed.refresh();
   };
@@ -281,6 +288,7 @@ export default function SparkleContent({ activity }: Props) {
             collapsedOnMount={true}
             placeholder="Sparkle your reply"
             replyingTo={sparkleActor.id}
+            sparkling={commenting}
           />
         </div>
         {appActivity.latest_reactions?.comment?.map((comment) => (
