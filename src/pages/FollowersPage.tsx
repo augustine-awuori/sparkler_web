@@ -1,44 +1,52 @@
 import { useEffect, useState } from "react";
-import { useStreamContext } from "react-activity-feed";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Text } from "@chakra-ui/react";
-import { StreamUser } from "getstream";
+import { toast } from "react-toastify";
+import { Box, Spinner, Text } from "@chakra-ui/react";
 
+import { User } from "../users";
 import { useUsers } from "../hooks";
+import usersService from "../services/users";
 import UsersList from "../components/UsersList";
 
 const FollowersPage = () => {
-  const { client } = useStreamContext();
-  const { users } = useUsers();
-  const [followers, setFollowers] = useState<StreamUser[]>([]);
+  const { allUsers: users } = useUsers();
+  const [followers, setFollowers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const { user_id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getFollowers = async () => {
-      const userId = users[user_id || ""];
-      if (!userId) return navigate(-1);
+    const initFollowers = async () => {
+      if (!user_id) return navigate(-1);
 
       setLoading(true);
-      const followersInfo =
-        (await client?.feed("user", userId)?.followers())?.results || [];
+      const res = await usersService.getUser(user_id);
+      if (!res.ok) {
+        toast.error("Something went wrong, try again later!");
+        return navigate(-1);
+      }
 
-      const followersPromises = followersInfo.map(async (follower) => {
-        const user = await client
-          ?.user(follower.feed_id.replace("timeline:", ""))
-          .get();
-        return user as unknown as StreamUser;
-      });
+      const user = res.data as User;
+      const followers = user.followers || {};
 
-      const followers = await Promise.all(followersPromises);
+      setFollowers(users.filter((user) => followers[user._id]));
       setLoading(false);
-      setFollowers(followers);
     };
 
-    getFollowers();
+    initFollowers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_id, users]);
+
+  if (loading) {
+    return (
+      <Box maxW="600px" mx="auto" mt={5} textAlign="center">
+        <Spinner size="xl" color="teal.500" />
+        <Text mt={4} fontSize="lg" color="#fff">
+          Loading followers...
+        </Text>
+      </Box>
+    );
+  }
 
   return (
     <Box maxW="600px" mx="auto" mt={5}>

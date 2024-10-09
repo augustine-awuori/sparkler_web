@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 
+import service from "../services/users";
 import useNotification from "./useNotification";
 import useUser from "./useUser";
 
@@ -40,6 +41,7 @@ export default function useFollow({ userId }: Props) {
     await timelineFeed?.[action]("user", userId);
 
     setIsFollowing((isFollowing) => !isFollowing);
+    service.updateFollowers(userId);
   };
 
   return { isFollowing, toggleFollow };

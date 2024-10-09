@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useStreamContext } from "react-activity-feed";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
@@ -11,15 +10,16 @@ import {
   AlertDescription,
   Button,
 } from "@chakra-ui/react";
-import { StreamUser } from "getstream";
+import { toast } from "react-toastify";
 
+import { User } from "../users";
 import { useUsers } from "../hooks";
 import UsersList from "../components/UsersList";
+import usersService from "../services/users";
 
 const FollowingsPage = () => {
-  const { client } = useStreamContext();
-  const { users } = useUsers();
-  const [followings, setFollowings] = useState<StreamUser[]>([]);
+  const { allUsers: users } = useUsers();
+  const [followings, setFollowings] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const { user_id } = useParams();
@@ -27,29 +27,21 @@ const FollowingsPage = () => {
 
   useEffect(() => {
     const getFollowings = async () => {
-      const userId = users[user_id || ""];
-      if (!userId) return navigate(-1);
+      if (!user_id) return navigate(-1);
 
       setLoading(true);
-      setError(false);
-      try {
-        const followingInfo =
-          (await client?.feed("user", userId)?.following())?.results || [];
-
-        const followingsPromises = followingInfo.map(async (following) => {
-          const user = await client
-            ?.user(following.feed_id.replace("timeline:", ""))
-            .get();
-          return user as unknown as StreamUser;
-        });
-
-        const followings = await Promise.all(followingsPromises);
-        setFollowings(followings);
-      } catch (error) {
+      const res = await usersService.getUser(user_id);
+      if (!res.ok) {
+        toast.error("Something went wrong, try again later!");
         setError(true);
-      } finally {
-        setLoading(false);
+        return navigate(-1);
       }
+
+      const user = res.data as User;
+      const following = user.following || {};
+
+      setFollowings(users.filter((user) => following[user._id]));
+      setLoading(false);
     };
 
     getFollowings();

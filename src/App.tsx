@@ -51,6 +51,7 @@ function App() {
   const [user, setUser] = useState<User>();
   const [activity, setActivity] = useState<Activity<DefaultGenerics>>();
   const [users, setUsers] = useState<Users>({});
+  const [allUsers, setAllUsers] = useState<User[]>([]);
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [appData, setAppData] = useState<AppData>();
@@ -118,6 +119,7 @@ function App() {
         setLoading(false);
       }
     };
+
     initApp();
   }, []);
 
@@ -185,6 +187,8 @@ function App() {
       try {
         const res = await usersService.getAllUsers();
         if (res.ok) {
+          setAllUsers(res.data as User[]);
+
           (res.data as User[]).forEach(({ _id, username }) => {
             if (!users[username]) users[username] = _id;
           });
@@ -207,7 +211,7 @@ function App() {
     >
       <Chat client={chatClient} theme="messaging dark">
         <Box fontFamily="quicksand">
-          <UsersContext.Provider value={{ setUsers, users }}>
+          <UsersContext.Provider value={{ allUsers, setUsers, users }}>
             <UserContext.Provider value={{ setUser, user }}>
               <ActivityContext.Provider value={{ activity, setActivity }}>
                 <QuotesContext.Provider value={{ quotes, setQuotes }}>

@@ -2,6 +2,7 @@ import { LoginInfo } from "../pages/LoginPage";
 import { RegistrationInfo } from "../pages/RegisterPage";
 import client, {
   emptyResponse,
+  getFailedResponse,
   processResponse,
   ResponseError,
 } from "./client";
@@ -10,6 +11,9 @@ const endpoint = "/users";
 
 const register = (userInfo: RegistrationInfo) =>
   client.post(endpoint, userInfo);
+
+const updateFollowers = (leaderId: string) =>
+  client.patch(`${endpoint}/followers`, { leaderId });
 
 const login = async (userInfo: LoginInfo) => {
   try {
@@ -52,12 +56,22 @@ const quickAuth = (info: {
   name: string;
 }) => client.post(`${endpoint}/quick`, info);
 
+const getUser = async (userId: string) => {
+  try {
+    return processResponse(await client.get(`${endpoint}/${userId}`));
+  } catch (error) {
+    return getFailedResponse(error);
+  }
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   getAllUsers,
-  register,
-  login,
+  getUser,
   getUserByUsername,
+  login,
   quickAuth,
+  register,
+  updateFollowers,
   updateUserInfo,
 };
