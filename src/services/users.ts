@@ -12,8 +12,15 @@ const endpoint = "/users";
 const register = (userInfo: RegistrationInfo) =>
   client.post(endpoint, userInfo);
 
-const updateFollowers = (leaderId: string) =>
-  client.patch(`${endpoint}/followers`, { leaderId });
+const updateFollowers = async (leaderId: string) => {
+  try {
+    return processResponse(
+      await client.patch(`${endpoint}/followers`, { leaderId })
+    );
+  } catch (error) {
+    return getFailedResponse(error);
+  }
+};
 
 const login = async (userInfo: LoginInfo) => {
   try {
