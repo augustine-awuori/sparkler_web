@@ -44,6 +44,8 @@ const FollowingsPage = () => {
       setLoading(false);
     };
 
+    window.scroll(0, 0);
+
     getFollowings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_id, users]);
