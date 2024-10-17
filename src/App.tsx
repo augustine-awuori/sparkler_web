@@ -100,6 +100,7 @@ function App() {
     if (ok) {
       auth.loginWithJwt(res.headers[authTokenKey]);
       setUser(data as User);
+      window.location.reload();
     } else toast.error("Login failed");
   }
 
