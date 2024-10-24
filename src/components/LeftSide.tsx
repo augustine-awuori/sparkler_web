@@ -95,28 +95,29 @@ export default function LeftSide({ onClickSparkle }: Props) {
         <Sparkle color="white" size={25} />
       </Link>
       <div className="buttons">
-        {menus.map((m) => {
+        {menus.map((item) => {
           const isActiveLink =
-            location.pathname === `/${m.id}` ||
-            (m.id === "profile" && location.pathname === `/${user?._id || ""}`);
+            location.pathname === `/${item.id}` ||
+            (item.id === "profile" &&
+              location.pathname === `/${user?._id || ""}`);
 
           return (
             <Link
-              to={getRoute(m)}
+              to={getRoute(item)}
               className={classNames(
-                `btn--${m.id} new-tweets`,
+                `btn--${item.id} new-tweets`,
                 isActiveLink && "active"
               )}
-              key={m.id}
-              onClick={() => handleItemClick(m)}
+              key={item.id}
+              onClick={() => handleItemClick(item)}
             >
               <div className="btn--icon">
-                {m.value && user ? (
-                  <span className="value-count">{m.value}</span>
+                {item.value && user ? (
+                  <span className="value-count">{item.value}</span>
                 ) : null}
-                <m.Icon fill={isActiveLink} color="white" size={25} />
+                <item.Icon fill={isActiveLink} color="white" size={25} />
               </div>
-              <span>{m.label}</span>
+              <span>{item.label}</span>
             </Link>
           );
         })}
