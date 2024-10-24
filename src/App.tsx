@@ -30,10 +30,9 @@ import {
   QuotesContext,
   UserContext,
 } from "./contexts";
-import { AppData } from "./utils/app";
+import { AppData, appDataJwt } from "./utils/app";
 import { Quote } from "./utils/types";
 import { User } from "./users";
-import appService from "./services/appData";
 import auth from "./services/auth";
 import chatTokenService from "./services/chatToken";
 import Layout from "./components/Layout";
@@ -53,7 +52,6 @@ function App() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [appData, setAppData] = useState<AppData>();
-  const [loading, setLoading] = useState(true);
   const { googleUser } = useUser();
 
   useEffect(() => {
@@ -62,22 +60,7 @@ function App() {
   }, [googleUser, user]);
 
   useEffect(() => {
-    const initApp = async () => {
-      try {
-        const res = await appService.getAppData();
-        if (res.ok) {
-          const data = res.data as { token: string };
-          const decoded = auth.decode(data.token) as AppData;
-          setAppData(decoded);
-        }
-      } catch (error) {
-        console.error("Error fetching app data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initApp();
+    setAppData(auth.decode(appDataJwt) as AppData);
   }, []);
 
   useEffect(() => {
@@ -157,7 +140,7 @@ function App() {
     retrieveAllUsersInfo();
   }, []);
 
-  if (loading || !feedClient || !chatClient || !appData) return <LoadingPage />;
+  if (!feedClient || !chatClient || !appData) return <LoadingPage />;
 
   return (
     <StreamApp
