@@ -99,7 +99,7 @@ export default function LeftSide({ onClickSparkle }: Props) {
           const isActiveLink =
             location.pathname === `/${item.id}` ||
             (item.id === "profile" &&
-              location.pathname === `/${user?._id || ""}`);
+              location.pathname === `/${user?.username}`);
 
           return (
             <Link
