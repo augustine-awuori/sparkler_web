@@ -4,7 +4,6 @@ import { Activity, DefaultGenerics, StreamClient } from "getstream";
 import { StreamApp } from "react-activity-feed";
 import { Box } from "@chakra-ui/react";
 import { Chat } from "stream-chat-react";
-import { toast } from "react-toastify";
 import {
   DefaultGenerics as ChatDefaultGenerics,
   StreamChat,
@@ -34,7 +33,6 @@ import { AppData, appDataJwt } from "./utils/app";
 import { Quote } from "./utils/types";
 import { User } from "./users";
 import auth from "./services/auth";
-import chatTokenService from "./services/chatToken";
 import Layout from "./components/Layout";
 import LoadingPage from "./pages/LoadingPage";
 import UsersContext, { Users } from "./contexts/UsersContext";
@@ -65,40 +63,28 @@ function App() {
 
   useEffect(() => {
     const initChatClient = async () => {
-      if (!appData) return;
       try {
+        if (!appData) return;
+
         const client = StreamChat.getInstance(appData.key);
 
-        if (!user) {
-          await client.connectUser(
-            { id: appData.userId, name: "Anonymous" },
-            appData.userToken
-          );
-          setChatClient(client);
-          return;
-        }
+        user
+          ? await client.connectUser(
+              { id: user._id, name: user.name, image: user.profileImage },
+              user.chatToken
+            )
+          : await client.connectUser(
+              { id: appData.userId, name: "Anonymous" },
+              appData.userToken
+            );
 
-        if (!user?.chatToken || !user?.feedToken) {
-          const res = await chatTokenService.getChatToken();
-          if (res.ok) {
-            const token = res.data as string;
-            setUser({ ...user, chatToken: token, feedToken: token });
-          } else {
-            toast.error("Failed to fetch your chat token");
-          }
-        }
-
-        await client.connectUser(
-          { id: user._id, name: user.name, image: user.profileImage },
-          user.chatToken
-        );
         setChatClient(client);
       } catch (error) {
         console.error("Error initializing chat client:", error);
       }
     };
 
-    if (appData) initChatClient();
+    initChatClient();
   }, [appData, user]);
 
   useEffect(() => {
@@ -106,12 +92,13 @@ function App() {
       if (!appData || (user && user._id === feedClient?.userId)) return;
 
       try {
-        const client = new StreamClient(
-          appData.key,
-          user?.feedToken || appData.userToken,
-          appData.id
+        setFeedClient(
+          new StreamClient(
+            appData.key,
+            user?.feedToken || appData.userToken,
+            appData.id
+          )
         );
-        setFeedClient(client);
       } catch (error) {
         console.error("Error initializing feed client:", error);
       }
@@ -122,9 +109,11 @@ function App() {
 
   useEffect(() => {
     const retrieveAllUsersInfo = async () => {
-      let users: Users = {};
       try {
+        let users: Users = {};
+
         const res = await usersService.getAllUsers();
+
         if (res.ok) {
           setAllUsers(res.data as User[]);
 
@@ -137,6 +126,7 @@ function App() {
         console.error("Error fetching users:", error);
       }
     };
+
     retrieveAllUsersInfo();
   }, []);
 
