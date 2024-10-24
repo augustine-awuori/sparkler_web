@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { IoLogOut, IoSparkles } from "react-icons/io5";
-import { FcGoogle } from "react-icons/fc";
+import { FaSignInAlt } from "react-icons/fa";
 import classNames from "classnames";
 import styled from "styled-components";
 
@@ -142,12 +142,12 @@ export default function LeftSide({ onClickSparkle }: Props) {
           </Button>
         ) : (
           <Button
-            leftIcon={<FcGoogle size={20} />}
-            className="login-button"
-            _hover={{ bg: "#db4437", color: "white" }}
             onClick={() => navigate("/auth")}
+            className="login-button"
+            leftIcon={<FaSignInAlt />}
+            _hover={{ bg: "var(--conc-theme-color)" }}
           >
-            Login with Google
+            Login
           </Button>
         )}
       </div>
@@ -243,8 +243,8 @@ const Container = styled.div`
   .login-button {
     width: 100%;
     background-color: white;
-    color: #db4437;
-    border: 1px solid #db4437;
+    color: var(--conc-theme-color);
+    border: 1px solid var(--conc-theme-color);
     border-radius: 30px;
     font-size: 16px;
     padding: 10px 0;
@@ -252,8 +252,8 @@ const Container = styled.div`
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: #db4437; /* Background color on hover */
-      color: white; /* Change text color to white */
+      background-color: var(--conc-theme-color);
+      color: white;
     }
 
     &:focus {
