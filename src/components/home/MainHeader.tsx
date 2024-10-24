@@ -1,11 +1,25 @@
 import styled from "styled-components";
 import { useBreakpointValue } from "@chakra-ui/media-query";
-import { FaSignInAlt } from "react-icons/fa";
+import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@chakra-ui/react";
+import { Button, ButtonProps } from "@chakra-ui/react";
 
+import { logout } from "../../hooks/useAuth";
 import { useUser } from "../../hooks";
-import Sparkler from "../icons/Twitter";
+
+const Btn = ({ children, ...otherProps }: ButtonProps) => (
+  <Button
+    size="sm"
+    color="var(--conc-theme-color)"
+    letterSpacing={0.1}
+    colorScheme="var(--conc-theme-color)"
+    py={0}
+    my={0}
+    {...otherProps}
+  >
+    {children}
+  </Button>
+);
 
 export default function MainHeader() {
   const { user } = useUser();
@@ -16,18 +30,13 @@ export default function MainHeader() {
     <Header>
       <h1>Home</h1>
       {user || (!user && !isMobile) ? (
-        <Sparkler color="white" />
+        <Btn onClick={logout} leftIcon={<FaSignOutAlt />}>
+          Log out
+        </Btn>
       ) : (
-        <Button
-          size="sm"
-          color="var(--conc-theme-color)"
-          letterSpacing={0.1}
-          colorScheme="var(--conc-theme-color)"
-          onClick={() => navigate("/auth")}
-          leftIcon={<FaSignInAlt />}
-        >
+        <Btn onClick={() => navigate("/auth")} leftIcon={<FaSignInAlt />}>
           Login
-        </Button>
+        </Btn>
       )}
     </Header>
   );

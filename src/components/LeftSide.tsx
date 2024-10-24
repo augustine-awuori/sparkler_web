@@ -6,8 +6,8 @@ import classNames from "classnames";
 import styled from "styled-components";
 
 import { events, logEvent } from "../storage/analytics";
+import { logout } from "../hooks/useAuth";
 import { useNewNotifications, useUnreadMessages, useUser } from "../hooks";
-import auth from "../services/auth";
 import Bell from "./icons/Bell";
 import Hashtag from "./icons/Hashtag";
 import Home from "./icons/Home";
@@ -72,11 +72,6 @@ export default function LeftSide({ onClickSparkle }: Props) {
       link: `/${user?.username || ""}`,
     },
   ];
-
-  const logout = () => {
-    auth.logout();
-    window.location.reload();
-  };
 
   const checkIsValidNavigation = (menuItem: Menu): boolean =>
     Boolean(user || menuItem.id === "home" || menuItem.id === "explore");

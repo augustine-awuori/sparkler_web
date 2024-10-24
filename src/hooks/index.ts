@@ -1,4 +1,5 @@
 export { default as useActivity } from "./useActivity";
+export { default as useAuth } from "./useAuth";
 export { default as useComment } from "./useComment";
 export { default as useFiles } from "./useFiles";
 export { default as useFollow } from "./useFollow";
