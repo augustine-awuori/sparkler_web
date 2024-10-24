@@ -6,6 +6,7 @@ import { Button, ButtonProps } from "@chakra-ui/react";
 
 import { logout } from "../../hooks/useAuth";
 import { useUser } from "../../hooks";
+import Sparkle from "../icons/Twitter";
 
 const Btn = ({ children, ...otherProps }: ButtonProps) => (
   <Button
@@ -23,21 +24,27 @@ const Btn = ({ children, ...otherProps }: ButtonProps) => (
 
 export default function MainHeader() {
   const { user } = useUser();
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobileSize = useBreakpointValue({ base: true, md: false });
   const navigate = useNavigate();
+
+  const renderButton = (): JSX.Element => {
+    if (!isMobileSize) return <Sparkle color="#fff" />;
+
+    return user ? (
+      <Btn onClick={logout} leftIcon={<FaSignOutAlt />}>
+        Log out
+      </Btn>
+    ) : (
+      <Btn onClick={() => navigate("/auth")} leftIcon={<FaSignInAlt />}>
+        Login
+      </Btn>
+    );
+  };
 
   return (
     <Header>
       <h1>Home</h1>
-      {user || (!user && !isMobile) ? (
-        <Btn onClick={logout} leftIcon={<FaSignOutAlt />}>
-          Log out
-        </Btn>
-      ) : (
-        <Btn onClick={() => navigate("/auth")} leftIcon={<FaSignInAlt />}>
-          Login
-        </Btn>
-      )}
+      {renderButton()}
     </Header>
   );
 }
