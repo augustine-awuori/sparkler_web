@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Activity, DefaultGenerics, StreamClient } from "getstream";
-import { StreamApp, useStreamContext } from "react-activity-feed";
+import { StreamApp } from "react-activity-feed";
 import { Box } from "@chakra-ui/react";
 import { Chat } from "stream-chat-react";
 import { toast } from "react-toastify";
@@ -33,9 +33,6 @@ import {
 import { AppData } from "./utils/app";
 import { Quote } from "./utils/types";
 import { User } from "./users";
-
-import { authTokenKey, processResponse } from "./services/client";
-import { useUser } from "./hooks";
 import appService from "./services/appData";
 import auth from "./services/auth";
 import chatTokenService from "./services/chatToken";
@@ -43,6 +40,7 @@ import Layout from "./components/Layout";
 import LoadingPage from "./pages/LoadingPage";
 import UsersContext, { Users } from "./contexts/UsersContext";
 import usersService from "./services/users";
+import useUser, { initUser } from "./hooks/useUser";
 
 function App() {
   const [feedClient, setFeedClient] = useState<StreamClient<DefaultGenerics>>();
@@ -57,52 +55,11 @@ function App() {
   const [appData, setAppData] = useState<AppData>();
   const [loading, setLoading] = useState(true);
   const { googleUser } = useUser();
-  const { client } = useStreamContext();
 
   useEffect(() => {
-    const updateUserInfo = async () => {
-      const shouldUpdate =
-        client?.userId === user?._id &&
-        user &&
-        client?.currentUser?.data?.name === "Unknown";
-
-      if (shouldUpdate) {
-        const userData = { ...user, id: user._id };
-        try {
-          await client?.currentUser?.update(userData);
-        } catch (error) {
-          await client.user(user._id).getOrCreate(userData);
-        }
-      }
-    };
-
-    updateUserInfo();
-    initUser();
+    initUser({ googleUser, setUser, user });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [googleUser, user]);
-
-  async function initUser() {
-    if (user) return;
-    const cachedUser = auth.getCurrentUser();
-    if (cachedUser) return setUser(cachedUser);
-
-    if (!googleUser) return;
-    const { email, displayName, photoURL } = googleUser;
-    if (!email || !displayName || !photoURL) return;
-
-    const res = await usersService.quickAuth({
-      email,
-      name: displayName,
-      profileImage: photoURL,
-    });
-
-    const { data, ok } = processResponse(res);
-    if (ok) {
-      auth.loginWithJwt(res.headers[authTokenKey]);
-      setUser(data as User);
-      window.location.reload();
-    } else toast.error("Login failed");
-  }
 
   useEffect(() => {
     const initApp = async () => {
@@ -157,9 +114,8 @@ function App() {
         console.error("Error initializing chat client:", error);
       }
     };
-    if (appData) {
-      initChatClient();
-    }
+
+    if (appData) initChatClient();
   }, [appData, user]);
 
   useEffect(() => {
