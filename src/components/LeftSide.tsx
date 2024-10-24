@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
-import { IoLogOut, IoSparkles } from "react-icons/io5";
-import { FaSignInAlt } from "react-icons/fa";
+import { IoSparkles } from "react-icons/io5";
+import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import classNames from "classnames";
 import styled from "styled-components";
 
@@ -134,7 +134,7 @@ export default function LeftSide({ onClickSparkle }: Props) {
       <div className="profile-section">
         {user ? (
           <Button
-            leftIcon={<IoLogOut />}
+            leftIcon={<FaSignOutAlt />}
             className="logout-button"
             onClick={logout}
           >

@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { useBreakpointValue } from "@chakra-ui/media-query";
 import { FaSignInAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
 import { Button } from "@chakra-ui/react";
+
 import { useUser } from "../../hooks";
 import Sparkler from "../icons/Twitter";
 
