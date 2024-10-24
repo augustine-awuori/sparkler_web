@@ -12,29 +12,27 @@ export default function MainHeader() {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const navigate = useNavigate();
 
+  const Icon = (): JSX.Element => {
+    return user || (!user && !isMobile) ? (
+      <Sparkler color="white" />
+    ) : (
+      <Button
+        size="sm"
+        color="var(--conc-theme-color)"
+        letterSpacing={0.1}
+        colorScheme="var(--conc-theme-color)"
+        onClick={() => navigate("/auth")}
+        leftIcon={<FaSignInAlt />}
+      >
+        Login
+      </Button>
+    );
+  };
+
   return (
     <Header>
       <h1>Home</h1>
-      {user ? (
-        <Sparkler color="white" />
-      ) : (
-        <>
-          {isMobile ? (
-            <Button
-              size="sm"
-              color="var(--conc-theme-color)"
-              letterSpacing={0.1}
-              colorScheme="var(--conc-theme-color)"
-              onClick={() => navigate("/auth")}
-              leftIcon={<FaSignInAlt />}
-            >
-              Login
-            </Button>
-          ) : (
-            <Sparkler color="white" />
-          )}
-        </>
-      )}
+      <Icon />
     </Header>
   );
 }
