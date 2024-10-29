@@ -1,8 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Avatar, Gallery, useStreamContext } from "react-activity-feed";
 import { Activity } from "getstream";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { FaUserMinus, FaUserPlus } from "react-icons/fa";
+import { BsPencil, BsTrash } from "react-icons/bs";
 import styled from "styled-components";
 import classNames from "classnames";
 
@@ -16,6 +18,7 @@ import { generateSparkleLink } from "../../utils/links";
 import {
   useActivity,
   useComment,
+  useFollow,
   useLike,
   useQuoting,
   useResparkle,
@@ -29,8 +32,11 @@ import Heart from "../icons/Heart";
 import QuoteDialog from "../quote/QuoteDialog";
 import ResparklePopup from "./ResparklePopup";
 import Retweet from "../icons/Retweet";
+import More from "../icons/More";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
+import MoreOptionsPopup, { Option } from "./MoreOptionPopup";
+import { toast } from "react-toastify";
 
 interface Props {
   activity: Activity;
@@ -44,32 +50,38 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
   const [quoteDialogOpened, setQuoteDialogOpened] = useState(false);
   const [retweetPopupOpened, setResparklePopupOpened] = useState(false);
-  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-  const [showMore, setShowMore] = useState(false);
+  const [morePopupOpened, setMorePopupOpened] = useState(false);
+  const [moreOptions, setMoreOptions] = useState<Option[]>([]);
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
+  const moreButtonRef = useRef<HTMLButtonElement>(null);
   const { setActivity } = useActivity();
   const { toggleResparkle } = useResparkle();
   const { createQuote } = useQuoting();
   const location = useLocation();
   const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const isAReaction = activity.foreign_id.startsWith("reaction");
-  const sparkle = isAReaction
-    ? (activity.object as unknown as AppActivity).object.data
-    : (activity.object as unknown as ActivityObject).data;
-
   const appActivity = isAReaction
     ? (activity.object as unknown as AppActivity)
     : (activity as unknown as AppActivity);
+  const { isFollowing, toggleFollow } = useFollow({
+    userId: appActivity.actor.id,
+  });
+  const [resparklePopupPosition, setResparklePopupPosition] = useState({
+    top: 0,
+    left: 0,
+  });
+  const [morePopupPosition, setMorePopupPosition] = useState({
+    top: 0,
+    right: 0,
+  });
+
+  const sparkle = isAReaction
+    ? (activity.object as unknown as AppActivity).object.data
+    : (activity.object as unknown as ActivityObject).data;
   const actor = appActivity.actor;
   const hasLikedSparkle = checkIfHasLiked(appActivity);
   const hasResparkled = checkIfHasResparkled(appActivity);
   const isAQuote = activity.verb === "quote";
-
-  const onToggleLike = () =>
-    toggleLike(appActivity as unknown as Activity, hasLikedSparkle);
-
-  const handleResparkle = () =>
-    toggleResparkle(appActivity as unknown as Activity, hasResparkled);
 
   const actions = [
     {
@@ -86,7 +98,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
       value: appActivity.reaction_counts.resparkle || 0,
       onClick: (_e: React.MouseEvent<HTMLButtonElement>) => {
         const buttonRect = resparkleButtonRef.current!.getBoundingClientRect();
-        setPopupPosition({
+        setResparklePopupPosition({
           top: buttonRect.top - 10,
           left: buttonRect.left,
         });
@@ -106,6 +118,58 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
       alt: "Upload",
     },
   ];
+
+  useEffect(() => {
+    initMoreOptions();
+
+    function initMoreOptions() {
+      const isTheAuthor = appActivity.actor.id === user?.id;
+
+      const authorOptions: Option[] = [
+        {
+          Icon: <BsTrash />,
+          label: "Delete Sparkle",
+          onClick: () => toast.info("sparkle deletion coming sooner"),
+        },
+        {
+          Icon: <BsPencil />,
+          label: "Edit Sparkle",
+          onClick: () => toast.info("sparkle edit coming soon"),
+        },
+      ];
+
+      setMoreOptions(
+        isTheAuthor
+          ? authorOptions
+          : [
+              {
+                Icon: isFollowing ? <FaUserMinus /> : <FaUserPlus />,
+                label: isFollowing ? "Unfollow" : "Follow",
+                onClick: toggleFollow,
+              },
+            ]
+      );
+    }
+  }, [appActivity.actor.id, isFollowing, toggleFollow, user?.id]);
+
+  const toggleMorePopup = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    const buttonRect = moreButtonRef.current!.getBoundingClientRect();
+
+    setMorePopupPosition({
+      top: buttonRect.top + window.scrollY + 20,
+      right: window.innerWidth - buttonRect.right,
+    });
+    setMorePopupOpened((prev) => !prev);
+  };
+
+  function onToggleLike() {
+    return toggleLike(appActivity as unknown as Activity, hasLikedSparkle);
+  }
+
+  function handleResparkle() {
+    return toggleResparkle(appActivity as unknown as Activity, hasResparkled);
+  }
 
   const sparkleLink = activity.id
     ? generateSparkleLink(actor.data.username, appActivity.id)
@@ -178,7 +242,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
               />
               <div className="tweet__details">
                 <Text
-                  noOfLines={showMore ? undefined : 3}
+                  noOfLines={morePopupOpened ? undefined : 3}
                   className="tweet__text"
                   dangerouslySetInnerHTML={{
                     __html: formatStringWithLink(
@@ -187,10 +251,9 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                     ).replace(/\n/g, "<br/>"),
                   }}
                 />
-                {/* Conditionally show the "Read more" button */}
-                {!showMore && (sparkle?.text?.length || 0) > 150 && (
+                {!morePopupOpened && (sparkle?.text?.length || 0) > 150 && (
                   <button
-                    onClick={() => setShowMore(true)}
+                    onClick={() => setMorePopupOpened(true)}
                     style={{
                       color: "var(--theme-color)",
                       cursor: "pointer",
@@ -253,8 +316,22 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
               })}
             </div>
           </div>
+          <button
+            ref={moreButtonRef}
+            className="more"
+            onClick={toggleMorePopup}
+          >
+            <More color="#777" size={20} />
+          </button>
         </Flex>
       </Block>
+      {morePopupOpened && (
+        <MoreOptionsPopup
+          position={morePopupPosition}
+          options={moreOptions}
+          onClose={() => setMorePopupOpened(false)}
+        />
+      )}
       {appActivity.id && quoteDialogOpened && (
         <QuoteDialog
           activity={appActivity as unknown as Activity}
@@ -275,7 +352,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
           onResparkle={handleResparkle}
           hasBeenResparkled={hasResparkled}
           onQuote={startQuoting}
-          position={popupPosition}
+          position={resparklePopupPosition}
         />
       )}
     </Box>
