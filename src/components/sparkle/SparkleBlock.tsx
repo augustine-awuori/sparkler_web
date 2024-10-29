@@ -1,10 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Avatar, Gallery, useStreamContext } from "react-activity-feed";
+import {
+  Avatar,
+  Gallery,
+  useFeedContext,
+  useStreamContext,
+} from "react-activity-feed";
 import { Activity } from "getstream";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaUserMinus, FaUserPlus } from "react-icons/fa";
 import { BsPencil, BsTrash } from "react-icons/bs";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 import classNames from "classnames";
 
@@ -36,7 +42,6 @@ import More from "../icons/More";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
 import MoreOptionsPopup, { Option } from "./MoreOptionPopup";
-import { toast } from "react-toastify";
 
 interface Props {
   activity: Activity;
@@ -44,6 +49,7 @@ interface Props {
 
 const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const { user } = useStreamContext();
+  const feed = useFeedContext();
   const { toggleLike } = useLike();
   const { createComment } = useComment();
   const navigate = useNavigate();
@@ -129,7 +135,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
         {
           Icon: <BsTrash />,
           label: "Delete Sparkle",
-          onClick: () => toast.info("sparkle deletion coming sooner"),
+          onClick: deleteSparkle,
         },
         {
           Icon: <BsPencil />,
@@ -150,7 +156,21 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
             ]
       );
     }
-  }, [appActivity.actor.id, isFollowing, toggleFollow, user?.id]);
+
+    async function deleteSparkle() {
+      toast.loading("Deleting sparkle...");
+      await feed.onRemoveActivity(activity.id);
+      feed.refresh();
+      toast.dismiss();
+    }
+  }, [
+    activity.id,
+    appActivity.actor.id,
+    feed,
+    isFollowing,
+    toggleFollow,
+    user?.id,
+  ]);
 
   const toggleMorePopup = (event: React.MouseEvent) => {
     event.stopPropagation();
