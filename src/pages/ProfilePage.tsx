@@ -10,6 +10,7 @@ import ProfileBio from "../components/profile/ProfileBio";
 import ProfileHeader from "../components/profile/ProfileHeader";
 import service from "../services/users";
 import TabList from "../components/profile/TabList";
+import { toast } from "react-toastify";
 
 export default function ProfilePage() {
   const { client } = useStreamContext();
@@ -28,7 +29,7 @@ export default function ProfilePage() {
         client?.currentUser?.data?.name === "Unknown";
 
       if (userDetailsNeedUpdate) {
-        const res = user.data
+        const res = user?.data
           ? { ok: true, problem: "", data: user.data }
           : await service.getUserByUsername(username);
 
@@ -53,9 +54,18 @@ export default function ProfilePage() {
     if (!username) return navigate(-1);
 
     const initUser = async () => {
-      let userId = user.data.id;
+      let userId = user?.data?.id;
 
-      if (!userId) return navigate(-1);
+      if (!userId) {
+        const res = await service.getUserByUsername(username);
+
+        if (!res.ok) {
+          toast.error("Database didn't pick the call");
+          return navigate(-1);
+        }
+
+        userId = (res.data as User)._id;
+      }
 
       try {
         const user = await client
