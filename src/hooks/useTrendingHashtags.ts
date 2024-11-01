@@ -11,22 +11,36 @@ type Hashtags = {
 const useTrendingHashtags = () => {
   const { client } = useStreamContext();
   const [hashtags, setHashtags] = useState<Hashtags>({});
+  const [verifiedHashtags, setVerifiedHashtags] = useState<Hashtags>({});
   const [isLoading, setIsLoading] = useState(false);
   const [sparklesWithHashtags, setSparklesWithHashtags] = useState<Activity[]>(
     []
   );
 
   useEffect(() => {
+    async function initHashtags() {
+      const hashtags = await getAllHashtags();
+
+      setHashtags(parseHashtagsFromSparkles(hashtags));
+    }
+
+    async function initVerifiedHashtags() {
+      setVerifiedHashtags(
+        parseHashtagsFromSparkles(await getVerifiedHashtags())
+      );
+    }
+
     setIsLoading(true);
     initHashtags();
+    initVerifiedHashtags();
     setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function initHashtags() {
-    const hashtags = await getAllHashtags();
+  async function getVerifiedHashtags() {
+    const response = await client?.feed("hashtags", "verified").get();
 
-    setHashtags(parseHashtagsFromSparkles(hashtags));
+    return (response?.results || []) as unknown as Activity[];
   }
 
   async function getAllHashtags() {
@@ -58,7 +72,7 @@ const useTrendingHashtags = () => {
     return hashtags;
   }
 
-  return { sparklesWithHashtags, hashtags, isLoading };
+  return { verifiedHashtags, sparklesWithHashtags, hashtags, isLoading };
 };
 
 export default useTrendingHashtags;

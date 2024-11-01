@@ -15,6 +15,7 @@ export default function ExplorePage() {
       <SearchInput onQueryChange={setQuery} query={query} />
 
       <ContentContainer>
+        <Trends query={query} verified />
         <Trends query={query} />
 
         {showWhoToFollowOnRight ? (

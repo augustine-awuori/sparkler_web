@@ -3,15 +3,17 @@ import styled from "styled-components";
 
 import { useTrendingHashtags } from "../../hooks";
 import More from "../icons/More";
+import VerifiedIcon from "../../assets/verified.svg";
 
 interface Props {
   query: string;
+  verified?: boolean;
 }
 
-const Trends = ({ query }: Props) => {
-  const { hashtags, isLoading } = useTrendingHashtags();
+const Trends = ({ query, verified }: Props) => {
+  const { hashtags, isLoading, verifiedHashtags } = useTrendingHashtags();
 
-  const populated = Object.entries(hashtags);
+  const populated = Object.entries(verified ? verifiedHashtags : hashtags);
 
   const queried = query
     ? populated.filter(([hashtag]) =>
@@ -23,7 +25,12 @@ const Trends = ({ query }: Props) => {
 
   return (
     <TrendsContainer>
-      <h2>Trends for you</h2>
+      <h2>
+        {verified && (
+          <img src={VerifiedIcon} alt="Verified" className="verified-icon" />
+        )}
+        Hashtags
+      </h2>
 
       {isLoading && (
         <div className="spinner-container">
@@ -67,6 +74,15 @@ const TrendsContainer = styled.div`
     text-align: center;
     margin-bottom: 16px;
     color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .verified-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
   }
 
   .spinner-container {

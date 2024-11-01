@@ -11,6 +11,7 @@ export default function RightSide() {
   return (
     <Container>
       <SearchInput onQueryChange={setQuery} query={query} />
+      <Trends query={query} verified />
       <Trends query={query} />
       <WhoToFollow query={query} />
     </Container>
