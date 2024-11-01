@@ -4,6 +4,7 @@ import { Spinner, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import { getProfileUserDataFromUserInfo } from "../../utils/funcs";
 import { useProfile } from "../../hooks";
 import { User } from "../../users";
 import FollowBtn from "../FollowBtn";
@@ -37,13 +38,7 @@ const WhoToFollow = ({ query }: Props) => {
 
   const navigateToProfile = (leader: User) => {
     navigate(`/${leader.username}`);
-    setUser({
-      created_at: "",
-      id: leader._id,
-      updated_at: "",
-      duration: "",
-      data: leader,
-    });
+    setUser(getProfileUserDataFromUserInfo(leader));
   };
 
   const leaders = query

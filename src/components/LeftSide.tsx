@@ -6,8 +6,14 @@ import classNames from "classnames";
 import styled from "styled-components";
 
 import { events, logEvent } from "../storage/analytics";
+import { getProfileUserDataFromUserInfo } from "../utils/funcs";
 import { logout } from "../hooks/useAuth";
-import { useNewNotifications, useUnreadMessages, useUser } from "../hooks";
+import {
+  useNewNotifications,
+  useProfile,
+  useUnreadMessages,
+  useUser,
+} from "../hooks";
 import Bell from "./icons/Bell";
 import Hashtag from "./icons/Hashtag";
 import Home from "./icons/Home";
@@ -32,10 +38,11 @@ type Menu = {
 };
 
 export default function LeftSide({ onClickSparkle }: Props) {
-  const location = useLocation();
-  const { user } = useUser();
-  const { newNotifications } = useNewNotifications();
   const { count } = useUnreadMessages();
+  const { newNotifications } = useNewNotifications();
+  const { setUser } = useProfile();
+  const { user } = useUser();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const menus: Menu[] = [
@@ -81,6 +88,10 @@ export default function LeftSide({ onClickSparkle }: Props) {
 
   const handleItemClick = (menuItem: Menu) => {
     logEvent(events.general.PAGE_VIEW, { pageLink: menuItem.link });
+
+    if (menuItem.id === "profile" && user)
+      setUser(getProfileUserDataFromUserInfo(user));
+
     navigate(getRoute(menuItem));
   };
 

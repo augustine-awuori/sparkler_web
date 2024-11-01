@@ -1,7 +1,8 @@
 import { Box } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 
-import { useUnreadMessages, useUser } from "../../hooks";
+import { getProfileUserDataFromUserInfo } from "../../utils/funcs";
+import { useProfile, useUnreadMessages, useUser } from "../../hooks";
 import BottomTab from "./BottomTab";
 import Hashtag from "../icons/Hashtag";
 import Home from "../icons/Home";
@@ -10,13 +11,18 @@ import NotificationIcon from "../notifications/Icon";
 import User from "../icons/User";
 
 const BottomNav = () => {
-  const { user } = useUser();
   const { count } = useUnreadMessages();
+  const { setUser } = useProfile();
+  const { user } = useUser();
   const location = useLocation();
 
   const isCurrentPath = (path: string) => location.pathname === path;
 
   const getPathName = (path: string) => (user ? path : "/auth");
+
+  const handleProfileUserData = () => {
+    if (user) setUser(getProfileUserDataFromUserInfo(user));
+  };
 
   return (
     <Box
@@ -54,6 +60,7 @@ const BottomNav = () => {
           <User size={23} color="#fff" fill={isCurrentPath(`/${user?._id}`)} />
         }
         pathname={getPathName(`/${user?.username}`)}
+        onClick={handleProfileUserData}
       />
     </Box>
   );

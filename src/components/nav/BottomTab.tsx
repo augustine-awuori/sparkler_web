@@ -1,6 +1,7 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button, Box } from "@chakra-ui/react";
+
 import { events, logEvent } from "../../storage/analytics";
 
 interface TabProps {
@@ -8,15 +9,23 @@ interface TabProps {
   pathname: string;
   Icon: JSX.Element;
   value?: number;
+  onClick?: () => void;
 }
 
-const BottomTab = ({ children, Icon: TabIcon, pathname, value }: TabProps) => {
+const BottomTab: React.FC<TabProps> = ({
+  children,
+  Icon: TabIcon,
+  onClick,
+  pathname,
+  value,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isActive = location.pathname.startsWith(pathname);
 
   const handleNavigation = () => {
     logEvent(events.general.PAGE_VIEW, { pageLink: pathname });
+    onClick?.();
     navigate(pathname);
   };
 
