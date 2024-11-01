@@ -3,15 +3,28 @@ import { useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 
 import { Activity } from "../utils/types";
+import { getEATZone } from "../utils/funcs";
 import { parseHashtags } from "../utils/string";
 import useUser from "./useUser";
-import { getEATZone } from "../utils/funcs";
 
 export default function useSparkle() {
   const { client } = useStreamContext();
   const { user } = useUser();
 
   const userFeed = client?.feed("user", client.userId);
+
+  const getComputedHashtags = (hashtags: string[]): string[] | undefined => {
+    if (!hashtags.length || !user) return undefined;
+
+    const computed = [
+      ...hashtags.map((tag) => `hashtags:${tag}`),
+      "hashtags:general",
+    ];
+
+    if (user.verified) computed.push("hashtags:verified");
+
+    return computed;
+  };
 
   const createSparkle = async (text: string, images: string[]) => {
     if (!user) {
@@ -30,11 +43,6 @@ export default function useSparkle() {
 
     const time = getEATZone();
 
-    const hashtags = parseHashtags(text);
-    const to = hashtags.length
-      ? [...hashtags.map((tag) => `hashtags:${tag}`), "hashtags:general"]
-      : undefined;
-
     await userFeed.addActivity({
       actor: `SU:${client.userId}`,
       verb: "tweet",
@@ -42,7 +50,7 @@ export default function useSparkle() {
       object: `SO:tweet:${collection.id}`,
       foreign_id: client.userId + time,
       time: time,
-      to,
+      to: getComputedHashtags(parseHashtags(text)),
     });
   };
 

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,7 +11,6 @@ import ProfileBio from "../components/profile/ProfileBio";
 import ProfileHeader from "../components/profile/ProfileHeader";
 import service from "../services/users";
 import TabList from "../components/profile/TabList";
-import { toast } from "react-toastify";
 
 export default function ProfilePage() {
   const { client } = useStreamContext();
