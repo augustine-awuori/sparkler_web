@@ -85,8 +85,7 @@ export default function ProfilePage() {
     };
 
     initUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username]);
+  }, [client, currentUser?._id, navigate, setUser, user?.data?.id, username]);
 
   if (!client || !user) return <LoadingIndicator />;
 
