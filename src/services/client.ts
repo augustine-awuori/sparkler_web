@@ -6,7 +6,7 @@ export const authTokenKey = "x-auth-token";
 
 export type ResponseError = {
   response: {
-    data: DataError;
+    data?: DataError;
   };
 };
 
@@ -58,7 +58,7 @@ export const processResponse = ({ data, status }: AxiosResponse) => {
 
 export const getFailedResponse = (error: unknown): Response => ({
   ...emptyResponse,
-  problem: (error as ResponseError).response.data.error || "Unknown error",
+  problem: (error as ResponseError).response?.data?.error || "Unknown error",
 });
 
 export default apiClient;
