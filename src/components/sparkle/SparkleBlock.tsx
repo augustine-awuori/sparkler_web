@@ -248,7 +248,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
         {(isAReaction || hasResparkled) && (
           <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={10}>
             <Retweet color="#777" size={13} />
-            <Text ml={1}>{getResparklerName()} resparkled</Text>
+            <Text ml={1} fontWeight={700}>{getResparklerName()} resparkled</Text>
           </Flex>
         )}
         <Flex cursor="pointer">
