@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { FlatFeed, LoadMorePaginator } from "react-activity-feed";
 import styled from "styled-components";
@@ -11,8 +11,12 @@ import SearchInput from "../components/trends/SearchInput";
 
 const HashtagPage = () => {
   const { hashtag } = useParams();
-  const [query, setQuery] = useState(hashtag || "");
+  const [query, setQuery] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (hashtag) setQuery(hashtag);
+  }, [hashtag]);
 
   const handleQuery = () => navigate(`/explore/${query.toLowerCase()}`);
 
