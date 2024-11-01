@@ -1,4 +1,5 @@
 import { Spinner } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { useTrendingHashtags } from "../../hooks";
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const Trends = ({ query, verified }: Props) => {
+  const navigate = useNavigate();
   const { hashtags, isLoading, verifiedHashtags } = useTrendingHashtags();
 
   const populated = Object.entries(verified ? verifiedHashtags : hashtags);
@@ -22,6 +24,9 @@ const Trends = ({ query, verified }: Props) => {
     : populated;
 
   const sorted = queried.sort((a, b) => b[1] - a[1]);
+
+  const showSparklesOfHashtag = (hashtag: string) =>
+    navigate(`/explore/${hashtag}`);
 
   return (
     <TrendsContainer>
@@ -44,7 +49,11 @@ const Trends = ({ query, verified }: Props) => {
 
       <div className="trends-list">
         {sorted.map(([hashtag, count], index) => (
-          <div className="trend" key={index}>
+          <div
+            className="trend"
+            key={index}
+            onClick={() => showSparklesOfHashtag(hashtag)}
+          >
             <div className="trend__details">
               <span className="trend__details__title">#{hashtag}</span>
               <span className="trend__details__tweets-count">
@@ -92,6 +101,7 @@ const TrendsContainer = styled.div`
   }
 
   .trend {
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
