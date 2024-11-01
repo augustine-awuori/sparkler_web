@@ -15,6 +15,7 @@ import {
   ExplorePage,
   FollowersPage,
   FollowingsPage,
+  HashtagPage,
   HomePage,
   MessagesPage,
   NotificationsPage,
@@ -158,6 +159,10 @@ function App() {
                             path="/notifications"
                           />
                           <Route element={<MessagesPage />} path="/messages" />
+                          <Route
+                            element={<HashtagPage />}
+                            path="/explore/:hashtag"
+                          />
                           <Route element={<ExplorePage />} path="/explore" />
                           <Route
                             element={<QuoteSparklePage />}

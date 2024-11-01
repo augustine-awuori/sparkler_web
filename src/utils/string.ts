@@ -11,7 +11,7 @@ export function formatStringWithLink(
 
     if (match.startsWith("#")) {
       // it is a hashtag
-      url = match;
+      url = `/explore/${match.replace("#", "")}`;
       label = match;
     } else if (match.startsWith("@")) {
       // it is a mention

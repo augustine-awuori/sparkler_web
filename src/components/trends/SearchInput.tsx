@@ -1,18 +1,23 @@
 import styled from "styled-components";
 import classNames from "classnames";
-
 import Search from "../icons/Search";
 
 interface Props {
   query: string;
   onQueryChange: (query: string) => void;
+  onEnter?: () => void;
 }
 
-const SearchInput = ({ onQueryChange, query }: Props) => (
+const SearchInput = ({ onQueryChange, query, onEnter }: Props) => (
   <SearchContainer>
     <Search color="#fff" />
     <input
       onChange={(e) => onQueryChange(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && onEnter) {
+          onEnter();
+        }
+      }}
       value={query}
       placeholder="Search Sparkler"
       style={{ color: "#fff" }}
