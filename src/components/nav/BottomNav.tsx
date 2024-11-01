@@ -1,5 +1,4 @@
 import { Box } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
 
 import { getProfileUserDataFromUserInfo } from "../../utils/funcs";
 import { useProfile, useUnreadMessages, useUser } from "../../hooks";
@@ -14,10 +13,6 @@ const BottomNav = () => {
   const { count } = useUnreadMessages();
   const { setUser } = useProfile();
   const { user } = useUser();
-  const location = useLocation();
-
-  const isCurrentPath = (path: string) => location.pathname === path;
-
   const getPathName = (path: string) => (user ? path : "/auth");
 
   const handleProfileUserData = () => {
@@ -38,27 +33,19 @@ const BottomNav = () => {
       borderTop="1px solid #333"
       zIndex="10"
     >
+      <BottomTab Icon={Home} pathname="/" />
+      <BottomTab Icon={Hashtag} pathname="/explore" />
       <BottomTab
-        Icon={<Home color="#fff" fill={isCurrentPath("/")} size={23} />}
-        pathname="/"
-      />
-      <BottomTab
-        Icon={<Hashtag color="#fff" size={23} />}
-        pathname="/explore"
-      />
-      <BottomTab
-        Icon={<NotificationIcon />}
+        Icon={NotificationIcon}
         pathname={getPathName("/notifications")}
       />
       <BottomTab
-        Icon={<Mail color="#fff" size={23} />}
+        Icon={Mail}
         pathname={getPathName("/messages")}
         value={count}
       />
       <BottomTab
-        Icon={
-          <User size={23} color="#fff" fill={isCurrentPath(`/${user?._id}`)} />
-        }
+        Icon={User}
         pathname={getPathName(`/${user?.username}`)}
         onClick={handleProfileUserData}
       />

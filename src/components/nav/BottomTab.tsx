@@ -7,21 +7,21 @@ import { events, logEvent } from "../../storage/analytics";
 interface TabProps {
   children?: ReactNode;
   pathname: string;
-  Icon: JSX.Element;
   value?: number;
   onClick?: () => void;
+  Icon: (props: { color: string; size?: number }) => JSX.Element;
 }
 
 const BottomTab: React.FC<TabProps> = ({
   children,
-  Icon: TabIcon,
   onClick,
   pathname,
+  Icon,
   value,
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isActive = location.pathname.startsWith(pathname);
+  const isActive = location.pathname === pathname;
 
   const handleNavigation = () => {
     logEvent(events.general.PAGE_VIEW, { pageLink: pathname });
@@ -46,8 +46,9 @@ const BottomTab: React.FC<TabProps> = ({
       position="relative"
     >
       <Box as="span" fontSize="xl" mb={1}>
-        {TabIcon}
+        {<Icon color={isActive ? "var(--theme-color)" : "#fff"} size={23} />}
       </Box>
+
       {value ? (
         <Box
           position="absolute"
