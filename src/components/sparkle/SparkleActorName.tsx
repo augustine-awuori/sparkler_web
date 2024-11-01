@@ -1,8 +1,9 @@
 import { format } from "date-fns";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import verificationIcon from "../../assets/verified.svg"; // Make sure this path is correct
+import { useProfile } from "../../hooks";
+import verificationIcon from "../../assets/verified.svg";
 
 interface Props {
   time: string;
@@ -12,6 +13,7 @@ interface Props {
   verified: boolean;
 }
 
+//TODO: pass the whole user data
 export default function SparkleActorName({
   time,
   name,
@@ -19,11 +21,11 @@ export default function SparkleActorName({
   username,
   verified,
 }: Props) {
+  const navigate = useNavigate();
+  const { setUser } = useProfile();
+
   const timeDiff = Date.now() - new Date(time).getTime();
-
-  // Convert ms to hours
   const hoursBetweenDates = timeDiff / (60 * 60 * 1000);
-
   const lessThan24hrs = hoursBetweenDates < 24;
   const lessThan1hr = hoursBetweenDates < 1;
 
@@ -33,8 +35,19 @@ export default function SparkleActorName({
     ? `${Math.floor(hoursBetweenDates)}h`
     : format(new Date(time), "MMM d");
 
+  const navigateToProfile = () => {
+    navigate(`/${username}`);
+    setUser({
+      created_at: "",
+      id,
+      updated_at: "",
+      duration: "",
+      data: { time, name, id, username, verified },
+    });
+  };
+
   return (
-    <TextBlock to={`/${username}`}>
+    <TextBlock onClick={navigateToProfile}>
       <span className="user--name">{name}</span>
       {verified && (
         <img src={verificationIcon} alt="Verified" className="verified-icon" />
@@ -45,7 +58,7 @@ export default function SparkleActorName({
   );
 }
 
-const TextBlock = styled(Link)`
+const TextBlock = styled.div`
   display: flex;
   align-items: center;
 

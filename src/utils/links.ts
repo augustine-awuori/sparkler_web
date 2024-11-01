@@ -1,6 +1,6 @@
 export function generateSparkleLink(
-  actorId: string,
+  actorUsername: string,
   sparkleActivityId: string
 ) {
-  return `/${actorId}/status/${sparkleActivityId}`;
+  return `/${actorUsername}/status/${sparkleActivityId}`;
 }

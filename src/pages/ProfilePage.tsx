@@ -1,13 +1,10 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
-import { FeedUser } from "../contexts/ProfileContext";
-import { ProfileContext } from "../contexts";
 import { User } from "../users";
-import { useTitleChanger, useUser, useUsers } from "../hooks";
+import { useProfile, useTitleChanger, useUser } from "../hooks";
 import LoadingIndicator from "../components/LoadingIndicator";
 import ProfileBio from "../components/profile/ProfileBio";
 import ProfileHeader from "../components/profile/ProfileHeader";
@@ -16,23 +13,24 @@ import TabList from "../components/profile/TabList";
 
 export default function ProfilePage() {
   const { client } = useStreamContext();
-  const [user, setUser] = useState<FeedUser>();
-  const { user_id: user_username } = useParams();
-  const { users } = useUsers();
-  const navigate = useNavigate();
+  const { user, setUser } = useProfile();
   const { user: currentUser } = useUser();
-  useTitleChanger((user?.data as User)?.name || "User Profile");
+  const { username } = useParams();
+  const navigate = useNavigate();
+  useTitleChanger(user?.data.name || "User Profile");
 
   useEffect(() => {
     const updateUserInfo = async () => {
       const userDetailsNeedUpdate =
         client?.userId === currentUser?._id &&
-        user_username &&
+        username &&
         user &&
         client?.currentUser?.data?.name === "Unknown";
 
       if (userDetailsNeedUpdate) {
-        const res = await service.getUserByUsername(user_username);
+        const res = user.data
+          ? { ok: true, problem: "", data: user.data }
+          : await service.getUserByUsername(username);
 
         if (res.ok) {
           const userData = {
@@ -49,23 +47,15 @@ export default function ProfilePage() {
     };
 
     updateUserInfo();
-  }, [client, client?.currentUser, currentUser?._id, user, user_username]);
+  }, [client, client?.currentUser, currentUser?._id, user, username]);
 
   useEffect(() => {
-    if (!user_username) return navigate(-1);
+    if (!username) return navigate(-1);
 
-    const getUser = async () => {
-      let userId = users[user_username];
+    const initUser = async () => {
+      let userId = user.data.id;
 
-      if (!userId) {
-        const res = await service.getUserByUsername(user_username);
-        if (res.ok) userId = (res.data as User)._id;
-      }
-
-      if (!userId) {
-        toast.error("There's no user with the given username");
-        return navigate(-1);
-      }
+      if (!userId) return navigate(-1);
 
       try {
         const user = await client
@@ -77,31 +67,29 @@ export default function ProfilePage() {
         if (client?.userId !== currentUser?._id) return;
 
         let fetchedUser: User | undefined = undefined;
-        const res = await service.getUserByUsername(user_username);
+        const res = await service.getUserByUsername(username);
         if (res.ok) fetchedUser = res.data as User;
         if (fetchedUser)
           client?.user(userId).getOrCreate({ ...fetchedUser, id: userId });
       }
     };
 
-    getUser();
+    initUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user_username]);
+  }, [username]);
 
   if (!client || !user) return <LoadingIndicator />;
 
   return (
-    <ProfileContext.Provider value={{ user, setUser }}>
-      <Container>
-        <ProfileHeader />
-        <main>
-          <ProfileBio />
-          <div className="tab-list">
-            <TabList />
-          </div>
-        </main>
-      </Container>
-    </ProfileContext.Provider>
+    <Container>
+      <ProfileHeader />
+      <main>
+        <ProfileBio />
+        <div className="tab-list">
+          <TabList />
+        </div>
+      </main>
+    </Container>
   );
 }
 

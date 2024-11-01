@@ -4,6 +4,7 @@ import { Spinner, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import { useProfile } from "../../hooks";
 import { User } from "../../users";
 import FollowBtn from "../FollowBtn";
 import usersService from "../../services/users";
@@ -20,6 +21,7 @@ const WhoToFollow = ({ query }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [leaderSuggestions, setLeadersSuggestions] = useState<User[]>([]);
   const navigate = useNavigate();
+  const { setUser } = useProfile();
 
   useEffect(() => {
     getAllUsers();
@@ -32,6 +34,17 @@ const WhoToFollow = ({ query }: Props) => {
 
     if (res.ok) setLeadersSuggestions(res.data as User[]);
   }
+
+  const navigateToProfile = (leader: User) => {
+    navigate(`/${leader.username}`);
+    setUser({
+      created_at: "",
+      id: leader._id,
+      updated_at: "",
+      duration: "",
+      data: leader,
+    });
+  };
 
   const leaders = query
     ? leaderSuggestions.filter(
@@ -62,7 +75,7 @@ const WhoToFollow = ({ query }: Props) => {
           .map((leader) => (
             <div className="user" key={leader._id}>
               <div
-                onClick={() => navigate(`/${leader.username}`)}
+                onClick={() => navigateToProfile(leader)}
                 className="user__details"
               >
                 <div className="user__img">

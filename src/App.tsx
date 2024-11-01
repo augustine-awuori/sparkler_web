@@ -35,6 +35,7 @@ import { User } from "./users";
 import auth from "./services/auth";
 import Layout from "./components/Layout";
 import LoadingPage from "./pages/LoadingPage";
+import ProfileContext, { FeedUser } from "./contexts/ProfileContext";
 import UsersContext, { Users } from "./contexts/UsersContext";
 import usersService from "./services/users";
 import useUser, { initUser } from "./hooks/useUser";
@@ -44,6 +45,7 @@ function App() {
   const [chatClient, setChatClient] =
     useState<StreamChat<ChatDefaultGenerics>>();
   const [user, setUser] = useState<User>();
+  const [profileUser, setProfileUser] = useState<FeedUser>();
   const [activity, setActivity] = useState<Activity<DefaultGenerics>>();
   const [users, setUsers] = useState<Users>({});
   const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -145,43 +147,47 @@ function App() {
               <ActivityContext.Provider value={{ activity, setActivity }}>
                 <QuotesContext.Provider value={{ quotes, setQuotes }}>
                   <FilesContext.Provider value={{ files, setFiles }}>
-                    <Layout>
-                      <Routes>
-                        <Route element={<AuthPages />} path="/auth" />
-                        <Route
-                          element={<NotificationsPage />}
-                          path="/notifications"
-                        />
-                        <Route element={<MessagesPage />} path="/messages" />
-                        <Route element={<ExplorePage />} path="/explore" />
-                        <Route
-                          element={<QuoteSparklePage />}
-                          path="/:user_id/status/:id/quote"
-                        />
-                        <Route
-                          element={<ThreadPage />}
-                          path="/:user_id/status/:id"
-                        />
-                        <Route
-                          element={<QuotesPage />}
-                          path="/:user_id/status/:id/quotes"
-                        />
-                        <Route
-                          element={<EditProfilePage />}
-                          path="/:user_id/edit"
-                        />
-                        <Route
-                          element={<FollowingsPage />}
-                          path="/:user_id/followings"
-                        />
-                        <Route
-                          element={<FollowersPage />}
-                          path="/:user_id/followers"
-                        />
-                        <Route element={<ProfilePage />} path="/:user_id" />
-                        <Route element={<HomePage />} path="/" />
-                      </Routes>
-                    </Layout>
+                    <ProfileContext.Provider
+                      value={{ user: profileUser, setUser: setProfileUser }}
+                    >
+                      <Layout>
+                        <Routes>
+                          <Route element={<AuthPages />} path="/auth" />
+                          <Route
+                            element={<NotificationsPage />}
+                            path="/notifications"
+                          />
+                          <Route element={<MessagesPage />} path="/messages" />
+                          <Route element={<ExplorePage />} path="/explore" />
+                          <Route
+                            element={<QuoteSparklePage />}
+                            path="/:username/status/:id/quote"
+                          />
+                          <Route
+                            element={<ThreadPage />}
+                            path="/:username/status/:id"
+                          />
+                          <Route
+                            element={<QuotesPage />}
+                            path="/:username/status/:id/quotes"
+                          />
+                          <Route
+                            element={<EditProfilePage />}
+                            path="/:username/edit"
+                          />
+                          <Route
+                            element={<FollowingsPage />}
+                            path="/:username/followings"
+                          />
+                          <Route
+                            element={<FollowersPage />}
+                            path="/:username/followers"
+                          />
+                          <Route element={<ProfilePage />} path="/:username" />
+                          <Route element={<HomePage />} path="/" />
+                        </Routes>
+                      </Layout>
+                    </ProfileContext.Provider>
                   </FilesContext.Provider>
                 </QuotesContext.Provider>
               </ActivityContext.Provider>
