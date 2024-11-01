@@ -95,6 +95,15 @@ export default function LeftSide({ onClickSparkle }: Props) {
     navigate(getRoute(menuItem));
   };
 
+  const isActiveLink = (item: Menu): boolean => {
+    if (location.pathname === "/" && item.id === "home") return true;
+
+    return (
+      location.pathname === `/${item.id}` ||
+      (item.id === "profile" && location.pathname === `/${user?.username}`)
+    );
+  };
+
   return (
     <Container>
       <Link to="/" className="header">
@@ -102,17 +111,14 @@ export default function LeftSide({ onClickSparkle }: Props) {
       </Link>
       <div className="buttons">
         {menus.map((item) => {
-          const isActiveLink =
-            location.pathname === `/${item.id}` ||
-            (item.id === "profile" &&
-              location.pathname === `/${user?.username}`);
+          const isActive = isActiveLink(item);
 
           return (
             <Link
               to={getRoute(item)}
               className={classNames(
                 `btn--${item.id} new-tweets`,
-                isActiveLink && "active"
+                isActive && "active"
               )}
               key={item.id}
               onClick={() => handleItemClick(item)}
@@ -121,7 +127,11 @@ export default function LeftSide({ onClickSparkle }: Props) {
                 {item.value && user ? (
                   <span className="value-count">{item.value}</span>
                 ) : null}
-                <item.Icon fill={isActiveLink} color="white" size={25} />
+                <item.Icon
+                  fill={isActive}
+                  color={isActive ? "var(--theme-color)" : "white"}
+                  size={25}
+                />
               </div>
               <span>{item.label}</span>
             </Link>
@@ -214,6 +224,7 @@ const Container = styled.div`
 
       &.active {
         font-weight: bold;
+        color: var(--theme-color);
 
         img {
           --size: 27px;
