@@ -95,12 +95,12 @@ export default function LeftSide({ onClickSparkle }: Props) {
     navigate(getRoute(menuItem));
   };
 
-  const isActiveLink = (item: Menu): boolean => {
-    if (location.pathname === "/" && item.id === "home") return true;
+  const isActiveLink = (menu: Menu): boolean => {
+    if (location.pathname === "/" && menu.id === "home") return true;
 
     return (
-      location.pathname === `/${item.id}` ||
-      (item.id === "profile" && location.pathname === `/${user?.username}`)
+      location.pathname === `/${menu.id}` ||
+      (menu.id === "profile" && location.pathname === `/${user?.username}`)
     );
   };
 
@@ -110,30 +110,30 @@ export default function LeftSide({ onClickSparkle }: Props) {
         <Sparkle color="white" size={25} />
       </Link>
       <div className="buttons">
-        {menus.map((item) => {
-          const isActive = isActiveLink(item);
+        {menus.map((menu) => {
+          const isActive = isActiveLink(menu);
 
           return (
             <Link
-              to={getRoute(item)}
+              to={getRoute(menu)}
               className={classNames(
-                `btn--${item.id} new-tweets`,
+                `btn--${menu.id} new-tweets`,
                 isActive && "active"
               )}
-              key={item.id}
-              onClick={() => handleItemClick(item)}
+              key={menu.id}
+              onClick={() => handleItemClick(menu)}
             >
               <div className="btn--icon">
-                {item.value && user ? (
-                  <span className="value-count">{item.value}</span>
+                {menu.value && user ? (
+                  <span className="value-count">{menu.value}</span>
                 ) : null}
-                <item.Icon
+                <menu.Icon
                   fill={isActive}
                   color={isActive ? "var(--theme-color)" : "white"}
                   size={25}
                 />
               </div>
-              <span>{item.label}</span>
+              <span>{menu.label}</span>
             </Link>
           );
         })}

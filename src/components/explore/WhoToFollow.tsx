@@ -33,7 +33,7 @@ const WhoToFollow = ({ query }: Props) => {
     const res = await usersService.getAllUsers();
     setIsLoading(false);
 
-    if (res.ok) setLeadersSuggestions(res.data as User[]);
+    if (res?.ok) setLeadersSuggestions(res?.data as User[]);
   }
 
   const navigateToProfile = (leader: User) => {
