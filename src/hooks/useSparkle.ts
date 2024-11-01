@@ -17,7 +17,7 @@ export default function useSparkle() {
     if (!hashtags.length || !user) return undefined;
 
     const computed = [
-      ...hashtags.map((tag) => `hashtags:${tag}`),
+      ...hashtags.map((tag) => `hashtags:${tag.toLowerCase()}`),
       "hashtags:general",
     ];
 
