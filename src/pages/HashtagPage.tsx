@@ -45,6 +45,9 @@ const HashtagPage = () => {
             LoadMoreButton={(props) => <LoadMoreButton {...props} />}
           />
         )}
+        options={{
+          ranking: `if(actor.data.verified, 100, 0) + decay_gauss(time) * log(likes + 0.5 * comments + 1)`,
+        }}
       />
     </>
   );
