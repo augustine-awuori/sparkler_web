@@ -81,7 +81,7 @@ const SparkleShareModal: React.FC<Props> = ({
 const Container = styled.div`
   .modal-backdrop {
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0);
     display: flex;
     height: 100vh;
     justify-content: center;
