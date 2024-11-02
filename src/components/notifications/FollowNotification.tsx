@@ -3,7 +3,8 @@ import { NotificationActivity } from "getstream";
 import { AvatarGroup } from "@chakra-ui/react";
 import styled from "styled-components";
 
-import { Activity } from "../../utils/types";
+import { Activity, ActivityActor } from "../../utils/types";
+import { useProfile } from "../../hooks";
 import Avatar from "../Avatar";
 import User from "../icons/User";
 
@@ -12,9 +13,16 @@ interface Props {
 }
 
 export default function FollowNotification({ followActivities }: Props) {
+  const { setUser } = useProfile();
   const navigate = useNavigate();
+
   const firstActivity = followActivities.activities[0] as unknown as Activity;
   const activitiesCount = followActivities.activities.length;
+
+  const visitProfile = (actor: ActivityActor) => {
+    navigate(`/${actor.id}`);
+    setUser(actor);
+  };
 
   return (
     <Block>
@@ -26,7 +34,7 @@ export default function FollowNotification({ followActivities }: Props) {
               <Avatar
                 key={activity.id}
                 name={activity.actor.data.name}
-                onClick={() => navigate(`/${activity.actor.id}`)}
+                onClick={() => visitProfile(activity.actor)}
                 src={activity.actor.data.profileImage}
               />
             )
