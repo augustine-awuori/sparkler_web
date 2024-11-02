@@ -45,6 +45,7 @@ import ResparklePopup from "./ResparklePopup";
 import Retweet from "../icons/Retweet";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
+import SparkleShareModal from "./SparkleShareModal";
 
 interface Props {
   activity: Activity;
@@ -59,6 +60,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
   const [quoteDialogOpened, setQuoteDialogOpened] = useState(false);
   const [retweetPopupOpened, setResparklePopupOpened] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [morePopupOpened, setMorePopupOpened] = useState(false);
   const [moreOptions, setMoreOptions] = useState<Option[]>([]);
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
@@ -93,6 +95,8 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const hasResparkled = checkIfHasResparkled(appActivity);
   const isAQuote = activity.verb === "quote";
   const sparkleLink = generateSparkleLink(actor.data.username, appActivity.id);
+  const completeSparkleLink = `${appUrl}${sparkleLink}`;
+  const sparkleText = (sparkle || { text: "" }).text;
 
   const actions = [
     {
@@ -127,6 +131,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
       id: "upload",
       Icon: Upload,
       alt: "Upload",
+      onClick: () => setShowShareModal(true),
     },
   ];
 
@@ -137,7 +142,11 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
       const isTheAuthor = appActivity.actor.id === user?.id;
 
       const generalOptions: Option[] = [
-        { Icon: <BsLink />, label: "Copy Link", onClick: copySparkleUrl },
+        {
+          Icon: <BsLink />,
+          label: "Copy Link",
+          onClick: () => copyToClipBorad(completeSparkleLink),
+        },
       ];
 
       const authorOptions: Option[] = [
@@ -170,15 +179,12 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
       feed.refresh();
       toast.dismiss();
     }
-
-    function copySparkleUrl() {
-      copyToClipBorad(`${appUrl}${sparkleLink}`);
-    }
   }, [
     activity.id,
     actor.data.username,
     appActivity.actor.id,
     appActivity.id,
+    completeSparkleLink,
     feed,
     isFollowing,
     sparkleLink,
@@ -280,7 +286,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                   className="tweet__text"
                   dangerouslySetInnerHTML={{
                     __html: formatStringWithLink(
-                      (sparkle || { text: "" }).text,
+                      sparkleText,
                       "tweet__text--link"
                     ).replace(/\n/g, "<br/>"),
                   }}
@@ -389,6 +395,12 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
           position={resparklePopupPosition}
         />
       )}
+      <SparkleShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        sparkleUrl={completeSparkleLink}
+        text={sparkleText}
+      />
     </Box>
   );
 };
