@@ -3,6 +3,7 @@ import axios, { AxiosResponse } from "axios";
 import auth from "./auth";
 
 export const authTokenKey = "x-auth-token";
+export const appUrl = "https://sparkler.lol";
 
 export type ResponseError = {
   response: {

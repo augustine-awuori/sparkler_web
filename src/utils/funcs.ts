@@ -22,8 +22,6 @@ export function getProfileUserDataFromUserInfo(user: User): FeedUser {
 export function copyToClipBorad(text: string) {
   navigator.clipboard
     .writeText(text)
-    .then(() => {
-      toast.success("Link copied to clip board");
-    })
+    .then(() => toast.success("Link copied to clip board"))
     .catch(() => toast.error("Link not copied! Something failed"));
 }

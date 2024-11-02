@@ -19,8 +19,12 @@ import {
   ActivityObject,
   QuoteActivity,
 } from "../../utils/types";
+import { appUrl } from "../../services/client";
+import { copyToClipBorad } from "../../utils/funcs";
+import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
 import { generateSparkleLink } from "../../utils/links";
+import { TabId } from "../profile/TabList";
 import {
   useActivity,
   useComment,
@@ -31,9 +35,6 @@ import {
   useResparkle,
   useSparkle,
 } from "../../hooks";
-import { copyToClipBorad } from "../../utils/funcs";
-import { EmbeddedSparkleBlock } from "../resparkle";
-import { TabId } from "../profile/TabList";
 import Comment from "../icons/Comment";
 import CommentDialog from "./CommentDialog ";
 import Heart from "../icons/Heart";
@@ -91,6 +92,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const hasLikedSparkle = checkIfHasLiked(appActivity);
   const hasResparkled = checkIfHasResparkled(appActivity);
   const isAQuote = activity.verb === "quote";
+  const sparkleLink = generateSparkleLink(actor.data.username, appActivity.id);
 
   const actions = [
     {
@@ -151,17 +153,15 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
         },
       ];
 
-      const followUnFollowOption: Option = {
+      const followUnfollowOption: Option = {
         Icon: isFollowing ? <FaUserMinus /> : <FaUserPlus />,
         label: isFollowing ? "Unfollow" : "Follow",
         onClick: toggleFollow,
       };
 
-      const authorisedOptions = isTheAuthor
-        ? authorOptions
-        : [followUnFollowOption];
+      const authorised = isTheAuthor ? authorOptions : [followUnfollowOption];
 
-      setMoreOptions([...authorisedOptions, ...generalOptions]);
+      setMoreOptions([...authorised, ...generalOptions]);
     }
 
     async function deleteSparkle() {
@@ -172,12 +172,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     }
 
     function copySparkleUrl() {
-      const sparkleLink = generateSparkleLink(
-        actor.data.username,
-        appActivity.id
-      );
-
-      copyToClipBorad(`https://sparkle.lol${sparkleLink}`);
+      copyToClipBorad(`${appUrl}${sparkleLink}`);
     }
   }, [
     activity.id,
@@ -186,6 +181,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     appActivity.id,
     feed,
     isFollowing,
+    sparkleLink,
     toggleFollow,
     user?.id,
   ]);
@@ -208,10 +204,6 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   function handleResparkle() {
     return toggleResparkle(appActivity as unknown as Activity, hasResparkled);
   }
-
-  const sparkleLink = activity.id
-    ? generateSparkleLink(actor.data.username, appActivity.id)
-    : "#";
 
   const handlePostComment = async (text: string) =>
     await createComment(text, appActivity as unknown as Activity);
@@ -240,7 +232,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     await createQuote(quote, appActivity as unknown as Activity);
   };
 
-  const viewDetails = () => navigate(sparkleLink);
+  const viewDetails = () => navigate(activity.id ? sparkleLink : "#");
 
   const navigateToProfile = () => {
     navigate(`/${actor.data.username}`);
