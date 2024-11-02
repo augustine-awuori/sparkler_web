@@ -54,7 +54,6 @@ const EditProfilePage: React.FC = () => {
 
     await client?.currentUser?.update({
       ...info,
-      verified: true,
       name,
       bio,
       profileImage: newProfileImage,
