@@ -20,7 +20,7 @@ export default function FollowNotification({ followActivities }: Props) {
   const activitiesCount = followActivities.activities.length;
 
   const visitProfile = (actor: ActivityActor) => {
-    navigate(`/${actor.id}`);
+    navigate(`/${actor.data.username}`);
     setUser(actor);
   };
 
