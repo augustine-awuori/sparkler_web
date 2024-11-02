@@ -7,12 +7,12 @@ import {
 } from "react-activity-feed";
 import { Activity } from "getstream";
 import { Box, Flex, Text } from "@chakra-ui/react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { BsLink, BsPencil, BsTrash } from "react-icons/bs";
 import { FaUserMinus, FaUserPlus } from "react-icons/fa";
-import { BsPencil, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
-import styled from "styled-components";
+import { useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
+import styled from "styled-components";
 
 import {
   Activity as AppActivity,
@@ -31,18 +31,19 @@ import {
   useResparkle,
   useSparkle,
 } from "../../hooks";
+import { copyToClipBorad } from "../../utils/funcs";
 import { EmbeddedSparkleBlock } from "../resparkle";
 import { TabId } from "../profile/TabList";
 import Comment from "../icons/Comment";
 import CommentDialog from "./CommentDialog ";
 import Heart from "../icons/Heart";
+import More from "../icons/More";
+import MoreOptionsPopup, { Option } from "./MoreOptionPopup";
 import QuoteDialog from "../quote/QuoteDialog";
 import ResparklePopup from "./ResparklePopup";
 import Retweet from "../icons/Retweet";
-import More from "../icons/More";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
-import MoreOptionsPopup, { Option } from "./MoreOptionPopup";
 
 interface Props {
   activity: Activity;
@@ -133,6 +134,10 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     function initMoreOptions() {
       const isTheAuthor = appActivity.actor.id === user?.id;
 
+      const generalOptions: Option[] = [
+        { Icon: <BsLink />, label: "Copy Link", onClick: copySparkleUrl },
+      ];
+
       const authorOptions: Option[] = [
         {
           Icon: <BsTrash />,
@@ -146,17 +151,17 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
         },
       ];
 
-      setMoreOptions(
-        isTheAuthor
-          ? authorOptions
-          : [
-              {
-                Icon: isFollowing ? <FaUserMinus /> : <FaUserPlus />,
-                label: isFollowing ? "Unfollow" : "Follow",
-                onClick: toggleFollow,
-              },
-            ]
-      );
+      const followUnFollowOption: Option = {
+        Icon: isFollowing ? <FaUserMinus /> : <FaUserPlus />,
+        label: isFollowing ? "Unfollow" : "Follow",
+        onClick: toggleFollow,
+      };
+
+      const authorisedOptions = isTheAuthor
+        ? authorOptions
+        : [followUnFollowOption];
+
+      setMoreOptions([...authorisedOptions, ...generalOptions]);
     }
 
     async function deleteSparkle() {
@@ -165,9 +170,20 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
       feed.refresh();
       toast.dismiss();
     }
+
+    function copySparkleUrl() {
+      const sparkleLink = generateSparkleLink(
+        actor.data.username,
+        appActivity.id
+      );
+
+      copyToClipBorad(`https://sparkle.lol${sparkleLink}`);
+    }
   }, [
     activity.id,
+    actor.data.username,
     appActivity.actor.id,
+    appActivity.id,
     feed,
     isFollowing,
     toggleFollow,
@@ -248,7 +264,9 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
         {(isAReaction || hasResparkled) && (
           <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={10}>
             <Retweet color="#777" size={13} />
-            <Text ml={1} fontWeight={700}>{getResparklerName()} resparkled</Text>
+            <Text ml={1} fontWeight={700}>
+              {getResparklerName()} resparkled
+            </Text>
           </Flex>
         )}
         <Flex cursor="pointer">
