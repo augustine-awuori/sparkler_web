@@ -72,11 +72,11 @@ export default function ProfilePage() {
       }
 
       try {
-        const user = await client
-          ?.user(userId)
-          .get({ with_follow_counts: true });
-
-        if (user?.full) setUser(user.full);
+        // const user = await client
+        //   ?.user(userId)
+        //   .get({ with_follow_counts: true });
+        // console.log("user?.full: ", user?.full);
+        // if (user?.full) setUser({...user, data: { ...user }});
       } catch (error) {
         if (client?.userId !== currentUser?._id) return;
 
