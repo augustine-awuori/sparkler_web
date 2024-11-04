@@ -7,19 +7,19 @@ import { toast } from "react-toastify";
 
 import { formatStringWithLink } from "../../utils/string";
 import { useProfile, useUser } from "../../hooks";
-import EditProfileButton from "../profile/EditProfileButton";
-import More from "../icons/More";
-import Mail from "../icons/Mail";
 import Calendar from "../icons/Calendar";
+import EditProfileButton from "../profile/EditProfileButton";
 import FollowBtn from "../FollowBtn";
-import verificationIcon from "../../assets/verified.svg"; // Import the verification icon
+import Mail from "../icons/Mail";
+import More from "../icons/More";
+import verificationIcon from "../../assets/verified.svg";
 
 export default function ProfileBio() {
-  const { user } = useProfile();
   const { client } = useStreamContext();
-  const navigate = useNavigate();
+  const { user } = useProfile();
   const { user: currentUser } = useUser();
-
+  const navigate = useNavigate();
+ 
   const actions = [
     {
       Icon: More,
