@@ -58,7 +58,7 @@ export default function ProfilePage() {
     if (!username) return navigate(-1);
 
     const initUser = async () => {
-      let userId = user?.data?.id;
+      let userId = user?.id;
 
       if (!userId) {
         const res = await service.getUserByUsername(username);
@@ -72,11 +72,15 @@ export default function ProfilePage() {
       }
 
       try {
-        // const user = await client
-        //   ?.user(userId)
-        //   .get({ with_follow_counts: true });
-        // console.log("user?.full: ", user?.full);
-        // if (user?.full) setUser({...user, data: { ...user }});
+        const fetchedUser = await client
+          ?.user(userId)
+          .get({ with_follow_counts: true });
+
+        if (fetchedUser?.full)
+          setUser({
+            ...fetchedUser.full,
+            data: { ...fetchedUser.full.data, ...user.data },
+          });
       } catch (error) {
         if (client?.userId !== currentUser?._id) return;
 
@@ -89,7 +93,16 @@ export default function ProfilePage() {
     };
 
     initUser();
-  }, [client, currentUser?._id, navigate, setUser, user?.data?.id, username]);
+  }, [
+    client,
+    currentUser?._id,
+    navigate,
+    setUser,
+    user.data,
+    user.data.id,
+    user?.id,
+    username,
+  ]);
 
   if (!client || !user) return <LoadingIndicator />;
 
