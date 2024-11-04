@@ -21,6 +21,10 @@ export default function ProfilePage() {
   useTitleChanger(user?.data.name || "User Profile");
 
   useEffect(() => {
+    window.scroll(0, 0);
+  }, []);
+
+  useEffect(() => {
     const updateUserInfo = async () => {
       const userDetailsNeedUpdate =
         client?.userId === currentUser?._id &&
