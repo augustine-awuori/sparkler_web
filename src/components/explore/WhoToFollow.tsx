@@ -37,8 +37,8 @@ const WhoToFollow = ({ query }: Props) => {
   }
 
   const navigateToProfile = (leader: User) => {
-    navigate(`/${leader.username}`);
     setUser(getProfileUserDataFromUserInfo(leader));
+    navigate(`/${leader.username}`);
   };
 
   const leaders = query
