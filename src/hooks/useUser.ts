@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
 import { User as GoogleUser } from "firebase/auth";
+import { useStreamContext } from "react-activity-feed";
 
 import { authTokenKey, processResponse } from "../services/client";
 import { googleAuth } from "../storage/config";
@@ -13,8 +14,23 @@ import usersService from "../services/users";
 const useUser = () => {
   const [googleUser] = useAuthState(googleAuth);
   const context = useContext(UserContext);
+  const { client } = useStreamContext();
 
-  return { ...context, googleUser };
+  const updateUsername = async (userId: string, username: string) => {
+    if (
+      !client?.currentUser ||
+      (client.currentUser.data as unknown as { username: "" })?.username ||
+      userId !== client.userId
+    )
+      return;
+
+    await client?.currentUser?.update({
+      ...client.currentUser,
+      username,
+    });
+  };
+
+  return { ...context, googleUser, updateUsername };
 };
 
 export default useUser;

@@ -53,10 +53,11 @@ function App() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [appData, setAppData] = useState<AppData>();
-  const { googleUser } = useUser();
+  const { googleUser, updateUsername } = useUser();
 
   useEffect(() => {
     initUser({ googleUser, setUser, user });
+    if (user) updateUsername(user._id, user.username);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [googleUser, user]);
 

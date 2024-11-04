@@ -5,9 +5,9 @@ import { useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 
 import { ActivityActor } from "../utils/types";
+import { useUser } from "../hooks";
 import service from "../services/users";
 import storage from "../storage/files";
-import { useUser } from "../hooks";
 
 const EditProfilePage: React.FC = () => {
   const [name, setName] = useState("");
@@ -16,8 +16,8 @@ const EditProfilePage: React.FC = () => {
   const [profileImage, setProfileImage] = useState<File | string>("");
   const [coverImage, setCoverImage] = useState<File | string>("");
   const { client } = useStreamContext();
-  const navigate = useNavigate();
   const { user } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const { name, bio, profileImage, coverImage } = (
