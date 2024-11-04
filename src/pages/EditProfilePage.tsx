@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { ActivityActor } from "../utils/types";
 import service from "../services/users";
 import storage from "../storage/files";
+import { useUser } from "../hooks";
 
 const EditProfilePage: React.FC = () => {
   const [name, setName] = useState("");
@@ -16,6 +17,7 @@ const EditProfilePage: React.FC = () => {
   const [coverImage, setCoverImage] = useState<File | string>("");
   const { client } = useStreamContext();
   const navigate = useNavigate();
+  const { user } = useUser();
 
   useEffect(() => {
     const { name, bio, profileImage, coverImage } = (
@@ -55,6 +57,7 @@ const EditProfilePage: React.FC = () => {
     await client?.currentUser?.update({
       ...info,
       name,
+      username: user?.username,
       bio,
       profileImage: newProfileImage,
       coverImage: uploadedBannerImageUrl || client.currentUser.data?.coverImage,
