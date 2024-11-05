@@ -38,18 +38,21 @@ const Container = styled.div<{ tabCount: number }>`
   .tab-list {
     margin-top: 10px;
     border-bottom: 1px solid #333;
-    display: grid;
-    grid-template-columns: repeat(${(props) => props.tabCount}, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px; /* Optional: add a small gap between tabs */
+    justify-content: space-evenly;
 
     .tab {
       color: #777;
-      padding: 0 35px;
-      width: 100%;
+      padding: 0 10px; /* Adjust padding to fit better on smaller screens */
+      flex-grow: 1;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
       font-size: 15px;
+      min-width: 80px; /* Set a minimum width for each tab */
 
       &:hover {
         background-color: #111;
@@ -57,7 +60,7 @@ const Container = styled.div<{ tabCount: number }>`
 
       &__label {
         position: relative;
-        padding: 20px 30px;
+        padding: 10px 15px; /* Adjust padding for smaller screens */
 
         &.active {
           color: white;
@@ -74,6 +77,18 @@ const Container = styled.div<{ tabCount: number }>`
           }
         }
       }
+    }
+  }
+
+  @media (max-width: 600px) {
+    /* Optional: further adjustments for very small screens */
+    .tab-list {
+      justify-content: center; /* Center the tabs */
+    }
+
+    .tab {
+      font-size: 14px;
+      padding: 0 5px;
     }
   }
 `;
