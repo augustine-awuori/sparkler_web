@@ -22,7 +22,8 @@ export default function QuoteDialog({ onQuoteSubmit, onClose }: Props) {
     setLoading(true);
     toast.loading("Sending your quote...");
     await onQuoteSubmit(quote);
-    toast.info("Sparkle quote send successfully");
+    toast.dismiss();
+    toast.success("Quote sent successfully");
     setLoading(false);
 
     onClose();
