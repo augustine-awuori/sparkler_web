@@ -15,7 +15,7 @@ interface Props {
   query: string;
 }
 
-const ANONYMOUS_USER_ID = "6685aed25e91a51c0361251f";
+export const ANONYMOUS_USER_ID = "6685aed25e91a51c0361251f";
 
 const WhoToFollow = ({ query }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -98,8 +98,12 @@ const WhoToFollow = ({ query }: Props) => {
           ))}
       </div>
 
-      {/* Show more link */}
-      <span className="show-more-text">Show more</span>
+      <span
+        className="show-more-text"
+        onClick={() => navigate("/explore/users")}
+      >
+        Show more
+      </span>
     </FollowsContainer>
   );
 };

@@ -25,7 +25,7 @@ export default function NotificationPage() {
 
   return (
     <Container>
-      <h1>Notifications</h1>
+      <h1 className="heading">Notifications</h1>
       <div className="tab-list">
         {tabList.map((tab) => (
           <button
@@ -59,7 +59,7 @@ export default function NotificationPage() {
 }
 
 const Container = styled.div`
-  h1 {
+  .heading {
     padding: 15px;
     font-size: 16px;
     color: white;

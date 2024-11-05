@@ -10,7 +10,7 @@ import LoadingIndicator from "../components/LoadingIndicator";
 import ProfileBio from "../components/profile/ProfileBio";
 import ProfileHeader from "../components/profile/ProfileHeader";
 import service from "../services/users";
-import TabList from "../components/profile/TabList";
+import ProfileTabList from "../components/profile/ProfileTabList";
 
 export default function ProfilePage() {
   const { client } = useStreamContext();
@@ -111,7 +111,7 @@ export default function ProfilePage() {
       <main>
         <ProfileBio />
         <div className="tab-list">
-          <TabList />
+          <ProfileTabList />
         </div>
       </main>
     </Container>

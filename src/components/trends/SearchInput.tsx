@@ -6,9 +6,10 @@ interface Props {
   query: string;
   onQueryChange: (query: string) => void;
   onEnter?: () => void;
+  placeholder?: string;
 }
 
-const SearchInput = ({ onQueryChange, query, onEnter }: Props) => (
+const SearchInput = ({ onQueryChange, placeholder, query, onEnter }: Props) => (
   <SearchContainer>
     <Search color="#fff" />
     <input
@@ -19,7 +20,7 @@ const SearchInput = ({ onQueryChange, query, onEnter }: Props) => (
         }
       }}
       value={query}
-      placeholder="Search Sparkler"
+      placeholder={placeholder || "Search Sparkler"}
       style={{ color: "#fff" }}
     />
     <button

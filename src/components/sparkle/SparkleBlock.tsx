@@ -24,7 +24,7 @@ import { copyToClipBorad } from "../../utils/funcs";
 import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
 import { generateSparkleLink } from "../../utils/links";
-import { TabId } from "../profile/TabList";
+import { TabId } from "../profile/ProfileTabList";
 import {
   useActivity,
   useComment,

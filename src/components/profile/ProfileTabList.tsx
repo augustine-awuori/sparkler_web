@@ -26,7 +26,7 @@ const tabs: Tab[] = [
   },
 ];
 
-export default function TabList() {
+export default function ProfileTabList() {
   const { user_id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();

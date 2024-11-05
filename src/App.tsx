@@ -23,6 +23,7 @@ import {
   QuotesPage,
   QuoteSparklePage,
   ThreadPage,
+  UsersPage,
 } from "./pages";
 import {
   ActivityContext,
@@ -159,6 +160,10 @@ function App() {
                             path="/notifications"
                           />
                           <Route element={<MessagesPage />} path="/messages" />
+                          <Route
+                            element={<UsersPage />}
+                            path="/explore/users"
+                          />
                           <Route
                             element={<HashtagPage />}
                             path="/explore/:hashtag"

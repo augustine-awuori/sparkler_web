@@ -13,3 +13,4 @@ export { default as QuotesPage } from "./QuotesPage";
 export { default as QuoteSparklePage } from "./QuoteSparklePage";
 export { default as RegisterPage } from "./RegisterPage";
 export { default as ThreadPage } from "./ThreadPage";
+export { default as UsersPage } from "./UsersPage";
