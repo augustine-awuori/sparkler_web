@@ -28,8 +28,7 @@ const HashtagPage = () => {
       });
       setLoading(false);
 
-      if (response?.results)
-        setHashtags(response?.results as unknown as Activity[]);
+      if (response) setHashtags(response.results as unknown as Activity[]);
     };
 
     fetchHashtags();
