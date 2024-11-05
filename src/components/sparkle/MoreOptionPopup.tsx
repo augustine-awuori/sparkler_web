@@ -25,7 +25,6 @@ const MoreOptionsPopup: React.FC<Props> = ({ onClose, options, position }) => (
     zIndex={10}
     width="220px"
     border="1px solid #333"
-    onBlur={onClose}
   >
     {options.map(({ Icon, label, onClick }, index) => (
       <Flex

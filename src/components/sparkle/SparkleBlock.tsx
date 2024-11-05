@@ -256,8 +256,12 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   )
     return null;
 
+  const closeMoreOptionsPopup = () => {
+    if (morePopupOpened) setMorePopupOpened(false);
+  };
+
   return (
-    <Box _hover={{ bg: "#111" }}>
+    <Box _hover={{ bg: "#111" }} onBlur={closeMoreOptionsPopup}>
       <Block>
         {(isAReaction || hasResparkled) && (
           <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={10}>
