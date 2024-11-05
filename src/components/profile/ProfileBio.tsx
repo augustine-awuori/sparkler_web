@@ -19,7 +19,7 @@ export default function ProfileBio() {
   const { user } = useProfile();
   const { user: currentUser } = useUser();
   const navigate = useNavigate();
- 
+
   const actions = [
     {
       Icon: More,

@@ -5,7 +5,6 @@ import { useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 
 import { ActivityActor } from "../utils/types";
-import { useUser } from "../hooks";
 import service from "../services/users";
 import storage from "../storage/files";
 
@@ -16,7 +15,6 @@ const EditProfilePage: React.FC = () => {
   const [profileImage, setProfileImage] = useState<File | string>("");
   const [coverImage, setCoverImage] = useState<File | string>("");
   const { client } = useStreamContext();
-  const { user } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,7 +55,6 @@ const EditProfilePage: React.FC = () => {
     await client?.currentUser?.update({
       ...info,
       name,
-      username: user?.username,
       bio,
       profileImage: newProfileImage,
       coverImage: uploadedBannerImageUrl || client.currentUser.data?.coverImage,

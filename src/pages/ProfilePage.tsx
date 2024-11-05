@@ -99,7 +99,6 @@ export default function ProfilePage() {
     navigate,
     setUser,
     user.data,
-    user.data.id,
     user?.id,
     username,
   ]);
