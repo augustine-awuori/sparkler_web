@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import { Activity as MainActivity } from "getstream";
 import { useState } from "react";
+import { Activity as MainActivity } from "getstream";
+import { toast } from "react-toastify";
+import styled from "styled-components";
 
-import { Activity, ActivityActor } from "../../utils/types";
 import { QuoteForm } from "../resparkle";
 import Modal from "../Modal";
 
@@ -12,21 +12,18 @@ interface Props {
   onQuoteSubmit: (quote: string) => Promise<void>;
 }
 
-export default function QuoteDialog({
-  activity,
-  onQuoteSubmit,
-  onClose,
-}: Props) {
+export default function QuoteDialog({ onQuoteSubmit, onClose }: Props) {
   const [quote, setQuote] = useState("");
-
-  const {
-    object: { data: sparkle },
-  } = activity as unknown as Activity;
-
-  const sparkleActor = activity.actor as unknown as ActivityActor;
+  const [isLoading, setLoading] = useState(false);
 
   const handleQuoteSubmit = async () => {
+    if (isLoading) return;
+
+    setLoading(true);
+    toast.loading("Sending your quote...");
     await onQuoteSubmit(quote);
+    toast.info("Sparkle quote send successfully");
+    setLoading(false);
 
     onClose();
   };
@@ -38,13 +35,12 @@ export default function QuoteDialog({
     <MainContainer>
       <Modal onClickOutside={onClose} className="modal-block">
         <BlockContent>
-          {/* <Container> */}
           <QuoteForm
             quote={quote}
             onQuoteChange={handleQuoteChange}
             onQuoteSubmit={handleQuoteSubmit}
+            sendingQuote={isLoading}
           />
-          {/* </Container> */}
         </BlockContent>
       </Modal>
     </MainContainer>

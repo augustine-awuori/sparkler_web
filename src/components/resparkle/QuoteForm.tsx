@@ -11,15 +11,17 @@ import TextArea from "../TextArea";
 import TextProgressRing from "../TextProgressRing";
 
 interface QuoteFormProps {
-  quote: string;
   onQuoteChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onQuoteSubmit: () => Promise<void>;
+  quote: string;
+  sendingQuote: boolean;
 }
 
 const QuoteForm: React.FC<QuoteFormProps> = ({
-  quote,
   onQuoteChange,
   onQuoteSubmit,
+  quote,
+  sendingQuote,
 }) => {
   const { activity } = useActivity();
   const { user } = useUser();
@@ -48,6 +50,8 @@ const QuoteForm: React.FC<QuoteFormProps> = ({
                 color="#fff"
                 _hover={{ bg: "var(--conc-theme-color)" }}
                 rightIcon={<BsSend />}
+                isLoading={sendingQuote}
+                disabled={sendingQuote}
               >
                 Quote
               </Button>
