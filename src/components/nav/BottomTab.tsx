@@ -52,7 +52,7 @@ const BottomTab: React.FC<TabProps> = ({
       position="relative"
     >
       <Box as="span" fontSize="xl" mb={1}>
-        {<Icon color={isActive ? "var(--theme-color)" : "#fff"} size={23} />}
+        {<Icon color={isActive ? "#fff" : "#9e9999"} size={23} />}
       </Box>
 
       {value ? (
