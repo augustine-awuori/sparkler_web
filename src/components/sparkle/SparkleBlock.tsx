@@ -35,6 +35,7 @@ import {
   useResparkle,
   useSparkle,
 } from "../../hooks";
+import { IconType } from "../nav/BottomTab";
 import Comment from "../icons/Comment";
 import CommentDialog from "./CommentDialog ";
 import Heart from "../icons/Heart";
@@ -43,13 +44,23 @@ import MoreOptionsPopup, { Option } from "./MoreOptionPopup";
 import QuoteDialog from "../quote/QuoteDialog";
 import ResparklePopup from "./ResparklePopup";
 import Retweet from "../icons/Retweet";
+import SparkleShareModal from "./SparkleShareModal";
 import TweetActorName from "./SparkleActorName";
 import Upload from "../icons/Upload";
-import SparkleShareModal from "./SparkleShareModal";
 
 interface Props {
   activity: Activity;
 }
+
+type ActionId = "comment" | "resparkle" | "heart" | "upload";
+
+type Action = {
+  id: ActionId;
+  Icon: IconType;
+  alt: string;
+  value?: number;
+  onClick: (arg?: any) => void;
+};
 
 const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const { user } = useStreamContext();
@@ -98,7 +109,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const completeSparkleLink = `${appUrl}${sparkleLink}`;
   const sparkleText = (sparkle || { text: "" }).text;
 
-  const actions = [
+  const actions: Action[] = [
     {
       id: "comment",
       Icon: Comment,
@@ -219,11 +230,13 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     setQuoteDialogOpened(true);
   };
 
-  const getColor = (name: string) => {
-    if (name === "heart")
-      return hasLikedSparkle ? "var(--theme-color)" : "#777";
-    else if (name === "resparkle") return hasResparkled ? "#17BF63" : "#777";
-    return "#777";
+  const getColor = (name: ActionId): string => {
+    let color = "#777";
+
+    if (name === "heart" && hasLikedSparkle) color = "var(--theme-color)";
+    else if (name === "resparkle" && hasResparkled) color = "#17BF63";
+
+    return color;
   };
 
   const getResparklerName = (): string => {

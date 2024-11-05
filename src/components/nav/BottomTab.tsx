@@ -4,12 +4,18 @@ import { Button, Box } from "@chakra-ui/react";
 
 import { events, logEvent } from "../../storage/analytics";
 
+export type IconType = (props: {
+  color: string;
+  size?: number;
+  fill?: boolean;
+}) => JSX.Element;
+
 interface TabProps {
   children?: ReactNode;
   pathname: string;
   value?: number;
   onClick?: () => void;
-  Icon: (props: { color: string; size?: number }) => JSX.Element;
+  Icon: IconType;
 }
 
 const BottomTab: React.FC<TabProps> = ({
