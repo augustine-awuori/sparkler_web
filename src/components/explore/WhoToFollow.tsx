@@ -69,6 +69,7 @@ const WhoToFollow = ({ query }: Props) => {
           .filter((user) => user._id !== client?.userId)
           .filter((user) => user._id !== ANONYMOUS_USER_ID)
           .filter(async ({ _id }) => !(await isFollowingUserWithId(_id)))
+          .slice(0, 10)
           .map((leader) => (
             <div className="user" key={leader._id}>
               <div
