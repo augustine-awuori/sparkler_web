@@ -226,11 +226,14 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     return "#777";
   };
 
-  const getResparklerName = () => {
-    const act = activity as unknown as AppActivity;
-    const isSparkler = user?.id === act.actor.id || hasResparkled;
+  const getResparklerName = (): string => {
+    const { actor } = activity as unknown as AppActivity;
+    const isSparkler = user?.id === actor.id || hasResparkled;
+    const actorName = actor.data.name;
 
-    return isSparkler ? "You" : act.actor.data.name;
+    if (isSparkler && actorName) return `You and ${actorName}`;
+
+    return isSparkler ? "You" : actorName;
   };
 
   const handleQuoteSubmit = async (quote: string) => {
