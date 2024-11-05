@@ -9,12 +9,12 @@ import SparkleBlock from "../components/sparkle/SparkleBlock";
 import SearchInput from "../components/trends/SearchInput";
 
 const HashtagPage = () => {
-  const { hashtag } = useParams();
-  const [query, setQuery] = useState("");
-  const navigate = useNavigate();
-  const { client } = useStreamContext();
   const [hashtags, setHashtags] = useState<Activity[]>([]);
   const [isLoading, setLoading] = useState(false);
+  const [query, setQuery] = useState("");
+  const { client } = useStreamContext();
+  const { hashtag } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (hashtag) setQuery(hashtag);
@@ -50,11 +50,9 @@ const HashtagPage = () => {
 
       {isLoading && <LoadingIndicator />}
 
-      <HashtagContainer>
-        {hashtags.map((activity) => (
-          <SparkleBlock key={activity.id} activity={activity} />
-        ))}
-      </HashtagContainer>
+      {hashtags.map((activity) => (
+        <SparkleBlock key={activity.id} activity={activity} />
+      ))}
     </>
   );
 };
@@ -64,14 +62,6 @@ const InputContainer = styled.div`
   margin-top: 16px;
   padding-left: 10px;
   padding-right: 10px;
-`;
-
-const HashtagContainer = styled.div`
-  margin-top: 16px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 `;
 
 export default HashtagPage;
