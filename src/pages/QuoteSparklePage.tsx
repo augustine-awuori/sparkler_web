@@ -6,18 +6,28 @@ import { useNavigate } from "react-router-dom";
 import { QuoteForm } from "../components/resparkle";
 import { useActivity, useComment } from "../hooks";
 import Header from "../components/Header";
+import { toast } from "react-toastify";
 
 const QuoteSparklePage: React.FC = () => {
   const [quote, setQuote] = useState("");
   const { activity } = useActivity();
   const { createComment } = useComment();
+  const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleQuoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setQuote(e.target.value);
 
   const handleQuoteSubmit = async () => {
+    if (isLoading) return;
+
+    setLoading(true);
+    toast.loading("Sending your sparkle quote...");
     await createComment(quote, activity as unknown as Activity, "quote");
+    toast.dismiss();
+    toast.success("Quote sent");
+    setLoading(false);
+
     navigate(-1);
   };
 
@@ -28,6 +38,7 @@ const QuoteSparklePage: React.FC = () => {
         quote={quote}
         onQuoteChange={handleQuoteChange}
         onQuoteSubmit={handleQuoteSubmit}
+        sendingQuote={isLoading}
       />
     </Container>
   );
