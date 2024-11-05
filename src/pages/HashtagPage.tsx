@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { FlatFeed, LoadMorePaginator } from "react-activity-feed";
+import { useStreamContext } from "react-activity-feed";
+import { Activity } from "getstream";
 import styled from "styled-components";
 
-import { LoadMoreButton } from "../components/profile/ProfileSparkles";
-import { ProfileSparklesPlaceholder } from "../components/placeholders";
 import LoadingIndicator from "../components/LoadingIndicator";
 import SparkleBlock from "../components/sparkle/SparkleBlock";
 import SearchInput from "../components/trends/SearchInput";
@@ -13,10 +12,28 @@ const HashtagPage = () => {
   const { hashtag } = useParams();
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const { client } = useStreamContext();
+  const [hashtags, setHashtags] = useState<Activity[]>([]);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     if (hashtag) setQuery(hashtag);
-  }, [hashtag]);
+
+    const fetchHashtags = async () => {
+      setLoading(true);
+      const hashtagsFeed = client?.feed("hashtags", hashtag);
+      const response = await hashtagsFeed?.get({
+        ownReactions: true,
+        withReactionCounts: true,
+      });
+      setLoading(false);
+
+      if (response?.results)
+        setHashtags(response?.results as unknown as Activity[]);
+    };
+
+    fetchHashtags();
+  }, [client, hashtag]);
 
   const handleQuery = () => navigate(`/explore/${query.toLowerCase()}`);
 
@@ -32,23 +49,13 @@ const HashtagPage = () => {
         />
       </InputContainer>
 
-      <FlatFeed
-        Activity={SparkleBlock}
-        feedGroup="hashtags"
-        userId={hashtag}
-        notify
-        LoadingIndicator={LoadingIndicator}
-        Placeholder={<ProfileSparklesPlaceholder />}
-        Paginator={(props) => (
-          <LoadMorePaginator
-            {...props}
-            LoadMoreButton={(props) => <LoadMoreButton {...props} />}
-          />
-        )}
-        options={{
-          ranking: `if(actor.data.verified, 100, 0) + decay_gauss(time) * log(likes + 0.5 * comments + 1)`,
-        }}
-      />
+      {isLoading && <LoadingIndicator />}
+
+      <HashtagContainer>
+        {hashtags.map((activity) => (
+          <SparkleBlock key={activity.id} activity={activity} />
+        ))}
+      </HashtagContainer>
     </>
   );
 };
@@ -58,6 +65,14 @@ const InputContainer = styled.div`
   margin-top: 16px;
   padding-left: 10px;
   padding-right: 10px;
+`;
+
+const HashtagContainer = styled.div`
+  margin-top: 16px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 export default HashtagPage;
