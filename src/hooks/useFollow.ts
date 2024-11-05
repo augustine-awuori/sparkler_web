@@ -16,13 +16,16 @@ export default function useFollow({ userId }: Props) {
   const { client } = useStreamContext();
   const { createNotification } = useNotification();
   const { user, setUser } = useUser();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function init() {
       try {
+        setLoading(true);
         const response = await client
           ?.feed("timeline", client.userId)
           .following({ filter: [`user:${userId}`] });
+        setLoading(false);
 
         setIsFollowing(Boolean(response?.results.length));
       } catch (error) {}
@@ -58,5 +61,5 @@ export default function useFollow({ userId }: Props) {
     return Boolean(response?.results.length);
   }
 
-  return { isFollowing, isFollowingUserWithId, toggleFollow };
+  return { isFollowing, isFollowingUserWithId, loading, toggleFollow };
 }

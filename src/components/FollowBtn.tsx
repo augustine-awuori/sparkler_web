@@ -1,11 +1,11 @@
 import React from "react";
 import classNames from "classnames";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 import { useFollow, useUser } from "../hooks";
 
 export default function FollowBtn({ userId }: { userId: string }) {
-  const { isFollowing, toggleFollow } = useFollow({ userId });
+  const { isFollowing, toggleFollow, loading } = useFollow({ userId });
   const { user } = useUser();
 
   const handleToggle = (
@@ -22,8 +22,11 @@ export default function FollowBtn({ userId }: { userId: string }) {
       <button
         className={classNames(validFollowing ? "following" : "not-following")}
         onClick={handleToggle}
+        disabled={loading} // disable button when loading
       >
-        {validFollowing ? (
+        {loading ? (
+          <div className="spinner" />
+        ) : validFollowing ? (
           <div className="follow-text">
             <span className="follow-text__following">Following</span>
             <span className="follow-text__unfollow">Unfollow</span>
@@ -36,18 +39,27 @@ export default function FollowBtn({ userId }: { userId: string }) {
   );
 }
 
+const spinAnimation = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
 const Container = styled.div`
   button {
     background-color: var(--theme-color);
     color: white;
     border: none;
-    border-radius: 18px; /* Adjusted for a smaller button */
-    padding: 6px 12px; /* Reduced padding */
-    font-size: 13px; /* Reduced font size */
+    border-radius: 18px;
+    padding: 6px 12px;
+    font-size: 13px;
     font-weight: bold;
     cursor: pointer;
+    position: relative;
     transition: background-color 0.3s ease, border-color 0.3s ease,
       color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &.following {
       background-color: white;
@@ -81,6 +93,16 @@ const Container = styled.div`
 
     &.following .follow-text:hover .follow-text__unfollow {
       display: inline-block;
+    }
+
+    /* Spinner styling */
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: ${spinAnimation} 0.6s linear infinite;
     }
   }
 `;
