@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { ANONYMOUS_USER_ID } from "../components/explore/WhoToFollow";
 import { getProfileUserDataFromUserInfo } from "../utils/funcs";
-import { useFollow, useProfile, useUser } from "../hooks";
+import { useProfile, useUser } from "../hooks";
 import { User } from "../users";
 import FollowBtn from "../components/FollowBtn";
 import LoadingIndicator from "../components/LoadingIndicator";
@@ -15,12 +15,11 @@ import TabsList, { Tab } from "../components/TabsList";
 import usersService from "../services/users";
 import verificationIcon from "../assets/verified.svg";
 
-type TabId = "all" | "verified" | "following";
+type TabId = "all" | "verified";
 
 const tabs: Tab<TabId>[] = [
   { id: "all", label: "All" },
   { id: "verified", label: "Verified" },
-  { id: "following", label: "Following" },
 ];
 
 const UsersPage = () => {
@@ -30,7 +29,6 @@ const UsersPage = () => {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const { setUser } = useProfile();
-  const { isFollowingUserWithId } = useFollow({ userId: "" });
   const { user } = useUser();
   const navigate = useNavigate();
 
@@ -58,10 +56,6 @@ const UsersPage = () => {
 
       if (activeTabId === "verified") {
         filtered = filtered.filter((u) => u.verified);
-      } else if (activeTabId === "following") {
-        filtered = await Promise.all(
-          filtered.filter(async (u) => await isFollowingUserWithId(u._id))
-        );
       }
 
       if (query) {
@@ -74,7 +68,7 @@ const UsersPage = () => {
     }
 
     filterUsersByTab();
-  }, [allUsers, activeTabId, query, isFollowingUserWithId]);
+  }, [allUsers, activeTabId, query]);
 
   const handleTabClick = (tabId: TabId) => {
     setActiveTabId(tabId);
