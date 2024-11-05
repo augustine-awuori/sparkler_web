@@ -3,8 +3,9 @@ import { useStreamContext } from "react-activity-feed";
 import { NotificationActivity } from "getstream";
 import styled from "styled-components";
 
+import { Activity, ActivityActor } from "../../utils/types";
 import { generateSparkleLink } from "../../utils/links";
-import { Activity } from "../../utils/types";
+import { useProfile } from "../../hooks";
 import Avatar from "../Avatar";
 import Comment from "../icons/Comment";
 import SparkleActorName from "../sparkle/SparkleActorName";
@@ -20,18 +21,24 @@ interface Props {
 }
 
 export default function CommentNotification({ activity }: Props) {
-  const navigate = useNavigate();
-  const { user } = useStreamContext();
   const { actor, time, object } = activity.activities[0] as unknown as Activity;
+  const { setUser } = useProfile();
+  const { user } = useStreamContext();
+  const navigate = useNavigate();
 
   const sparkleLink = generateSparkleLink(actor.id, object.id);
+
+  const visitProfile = (actor: ActivityActor) => {
+    navigate(`/${actor.data.username}`);
+    setUser(actor);
+  };
 
   return (
     <Block key={activity.id} onClick={() => navigate(sparkleLink)}>
       <Comment color="#1c9bef" size={25} />
       <div className="right">
         <Avatar
-          onClick={() => navigate(`/${actor.id}`)}
+          onClick={() => visitProfile(actor)}
           src={actor.data.profileImage}
           name={actor.data.name}
         />

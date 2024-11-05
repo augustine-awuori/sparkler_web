@@ -3,17 +3,25 @@ import { Link, useNavigate } from "react-router-dom";
 import { NotificationActivity } from "getstream";
 import styled from "styled-components";
 
-import { Activity } from "../../utils/types";
+import { Activity, ActivityActor } from "../../utils/types";
+import { useProfile } from "../../hooks";
 import Heart from "../icons/Heart";
+import { Box } from "@chakra-ui/react";
 
 interface Props {
   likeGroupActivity: NotificationActivity;
 }
 
 export default function LikeNotification({ likeGroupActivity }: Props) {
-  const navigate = useNavigate();
+  const { setUser } = useProfile();
   const { user } = useStreamContext();
   const likedGroup: { [id: string]: Activity[] } = {};
+  const navigate = useNavigate();
+
+  const visitProfile = (actor: ActivityActor) => {
+    navigate(`/${actor.data.username}`);
+    setUser(actor);
+  };
 
   (likeGroupActivity.activities as unknown as Activity[]).forEach(
     (activity) => {
@@ -41,18 +49,14 @@ export default function LikeNotification({ likeGroupActivity }: Props) {
             <Heart color="var(--theme-color)" size={25} fill={true} />
             <div className="right">
               <div className="liked-actors__images">
-                {activities.map((act) => (
-                  <Link
-                    to={`/${act.actor.id}`}
-                    key={act.id}
+                {activities.map(({ id, actor }) => (
+                  <Box
+                    key={id}
                     className="liked-actors__images__image"
+                    onClick={() => visitProfile(actor)}
                   >
-                    {act.actor.data.profileImage ? (
-                      <img src={act.actor.data.profileImage} alt="profile" />
-                    ) : (
-                      <Avatar />
-                    )}
-                  </Link>
+                    <Avatar image={actor.data.profileImage} alt="profile" />
+                  </Box>
                 ))}
               </div>
               <span className="liked-actors__text">
