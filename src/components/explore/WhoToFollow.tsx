@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { getProfileUserDataFromUserInfo } from "../../utils/funcs";
-import { useProfile } from "../../hooks";
+import { useFollow, useProfile } from "../../hooks";
 import { User } from "../../users";
 import FollowBtn from "../FollowBtn";
 import usersService from "../../services/users";
@@ -18,11 +18,12 @@ interface Props {
 const ANONYMOUS_USER_ID = "6685aed25e91a51c0361251f";
 
 const WhoToFollow = ({ query }: Props) => {
-  const { client } = useStreamContext();
   const [isLoading, setIsLoading] = useState(false);
   const [leaderSuggestions, setLeadersSuggestions] = useState<User[]>([]);
-  const navigate = useNavigate();
+  const { isFollowingUserWithId } = useFollow({ userId: "" });
+  const { client } = useStreamContext();
   const { setUser } = useProfile();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllUsers();
@@ -67,6 +68,7 @@ const WhoToFollow = ({ query }: Props) => {
         {leaders
           .filter((user) => user._id !== client?.userId)
           .filter((user) => user._id !== ANONYMOUS_USER_ID)
+          .filter(async ({ _id }) => !(await isFollowingUserWithId(_id)))
           .map((leader) => (
             <div className="user" key={leader._id}>
               <div

@@ -20,16 +20,13 @@ export default function useFollow({ userId }: Props) {
   useEffect(() => {
     async function init() {
       try {
-        const response = await client
-          ?.feed("timeline", client.userId)
-          .following({ filter: [`user:${userId}`] });
-
-        setIsFollowing(!!response?.results.length);
+        setIsFollowing(await isFollowingUserWithId(userId));
       } catch (error) {}
     }
 
     init();
-  }, [userId, client]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   const toggleFollow = async () => {
     if (!user) return toast.info("Login to follow user");
@@ -45,5 +42,17 @@ export default function useFollow({ userId }: Props) {
     if (res.ok) setUser(res.data as User);
   };
 
-  return { isFollowing, toggleFollow };
+  async function isFollowingUserWithId(
+    userId: string | undefined
+  ): Promise<boolean> {
+    if (!userId) return false;
+
+    const response = await client
+      ?.feed("timeline", client.userId)
+      .following({ filter: [`user:${userId}`] });
+
+    return Boolean(response?.results.length);
+  }
+
+  return { isFollowing, isFollowingUserWithId, toggleFollow };
 }
