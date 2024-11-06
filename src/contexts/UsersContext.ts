@@ -8,12 +8,16 @@ interface Value {
   allUsers: User[];
   users: Users;
   setUsers: (users: Users) => void;
+  isLoading: boolean;
+  setLoading: (isLoading: boolean) => void;
 }
 
 export const UsersContext = createContext<Value>({
   allUsers: [],
   users: {},
   setUsers: () => {},
+  isLoading: false,
+  setLoading: () => {},
 });
 
 UsersContext.displayName = "Users Context";

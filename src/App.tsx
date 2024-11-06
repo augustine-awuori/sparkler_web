@@ -53,6 +53,7 @@ function App() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [files, setFiles] = useState<File[]>([]);
+  const [usersLoading, setUsersLoading] = useState(false);
   const [appData, setAppData] = useState<AppData>();
   const { googleUser } = useUser();
 
@@ -114,13 +115,14 @@ function App() {
   useEffect(() => {
     const retrieveAllUsersInfo = async () => {
       try {
-        let users: Users = {};
-
+        setUsersLoading(true);
         const res = await usersService.getAllUsers();
+        setUsersLoading(false);
 
         if (res.ok) {
           setAllUsers(res.data as User[]);
 
+          let users: Users = {};
           (res.data as User[]).forEach(({ _id, username }) => {
             if (!users[username]) users[username] = _id;
           });
@@ -144,7 +146,15 @@ function App() {
     >
       <Chat client={chatClient} theme="messaging dark">
         <Box fontFamily="quicksand">
-          <UsersContext.Provider value={{ allUsers, setUsers, users }}>
+          <UsersContext.Provider
+            value={{
+              allUsers,
+              setUsers,
+              users,
+              isLoading: usersLoading,
+              setLoading: setUsersLoading,
+            }}
+          >
             <UserContext.Provider value={{ setUser, user }}>
               <ActivityContext.Provider value={{ activity, setActivity }}>
                 <QuotesContext.Provider value={{ quotes, setQuotes }}>

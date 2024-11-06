@@ -6,13 +6,12 @@ import styled from "styled-components";
 
 import { ANONYMOUS_USER_ID } from "../components/explore/WhoToFollow";
 import { getProfileUserDataFromUserInfo } from "../utils/funcs";
-import { useProfile, useUser } from "../hooks";
+import { useProfile, useUser, useUsers } from "../hooks";
 import { User } from "../users";
 import FollowBtn from "../components/FollowBtn";
 import LoadingIndicator from "../components/LoadingIndicator";
 import SearchInput from "../components/trends/SearchInput";
 import TabsList, { Tab } from "../components/TabsList";
-import usersService from "../services/users";
 import verificationIcon from "../assets/verified.svg";
 
 type TabId = "all" | "verified";
@@ -24,35 +23,26 @@ const tabs: Tab<TabId>[] = [
 
 const UsersPage = () => {
   const [activeTabId, setActiveTabId] = useState<TabId>(tabs[0].id);
-  const [isLoading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
-  const [allUsers, setAllUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const { allUsers, isLoading } = useUsers();
   const { setUser } = useProfile();
   const { user } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchUsers() {
-      setLoading(true);
-      const res = await usersService.getAllUsers();
-      setLoading(false);
-
-      if (res?.ok) {
-        const result = res?.data as User[];
-        const usersWithoutCurrentAndAnonymous = result
-          .filter(({ _id }) => _id !== user?._id && _id !== ANONYMOUS_USER_ID)
-          .sort((a, b) => (b.verified ? 1 : 0) - (a.verified ? 1 : 0));
-        setAllUsers(usersWithoutCurrentAndAnonymous);
-      }
+    function getVerfiedFirst(users: User[]): User[] {
+      return users.sort((a, b) => (b.verified ? 1 : 0) - (a.verified ? 1 : 0));
     }
 
-    fetchUsers();
-  }, [user?._id]);
+    function showValidUsers(users: User[]): User[] {
+      return users.filter(
+        ({ _id }) => _id !== user?._id && _id !== ANONYMOUS_USER_ID
+      );
+    }
 
-  useEffect(() => {
     async function filterUsersByTab() {
-      let filtered = allUsers;
+      let filtered = getVerfiedFirst(showValidUsers(allUsers));
 
       if (activeTabId === "verified") {
         filtered = filtered.filter((u) => u.verified);
@@ -68,7 +58,7 @@ const UsersPage = () => {
     }
 
     filterUsersByTab();
-  }, [allUsers, activeTabId, query]);
+  }, [activeTabId, allUsers, query, user?._id]);
 
   const handleTabClick = (tabId: TabId) => {
     setActiveTabId(tabId);
