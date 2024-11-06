@@ -67,7 +67,7 @@ export default function ProfileBio() {
                 <action.Icon color="white" size={21} />
               </button>
             ))}
-            <FollowBtn userId={user.data.id} />
+            {user?.id && <FollowBtn userId={user.id} />}
           </div>
         ) : (
           <div className="actions">
