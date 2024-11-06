@@ -134,6 +134,7 @@ const Container = styled.div`
   }
 
   .user {
+    border-bottom: 1px solid #333;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
