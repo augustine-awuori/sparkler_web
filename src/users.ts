@@ -1,5 +1,6 @@
 export type User = {
   _id: string;
+  bio?: string;
   chatToken: string;
   email: string;
   feedToken: string;

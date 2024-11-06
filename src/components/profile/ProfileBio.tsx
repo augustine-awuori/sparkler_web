@@ -1,9 +1,10 @@
-import styled from "styled-components";
+import { useEffect } from "react";
 import { format } from "date-fns";
 import { Avatar, useStreamContext } from "react-activity-feed";
 import { Box, Heading } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import styled from "styled-components";
 
 import { formatStringWithLink } from "../../utils/string";
 import { useProfile, useUser } from "../../hooks";
@@ -12,6 +13,7 @@ import EditProfileButton from "../profile/EditProfileButton";
 import FollowBtn from "../FollowBtn";
 import Mail from "../icons/Mail";
 import More from "../icons/More";
+import usersService from "../../services/users";
 import verificationIcon from "../../assets/verified.svg";
 
 export default function ProfileBio() {
@@ -19,6 +21,18 @@ export default function ProfileBio() {
   const { user } = useProfile();
   const { user: currentUser } = useUser();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function updateBio() {
+      if (client?.userId !== user.id) return;
+
+      const bio = user.data.bio;
+
+      if (bio && !currentUser?.bio) await usersService.updateUserInfo({ bio });
+    }
+
+    updateBio();
+  }, [client?.userId, currentUser?.bio, user.data.bio, user.id]);
 
   const actions = [
     {
