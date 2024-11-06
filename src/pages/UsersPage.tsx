@@ -31,18 +31,18 @@ const UsersPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    function getVerfiedFirst(users: User[]): User[] {
+    function getVerifiedFirst(users: User[]): User[] {
       return users.sort((a, b) => (b.verified ? 1 : 0) - (a.verified ? 1 : 0));
     }
 
-    function showValidUsers(users: User[]): User[] {
+    function getValidUsers(users: User[]): User[] {
       return users.filter(
         ({ _id }) => _id !== user?._id && _id !== ANONYMOUS_USER_ID
       );
     }
 
     async function filterUsersByTab() {
-      let filtered = getVerfiedFirst(showValidUsers(allUsers));
+      let filtered = getVerifiedFirst(getValidUsers(allUsers));
 
       if (activeTabId === "verified") {
         filtered = filtered.filter((u) => u.verified);
