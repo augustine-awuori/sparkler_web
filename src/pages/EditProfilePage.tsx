@@ -52,14 +52,21 @@ const EditProfilePage: React.FC = () => {
     const newProfileImage =
       uploadedProfileImageUrl || client?.currentUser?.data?.profileImage;
 
+    const computedCoverImage =
+      uploadedBannerImageUrl || client?.currentUser?.data?.coverImage;
     await client?.currentUser?.update({
       ...info,
       name,
       bio,
       profileImage: newProfileImage,
-      coverImage: uploadedBannerImageUrl || client.currentUser.data?.coverImage,
+      coverImage: computedCoverImage,
     });
-    await service.updateUserInfo({ name, profileImage: newProfileImage });
+    await service.updateUserInfo({
+      name,
+      profileImage: newProfileImage,
+      bio,
+      coverImage: computedCoverImage,
+    });
     setIsLoading(false);
     toast.dismiss();
 
