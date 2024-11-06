@@ -73,6 +73,18 @@
     <meta name="robots" content="index, follow" />
 
     <title>Sparkler - Connect, Share, Engage</title>
+    <script
+      src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+      defer
+    ></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function (OneSignal) {
+        await OneSignal.init({
+          appId: "0b82bdbd-5fe2-44cf-8466-51638787b386",
+        });
+      });
+    </script>
   </head>
 
   <body>

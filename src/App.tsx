@@ -144,6 +144,7 @@ function App() {
       appId={appData.id}
       apiKey={appData.key}
     >
+      <div className="onesignal-customelink-container" />
       <Chat client={chatClient} theme="messaging dark">
         <Box fontFamily="quicksand">
           <UsersContext.Provider
