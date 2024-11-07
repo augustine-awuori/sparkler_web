@@ -14,11 +14,19 @@ type BlockState = {
   blockText: string;
 };
 
+type AllState = {
+  outline: boolean;
+  outlineText: string;
+  blockText: string;
+};
+
+type State = AllState | BlockState | OutlineState;
+
 interface Props {
   onClick: () => void;
 }
 
-const Button: React.FC<(OutlineState | BlockState) & Props> = ({
+const Button: React.FC<State & Props> = ({
   outline,
   blockText,
   outlineText,
