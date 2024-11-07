@@ -82,7 +82,7 @@ const UsersPage = () => {
       <div className="search-container">
         <SearchInput
           onQueryChange={setQuery}
-          placeholder="Search sparklers"
+          placeholder="Search Sparklers"
           query={query}
         />
       </div>
@@ -111,8 +111,13 @@ const UsersPage = () => {
               </Text>
               <span className="user__id">@{leader.username}</span>
             </div>
+            {leader.bio && (
+              <Text noOfLines={2} fontSize="small">
+                {leader.bio}
+              </Text>
+            )}
           </div>
-          <FollowBtn userId={leader._id} />
+          {/* <FollowBtn userId={leader._id} /> */}
         </div>
       ))}
     </Container>

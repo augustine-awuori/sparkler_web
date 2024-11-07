@@ -93,7 +93,7 @@ const WhoToFollow = ({ query }: Props) => {
                   <span className="user__id">@{leader.username}</span>
                 </div>
               </div>
-              <FollowBtn userId={leader._id} />
+              {/* <FollowBtn userId={leader._id} /> */}
             </div>
           ))}
       </div>
