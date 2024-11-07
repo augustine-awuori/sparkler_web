@@ -26,24 +26,23 @@ interface Props {
   onClick: () => void;
 }
 
-const Button: React.FC<State & Props> = ({
-  outline,
-  blockText,
-  outlineText,
-  onClick,
-}) => (
-  <Container onClick={onClick}>
-    <button className={classNames(outline ? "outline" : "block")}>
-      <div className="follow-text">
-        <span
-          className={`follow-text${outline ? "__following" : "__unfollow"}`}
-        >
-          {outline ? outlineText : blockText}
-        </span>
-      </div>
-    </button>
-  </Container>
-);
+const Button: React.FC<State & Props> = (props) => {
+  const { outline, blockText, outlineText, onClick } = props;
+
+  return (
+    <Container onClick={onClick}>
+      <button className={classNames(outline ? "outline" : "block")}>
+        <div className="follow-text">
+          <span
+            className={`follow-text${outline ? "__following" : "__unfollow"}`}
+          >
+            {outline ? outlineText : blockText}
+          </span>
+        </div>
+      </button>
+    </Container>
+  );
+};
 
 const Container = styled.div`
   button {

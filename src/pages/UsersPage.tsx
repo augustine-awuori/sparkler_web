@@ -155,7 +155,7 @@ const Container = styled.div`
     border-bottom: 1px solid #333;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
-    padding: 8px 5px;
+    padding: 8px 7px;
 
     &:hover {
       background-color: #2a2f35;
