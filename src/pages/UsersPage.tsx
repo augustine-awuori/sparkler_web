@@ -8,7 +8,7 @@ import { ANONYMOUS_USER_ID } from "../components/explore/WhoToFollow";
 import { getProfileUserDataFromUserInfo } from "../utils/funcs";
 import { useProfile, useUser, useUsers } from "../hooks";
 import { User } from "../users";
-import FollowBtn from "../components/FollowBtn";
+// import FollowBtn from "../components/FollowBtn";
 import LoadingIndicator from "../components/LoadingIndicator";
 import SearchInput from "../components/trends/SearchInput";
 import TabsList, { Tab } from "../components/TabsList";
@@ -90,34 +90,40 @@ const UsersPage = () => {
       {isLoading && !filteredUsers.length && <LoadingIndicator />}
 
       {filteredUsers.map((leader) => (
-        <div className="user" key={leader._id}>
-          <div
-            onClick={() => navigateToProfile(leader)}
-            className="user__details"
-          >
-            <div className="user__img">
-              <Avatar image={leader.profileImage} />
+        <div className="user-container" key={leader._id}>
+          <div className="user">
+            <div
+              onClick={() => navigateToProfile(leader)}
+              className="user__details"
+            >
+              <Avatar circle image={leader.profileImage} size={40} />
+              <div className="user__info">
+                <Text noOfLines={1} className="user__name">
+                  {leader.name}
+                  {leader.verified && (
+                    <img
+                      src={verificationIcon}
+                      alt="Verified"
+                      className="verified-icon"
+                    />
+                  )}
+                </Text>
+                <span className="user__id">@{leader.username}</span>
+              </div>
             </div>
-            <div className="user__info">
-              <Text noOfLines={1} className="user__name">
-                {leader.name}
-                {leader.verified && (
-                  <img
-                    src={verificationIcon}
-                    alt="Verified"
-                    className="verified-icon"
-                  />
-                )}
-              </Text>
-              <span className="user__id">@{leader.username}</span>
-            </div>
-            {leader.bio && (
-              <Text noOfLines={2} fontSize="small">
-                {leader.bio}
-              </Text>
-            )}
+            {/* <FollowBtn userId={leader._id} /> */}
           </div>
-          {/* <FollowBtn userId={leader._id} /> */}
+          {leader.bio && (
+            <Text
+              noOfLines={2}
+              fontSize="small"
+              className="bio"
+              color="#fff"
+              mb={2}
+            >
+              {leader.bio}
+            </Text>
+          )}
         </div>
       ))}
     </Container>
@@ -138,45 +144,32 @@ const Container = styled.div`
     margin: 0.5rem;
   }
 
-  .user {
+  .user-container {
     border-bottom: 1px solid #333;
     cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    padding: 5px 8px;
-    border-radius: 8px;
     transition: background-color 0.3s, transform 0.3s;
+    padding: 5px;
 
     &:hover {
       background-color: #2a2f35;
+      border-radius: 8px;
       transform: scale(1.02);
     }
+  }
+
+  .user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     .user__details {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       flex-grow: 1;
       min-width: 0;
 
-      .user__img {
-        min-width: 40px;
-        min-height: 40px;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        overflow: hidden;
-        margin-right: 8px;
-        object-fit: cover;
-
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-
       .user__info {
+        margin-left: 0.2rem;
         max-width: 100%;
         flex-grow: 1;
         min-width: 0;
@@ -209,6 +202,7 @@ const Container = styled.div`
         }
       }
     }
+  }
 `;
 
 export default UsersPage;
