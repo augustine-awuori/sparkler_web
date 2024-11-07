@@ -22,7 +22,7 @@ export default function FollowBtn({ userId }: { userId: string }) {
       <button
         className={classNames(validFollowing ? "following" : "not-following")}
         onClick={handleToggle}
-        disabled={loading} // disable button when loading
+        disabled={loading}
       >
         {loading ? (
           <div className="spinner" />

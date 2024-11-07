@@ -13,6 +13,7 @@ import LoadingIndicator from "../components/LoadingIndicator";
 import SearchInput from "../components/trends/SearchInput";
 import TabsList, { Tab } from "../components/TabsList";
 import verificationIcon from "../assets/verified.svg";
+import Button from "../components/Button";
 
 type TabId = "all" | "verified";
 
@@ -112,6 +113,12 @@ const UsersPage = () => {
               </div>
             </div>
             {/* <FollowBtn userId={leader._id} /> */}
+            <Button
+              outline
+              outlineText="Visit"
+              blockText="Click"
+              onClick={() => navigateToProfile(leader)}
+            />
           </div>
           {leader.bio && (
             <Text
@@ -148,7 +155,7 @@ const Container = styled.div`
     border-bottom: 1px solid #333;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
-    padding: 5px;
+    padding: 8px 5px;
 
     &:hover {
       background-color: #2a2f35;
@@ -169,7 +176,7 @@ const Container = styled.div`
       min-width: 0;
 
       .user__info {
-        margin-left: 0.2rem;
+        margin-left: 0.4rem;
         max-width: 100%;
         flex-grow: 1;
         min-width: 0;
