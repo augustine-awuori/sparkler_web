@@ -2,13 +2,13 @@ import React from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 
-type State1 = {
+type OutlineState = {
   outline: boolean;
   outlineText: string;
   blockText?: string;
 };
 
-type State2 = {
+type BlockState = {
   outline: boolean;
   outlineText?: string;
   blockText: string;
@@ -18,7 +18,7 @@ interface Props {
   onClick: () => void;
 }
 
-const Button: React.FC<(State1 | State2) & Props> = ({
+const Button: React.FC<(OutlineState | BlockState) & Props> = ({
   outline,
   blockText,
   outlineText,
