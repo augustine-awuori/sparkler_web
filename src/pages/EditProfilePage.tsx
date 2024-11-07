@@ -29,6 +29,7 @@ const EditProfilePage: React.FC = () => {
 
   const handleSave = async () => {
     if (isLoading) return;
+    if (!name) return toast.error("Name is required!");
 
     setIsLoading(true);
     const info = (client?.currentUser as unknown as ActivityActor)?.data;
