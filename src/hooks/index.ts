@@ -17,3 +17,4 @@ export { default as useTrendingHashtags } from "./useTrendingHashtags";
 export { default as useUnreadMessages } from "./useUnreadMessages";
 export { default as useUser } from "./useUser";
 export { default as useUsers } from "./useUsers";
+export { default as useShowSparkleModal } from "./useShowSparkleModal";

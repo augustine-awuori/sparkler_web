@@ -8,7 +8,7 @@ import { getProfileUserDataFromUserInfo } from "../../utils/funcs";
 import { useProfile } from "../../hooks";
 import { User } from "../../users";
 import usersService from "../../services/users";
-import verificationIcon from "../../assets/verified.svg"; // Import the verification icon
+import verificationIcon from "../../assets/verified.svg";
 
 interface Props {
   query: string;

@@ -2,24 +2,23 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
-import { useFiles, useSparkle } from "../../hooks";
+import { useFiles, useShowSparkleModal, useSparkle } from "../../hooks";
 import filesStorage from "../../storage/files";
 import Modal from "../Modal";
 import SparkleForm, { IMAGES_LIMIT } from "./SparkleForm";
 
-interface Props {
-  onClickOutside: () => void;
-}
-
-export default function CreateTweetDialog({ onClickOutside }: Props) {
+export default function CreateTweetDialog() {
   const { createSparkle } = useSparkle();
   const { files, filesCount, removeAllFiles } = useFiles(IMAGES_LIMIT);
+  const { setShowSparkleModal, showSparkleModal } = useShowSparkleModal();
   const [sparkling, setSparkling] = useState(false);
 
   useEffect(() => {
     if (filesCount) removeAllFiles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const closeDialog = () => setShowSparkleModal(false);
 
   const onSubmit = async (text: string) => {
     if (sparkling) return;
@@ -32,7 +31,7 @@ export default function CreateTweetDialog({ onClickOutside }: Props) {
       if (filesCount) imagesUrl = await filesStorage.saveFiles(files);
       await createSparkle(text, imagesUrl);
 
-      onClickOutside();
+      closeDialog();
       removeAllFiles();
     } catch (error) {
       toast.error("Sparkle couldn't be posted");
@@ -42,9 +41,11 @@ export default function CreateTweetDialog({ onClickOutside }: Props) {
     setSparkling(false);
   };
 
+  if (!showSparkleModal) return null;
+
   return (
     <Container>
-      <Modal onClickOutside={onClickOutside} className="modal-block">
+      <Modal onClickOutside={closeDialog} className="modal-block">
         <SparkleForm
           onSubmit={onSubmit}
           shouldFocus={true}

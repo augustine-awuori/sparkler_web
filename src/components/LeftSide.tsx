@@ -13,6 +13,7 @@ import {
   useProfile,
   useUnreadMessages,
   useUser,
+  useShowSparkleModal,
 } from "../hooks";
 import Bell from "./icons/Bell";
 import Hashtag from "./icons/Hashtag";
@@ -20,10 +21,6 @@ import Home from "./icons/Home";
 import Mail from "./icons/Mail";
 import Sparkle from "./icons/Twitter";
 import User from "./icons/User";
-
-interface Props {
-  onClickSparkle: () => void;
-}
 
 type Menu = {
   id: "home" | "explore" | "notifications" | "messages" | "profile";
@@ -37,11 +34,12 @@ type Menu = {
   value?: number;
 };
 
-export default function LeftSide({ onClickSparkle }: Props) {
+export default function LeftSide() {
   const { count } = useUnreadMessages();
   const { newNotifications } = useNewNotifications();
   const { setUser } = useProfile();
   const { user } = useUser();
+  const { setShowSparkleModal } = useShowSparkleModal();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -139,7 +137,7 @@ export default function LeftSide({ onClickSparkle }: Props) {
         })}
       </div>
       <Button
-        onClick={onClickSparkle}
+        onClick={() => setShowSparkleModal(true)}
         className="tweet-btn"
         leftIcon={<IoSparkles color="#fff" />}
         _hover={{ bg: "var(--conc-theme-color)" }}

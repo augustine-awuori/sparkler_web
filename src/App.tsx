@@ -29,6 +29,7 @@ import {
   ActivityContext,
   FilesContext,
   QuotesContext,
+  ShowSparkleModalContext,
   UserContext,
 } from "./contexts";
 import { AppData, appDataJwt } from "./utils/app";
@@ -54,6 +55,7 @@ function App() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [usersLoading, setUsersLoading] = useState(false);
+  const [showSparkleModal, setShowSparkleModal] = useState(false);
   const [appData, setAppData] = useState<AppData>();
   const { googleUser } = useUser();
 
@@ -163,51 +165,61 @@ function App() {
                     <ProfileContext.Provider
                       value={{ user: profileUser, setUser: setProfileUser }}
                     >
-                      <Layout>
-                        <Routes>
-                          <Route element={<AuthPages />} path="/auth" />
-                          <Route
-                            element={<NotificationsPage />}
-                            path="/notifications"
-                          />
-                          <Route element={<MessagesPage />} path="/messages" />
-                          <Route
-                            element={<UsersPage />}
-                            path="/explore/users"
-                          />
-                          <Route
-                            element={<HashtagPage />}
-                            path="/explore/:hashtag"
-                          />
-                          <Route element={<ExplorePage />} path="/explore" />
-                          <Route
-                            element={<QuoteSparklePage />}
-                            path="/:username/status/:id/quote"
-                          />
-                          <Route
-                            element={<ThreadPage />}
-                            path="/:username/status/:id"
-                          />
-                          <Route
-                            element={<QuotesPage />}
-                            path="/:username/status/:id/quotes"
-                          />
-                          <Route
-                            element={<EditProfilePage />}
-                            path="/:username/edit"
-                          />
-                          <Route
-                            element={<FollowingsPage />}
-                            path="/:username/followings"
-                          />
-                          <Route
-                            element={<FollowersPage />}
-                            path="/:username/followers"
-                          />
-                          <Route element={<ProfilePage />} path="/:username" />
-                          <Route element={<HomePage />} path="/" />
-                        </Routes>
-                      </Layout>
+                      <ShowSparkleModalContext.Provider
+                        value={{ setShowSparkleModal, showSparkleModal }}
+                      >
+                        <Layout>
+                          <Routes>
+                            <Route element={<AuthPages />} path="/auth" />
+                            <Route
+                              element={<NotificationsPage />}
+                              path="/notifications"
+                            />
+                            <Route
+                              element={<MessagesPage />}
+                              path="/messages"
+                            />
+                            <Route
+                              element={<UsersPage />}
+                              path="/explore/users"
+                            />
+                            <Route
+                              element={<HashtagPage />}
+                              path="/explore/:hashtag"
+                            />
+                            <Route element={<ExplorePage />} path="/explore" />
+                            <Route
+                              element={<QuoteSparklePage />}
+                              path="/:username/status/:id/quote"
+                            />
+                            <Route
+                              element={<ThreadPage />}
+                              path="/:username/status/:id"
+                            />
+                            <Route
+                              element={<QuotesPage />}
+                              path="/:username/status/:id/quotes"
+                            />
+                            <Route
+                              element={<EditProfilePage />}
+                              path="/:username/edit"
+                            />
+                            <Route
+                              element={<FollowingsPage />}
+                              path="/:username/followings"
+                            />
+                            <Route
+                              element={<FollowersPage />}
+                              path="/:username/followers"
+                            />
+                            <Route
+                              element={<ProfilePage />}
+                              path="/:username"
+                            />
+                            <Route element={<HomePage />} path="/" />
+                          </Routes>
+                        </Layout>
+                      </ShowSparkleModalContext.Provider>
                     </ProfileContext.Provider>
                   </FilesContext.Provider>
                 </QuotesContext.Provider>

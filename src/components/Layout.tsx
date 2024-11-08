@@ -1,20 +1,18 @@
-import { ReactNode, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { Box, useBreakpointValue } from "@chakra-ui/react";
-import styled from "styled-components";
 import { useLocation } from "react-router-dom";
+import styled from "styled-components";
 
-import LeftSide from "./LeftSide";
-import CreateTweetDialog from "./sparkle/CreateSparkleDialog";
-import RightSide from "./RightSide";
-import LoadingIndicator from "./LoadingIndicator";
 import BottomNav from "./nav/BottomNav";
+import CreateTweetDialog from "./sparkle/CreateSparkleDialog";
+import LeftSide from "./LeftSide";
+import LoadingIndicator from "./LoadingIndicator";
+import RightSide from "./RightSide";
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: PropsWithChildren) {
   const { user } = useStreamContext();
-  const [createDialogOpened, setCreateDialogOpened] = useState(false);
   const [hideRightSide, setHideRightSide] = useState(false);
-
   const location = useLocation();
 
   useEffect(() => {
@@ -32,20 +30,17 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {createDialogOpened && (
-        <CreateTweetDialog
-          onClickOutside={() => setCreateDialogOpened(false)}
-        />
-      )}
+      <CreateTweetDialog />
+
       <Container>
         <Box className="content">
           {showLeftSidebar && (
             <Box className="left-side-bar">
-              <LeftSide onClickSparkle={() => setCreateDialogOpened(true)} />
+              <LeftSide />
             </Box>
           )}
           <Box as="main" className="main-content">
-            {!user ? <LoadingIndicator /> : children}
+            {children}
             <BottomNav />
           </Box>
           {showRightSidebar && (
