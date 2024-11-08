@@ -121,13 +121,7 @@ const UsersPage = () => {
             />
           </div>
           {leader.bio && (
-            <Text
-              noOfLines={2}
-              fontSize="small"
-              className="bio"
-              color="#fff"
-              mb={2}
-            >
+            <Text noOfLines={2} fontSize="small" className="bio" color="#fff">
               {leader.bio}
             </Text>
           )}
