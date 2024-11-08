@@ -3,7 +3,7 @@ import { Box, Button } from "@chakra-ui/react";
 import { ImSpinner9 } from "react-icons/im";
 
 const LoadMoreButton = ({ onClick, refreshing }: LoadMoreButtonProps) => (
-  <Box textAlign="center" mt={4}>
+  <Box textAlign="center" my={4}>
     <Button
       borderRadius="full"
       onClick={onClick}
