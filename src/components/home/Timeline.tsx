@@ -1,9 +1,14 @@
-import { FlatFeed, useStreamContext } from "react-activity-feed";
+import {
+  FlatFeed,
+  LoadMorePaginator,
+  useStreamContext,
+} from "react-activity-feed";
 import { Flex, Heading, Text, IconButton } from "@chakra-ui/react";
 import { IoSparkles } from "react-icons/io5";
 
 import { useShowSparkleModal } from "../../hooks";
 import LoadingIndicator from "../LoadingIndicator";
+import LoadMoreButton from "../LoadMoreButton";
 import SparkleBlock from "../sparkle/SparkleBlock";
 
 const Placeholder = () => (
@@ -44,6 +49,12 @@ export default function Timeline() {
         feedGroup="timeline"
         LoadingIndicator={LoadingIndicator}
         Placeholder={Placeholder}
+        Paginator={(props) => (
+          <LoadMorePaginator
+            {...props}
+            LoadMoreButton={(props) => <LoadMoreButton {...props} />}
+          />
+        )}
       />
       <IconButton
         _hover={{ backgroundColor: "var(--theme-color)" }}

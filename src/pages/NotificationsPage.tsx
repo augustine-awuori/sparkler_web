@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { NotificationGroup } from "../components/notifications";
 import { useTitleChanger } from "../hooks";
 import LoadingIndicator from "../components/LoadingIndicator";
-import { LoadMoreButton } from "../components/profile/ProfileSparkles";
+import LoadMoreButton from "../components/LoadMoreButton";
 
 const tabList = [
   {

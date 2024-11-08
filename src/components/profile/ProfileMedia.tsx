@@ -1,9 +1,9 @@
 import { FlatFeed, LoadMorePaginator } from "react-activity-feed";
 
-import { LoadMoreButton } from "./ProfileSparkles";
 import { ProfileMediaPlaceholder } from "../placeholders";
 import { useProfile } from "../../hooks";
 import LoadingIndicator from "../LoadingIndicator";
+import LoadMoreButton from "../LoadMoreButton";
 import SparkleBlock from "../sparkle/SparkleBlock";
 
 const ProfileMedia = () => {
