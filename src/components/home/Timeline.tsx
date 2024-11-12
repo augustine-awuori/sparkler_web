@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   FlatFeed,
   LoadMorePaginator,
@@ -6,10 +7,12 @@ import {
 import { Flex, Heading, Text, IconButton } from "@chakra-ui/react";
 import { IoSparkles } from "react-icons/io5";
 
-import { useShowSparkleModal } from "../../hooks";
+import { useShowSparkleModal, useUser } from "../../hooks";
+import auth from "../../services/auth";
 import LoadingIndicator from "../LoadingIndicator";
 import LoadMoreButton from "../LoadMoreButton";
 import SparkleBlock from "../sparkle/SparkleBlock";
+import usersService from "../../services/users";
 
 const Placeholder = () => (
   <Flex
@@ -36,8 +39,29 @@ const Placeholder = () => (
 );
 
 export default function Timeline() {
+  const { client } = useStreamContext();
   const { user } = useStreamContext();
   const { setShowSparkleModal } = useShowSparkleModal();
+  const { user: currentUser } = useUser();
+
+  useEffect(() => {
+    const logOutUser = async () => {
+      auth.logout();
+      window.location.reload();
+    };
+
+    const deleteInvalidAccount = async () => {
+      if (!currentUser?.invalid) return;
+      if (!client?.currentUser) return;
+
+      await client.currentUser.delete();
+      await usersService.deleteUserAccont();
+
+      logOutUser();
+    };
+
+    deleteInvalidAccount();
+  }, [client?.currentUser, currentUser?.invalid]);
 
   if (!user) return <Heading>User not logged in</Heading>;
 

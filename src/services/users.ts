@@ -71,8 +71,17 @@ const getUser = async (userId: string) => {
   }
 };
 
+const deleteUserAccont = async () => {
+  try {
+    return processResponse(await client.delete(endpoint));
+  } catch (error) {
+    return getFailedResponse(error);
+  }
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
+  deleteUserAccont,
   getAllUsers,
   getUser,
   getUserByUsername,
