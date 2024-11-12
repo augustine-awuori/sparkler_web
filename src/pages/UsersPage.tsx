@@ -37,9 +37,9 @@ const UsersPage = () => {
     }
 
     function getValidUsers(users: User[]): User[] {
-      return users.filter(
-        ({ _id }) => _id !== user?._id && _id !== ANONYMOUS_USER_ID
-      );
+      return users
+        .filter(({ _id }) => _id !== user?._id && _id !== ANONYMOUS_USER_ID)
+        .filter((u) => !u.invalid);
     }
 
     async function filterUsersByTab() {

@@ -10,4 +10,5 @@ export type User = {
   profileImage: string;
   username: string;
   verified?: boolean;
+  invalid?: boolean;
 };
