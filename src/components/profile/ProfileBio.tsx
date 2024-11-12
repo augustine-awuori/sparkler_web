@@ -7,12 +7,10 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 
 import { formatStringWithLink } from "../../utils/string";
+import { Calendar, Mail, More } from "../../assets/icons";
 import { useProfile, useUser } from "../../hooks";
-import Calendar from "../icons/Calendar";
 import EditProfileButton from "../profile/EditProfileButton";
 import FollowBtn from "../FollowBtn";
-import Mail from "../icons/Mail";
-import More from "../icons/More";
 import usersService from "../../services/users";
 import verificationIcon from "../../assets/verified.svg";
 

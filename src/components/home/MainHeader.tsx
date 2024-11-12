@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { Button, ButtonProps } from "@chakra-ui/react";
 
 import { logout } from "../../hooks/useAuth";
+import { Sparkle } from "../../assets/icons";
 import { useUser } from "../../hooks";
-import Sparkle from "../icons/Twitter";
 
 const Btn = ({ children, ...otherProps }: ButtonProps) => (
   <Button

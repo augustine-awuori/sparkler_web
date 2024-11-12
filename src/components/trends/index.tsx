@@ -2,8 +2,8 @@ import { Spinner } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import { More } from "../../assets/icons";
 import { useTrendingHashtags } from "../../hooks";
-import More from "../icons/More";
 import VerifiedIcon from "../../assets/verified.svg";
 
 interface Props {

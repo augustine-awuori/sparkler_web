@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import classNames from "classnames";
-import Search from "../icons/Search";
+
+import { Search } from "../../assets/icons";
 
 interface Props {
   query: string;
@@ -15,9 +16,7 @@ const SearchInput = ({ onQueryChange, placeholder, query, onEnter }: Props) => (
     <input
       onChange={(e) => onQueryChange(e.target.value)}
       onKeyDown={(e) => {
-        if (e.key === "Enter" && onEnter) {
-          onEnter();
-        }
+        if (e.key === "Enter" && onEnter) onEnter();
       }}
       value={query}
       placeholder={placeholder || "Search Sparkler"}

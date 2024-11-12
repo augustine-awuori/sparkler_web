@@ -3,7 +3,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 
 import { MAX_CHARS } from "./sparkle/SparkleForm";
-import ProgressRing from "./icons/ProgressRing";
+import { ProgressRing } from "../assets/icons";
 
 interface ProgressRingProps {
   textLength: number;

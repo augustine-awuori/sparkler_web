@@ -3,8 +3,8 @@ import { useStreamContext } from "react-activity-feed";
 import { Navigate, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import { ArrowLeft } from "../../assets/icons";
 import { useProfile } from "../../hooks";
-import ArrowLeft from "../icons/ArrowLeft";
 
 export interface ProfileUser {
   id: string;
@@ -15,10 +15,10 @@ export interface ProfileUser {
 }
 
 export default function ProfileHeader() {
-  const navigate = useNavigate();
-  const { user } = useProfile();
-  const { client } = useStreamContext();
   const [activitiesCount, setActivitiesCount] = useState(0);
+  const { client } = useStreamContext();
+  const { user } = useProfile();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userFeed = client?.feed("user", user?.id);

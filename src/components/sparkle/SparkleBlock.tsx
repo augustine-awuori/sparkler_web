@@ -20,6 +20,7 @@ import {
   QuoteActivity,
 } from "../../utils/types";
 import { appUrl } from "../../services/client";
+import { Comment, Heart, More, Resparkle, Upload } from "../../assets/icons";
 import { copyToClipBorad } from "../../utils/funcs";
 import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
@@ -36,17 +37,12 @@ import {
   useSparkle,
 } from "../../hooks";
 import { IconType } from "../nav/BottomTab";
-import Comment from "../icons/Comment";
 import CommentDialog from "./CommentDialog ";
-import Heart from "../icons/Heart";
-import More from "../icons/More";
 import MoreOptionsPopup, { Option } from "./MoreOptionPopup";
 import QuoteDialog from "../quote/QuoteDialog";
 import ResparklePopup from "./ResparklePopup";
-import Retweet from "../icons/Retweet";
 import SparkleShareModal from "./SparkleShareModal";
 import TweetActorName from "./SparkleActorName";
-import Upload from "../icons/Upload";
 
 interface Props {
   activity: Activity;
@@ -119,7 +115,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     },
     {
       id: "resparkle",
-      Icon: Retweet,
+      Icon: Resparkle,
       alt: "Resparkle",
       value: appActivity.reaction_counts.resparkle || 0,
       onClick: (_e: React.MouseEvent<HTMLButtonElement>) => {
@@ -277,7 +273,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
       <Block>
         {(isAReaction || hasResparkled) && (
           <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={10}>
-            <Retweet color="#777" size={13} />
+            <Resparkle color="#777" size={13} />
             <Text ml={1} fontWeight={700}>
               {getResparklerName()} resparkled
             </Text>

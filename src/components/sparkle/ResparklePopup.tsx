@@ -1,7 +1,8 @@
 import { Flex, FlexProps, Text } from "@chakra-ui/react";
 import { FaPencilAlt } from "react-icons/fa";
 import styled from "styled-components";
-import Retweet from "../icons/Retweet";
+
+import { Resparkle } from "../../assets/icons";
 
 interface OptionProps extends FlexProps {
   Icon: JSX.Element;
@@ -56,7 +57,7 @@ const ResparklePopup: React.FC<PopupProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <Option
-          Icon={<Retweet color="#fff" />}
+          Icon={<Resparkle color="#fff" />}
           label={hasBeenResparkled ? "Undo Resparkle" : "Resparkle"}
           onClick={handleResparkle}
         />

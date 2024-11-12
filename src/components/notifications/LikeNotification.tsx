@@ -1,12 +1,12 @@
 import { Avatar, useStreamContext } from "react-activity-feed";
+import { Box } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { NotificationActivity } from "getstream";
 import styled from "styled-components";
 
 import { Activity, ActivityActor } from "../../utils/types";
+import { Heart } from "../../assets/icons";
 import { useProfile } from "../../hooks";
-import Heart from "../icons/Heart";
-import { Box } from "@chakra-ui/react";
 
 interface Props {
   likeGroupActivity: NotificationActivity;

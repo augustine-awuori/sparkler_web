@@ -17,16 +17,11 @@ import {
   useSparkle,
   useUser,
 } from "../../hooks";
-// import BarChart from "../icons/BarChart";
-import Comment from "../icons/Comment";
+import { Comment, Heart, More, Resparkle, Upload } from "../../assets/icons";
 import CommentDialog from "../sparkle/CommentDialog ";
-import Heart from "../icons/Heart";
-import More from "../icons/More";
 import ResparklePopup from "../sparkle/ResparklePopup";
-import Retweet from "../icons/Retweet";
 import SparkleCommentBlock from "./SparkleCommentBlock";
 import TweetForm from "../sparkle/SparkleForm";
-import Upload from "../icons/Upload";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
 import verifiedIcon from "../../assets/verified.svg";
@@ -80,7 +75,7 @@ export default function SparkleContent({ activity }: Props) {
     },
     {
       id: "resparkle",
-      Icon: Retweet,
+      Icon: Resparkle,
       onClick: (_e: React.MouseEvent<HTMLButtonElement>) => {
         const buttonRect = resparkleButtonRef.current!.getBoundingClientRect();
         setPopupPosition({

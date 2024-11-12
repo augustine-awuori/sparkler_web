@@ -1,14 +1,11 @@
 import React, { useRef } from "react";
+import styled from "styled-components";
 import { Activity } from "getstream";
 import classNames from "classnames";
 
-import { useLike, useSparkle } from "../../hooks";
 import { Activity as AppActivity } from "../../utils/types";
-import Retweet from "../icons/Retweet";
-import Heart from "../icons/Heart";
-import Upload from "../icons/Upload";
-import Comment from "../icons/Comment";
-import styled from "styled-components";
+import { Comment, Heart, Resparkle, Upload } from "../../assets/icons";
+import { useLike, useSparkle } from "../../hooks";
 
 interface Props {
   appActivity: AppActivity;
@@ -42,7 +39,7 @@ const SparkleReactions = ({
     },
     {
       id: "resparkle",
-      Icon: Retweet,
+      Icon: Resparkle,
       alt: "Resparkle",
       value: appActivity.reaction_counts.resparkle || 0,
       onClick: (_e: React.MouseEvent<HTMLButtonElement>) => {

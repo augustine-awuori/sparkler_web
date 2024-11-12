@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import ArrowLeft from "./icons/ArrowLeft";
+import { ArrowLeft } from "../assets/icons";
 
 interface Props {
   title?: string;

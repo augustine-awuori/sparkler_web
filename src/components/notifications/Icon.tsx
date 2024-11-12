@@ -1,8 +1,8 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
+import { Bell } from "../../assets/icons";
 import { useNewNotifications } from "../../hooks";
-import Bell from "../icons/Bell";
 
 const NotificationIcon = () => {
   const { newNotifications } = useNewNotifications();

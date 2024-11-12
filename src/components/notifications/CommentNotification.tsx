@@ -4,10 +4,10 @@ import { NotificationActivity } from "getstream";
 import styled from "styled-components";
 
 import { Activity, ActivityActor } from "../../utils/types";
+import { Comment } from "../../assets/icons";
 import { generateSparkleLink } from "../../utils/links";
 import { useProfile } from "../../hooks";
 import Avatar from "../Avatar";
-import Comment from "../icons/Comment";
 import SparkleActorName from "../sparkle/SparkleActorName";
 
 export interface CommentNotificationActivity extends NotificationActivity {

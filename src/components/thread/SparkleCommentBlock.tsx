@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { Comment } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
-import More from "../icons/More";
+import { More } from "../../assets/icons";
 import SparkleActorName from "../sparkle/SparkleActorName";
 
 interface Props {

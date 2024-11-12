@@ -4,9 +4,9 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 
 import { events, logEvent } from "../../storage/analytics";
+import { Image } from "../../assets/icons";
 import { useFiles, useUser } from "../../hooks";
 import filesStorage from "../../storage/files";
-import Image from "../icons/Image";
 import TextProgressRing from "../TextProgressRing";
 import TextArea from "../TextArea";
 import ImageInputList from "../common/ImageInputList";

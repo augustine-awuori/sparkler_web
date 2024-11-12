@@ -5,8 +5,8 @@ import styled from "styled-components";
 
 import { Activity, ActivityActor } from "../../utils/types";
 import { useProfile } from "../../hooks";
+import { User } from "../../assets/icons";
 import Avatar from "../Avatar";
-import User from "../icons/User";
 
 interface Props {
   followActivities: NotificationActivity;

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import styled from "styled-components";
 
-import Close from "./icons/Close";
+import { Close } from "../assets/icons";
 
 interface Props {
   children: JSX.Element;

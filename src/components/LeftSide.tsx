@@ -5,6 +5,7 @@ import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import classNames from "classnames";
 import styled from "styled-components";
 
+import { Bell, Home, Mail, Search, Sparkle, User } from "../assets/icons";
 import { events, logEvent } from "../storage/analytics";
 import { getProfileUserDataFromUserInfo } from "../utils/funcs";
 import { logout } from "../hooks/useAuth";
@@ -15,12 +16,6 @@ import {
   useUser,
   useShowSparkleModal,
 } from "../hooks";
-import Bell from "./icons/Bell";
-import Home from "./icons/Home";
-import Mail from "./icons/Mail";
-import Search from "./icons/Search";
-import Sparkle from "./icons/Twitter";
-import User from "./icons/User";
 
 type Menu = {
   id: "home" | "explore" | "notifications" | "messages" | "profile";
