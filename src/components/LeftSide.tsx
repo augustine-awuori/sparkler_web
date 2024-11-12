@@ -16,9 +16,9 @@ import {
   useShowSparkleModal,
 } from "../hooks";
 import Bell from "./icons/Bell";
-import Hashtag from "./icons/Hashtag";
 import Home from "./icons/Home";
 import Mail from "./icons/Mail";
+import Search from "./icons/Search";
 import Sparkle from "./icons/Twitter";
 import User from "./icons/User";
 
@@ -53,7 +53,7 @@ export default function LeftSide() {
     {
       id: "explore",
       label: "Explore",
-      Icon: Hashtag,
+      Icon: Search,
       link: "/explore",
     },
     {
