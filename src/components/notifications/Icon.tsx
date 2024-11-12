@@ -1,12 +1,12 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
+import { useNewNotifications } from "../../hooks";
 import Bell from "../icons/Bell";
-import useNewNotifications from "../../hooks/useNewNotifications";
 
 const NotificationIcon = () => {
-  const location = useLocation();
   const { newNotifications } = useNewNotifications();
+  const location = useLocation();
 
   const isActiveLink = location.pathname === "/notifications";
 
@@ -15,7 +15,11 @@ const NotificationIcon = () => {
       {!!newNotifications && (
         <span className="notifications-count">{newNotifications}</span>
       )}
-      <Bell fill={isActiveLink} color="white" size={23} />
+      <Bell
+        fill={isActiveLink}
+        color={isActiveLink ? "#fff" : "#9e9999"}
+        size={23}
+      />
     </Container>
   );
 };
