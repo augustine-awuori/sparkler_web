@@ -127,7 +127,7 @@ export default function LeftSide() {
                 ) : null}
                 <menu.Icon
                   fill={isActive}
-                  color={isActive ? "var(--theme-color)" : "white"}
+                  color={isActive ? "#fff" : "#9e9999"}
                   size={25}
                 />
               </div>
