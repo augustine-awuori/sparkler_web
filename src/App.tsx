@@ -33,7 +33,7 @@ import {
   UserContext,
 } from "./contexts";
 import { AppData, appDataJwt } from "./utils/app";
-import { Quote } from "./utils/types";
+import { ActivityActor, Quote } from "./utils/types";
 import { User } from "./users";
 import auth from "./services/auth";
 import Layout from "./components/Layout";
@@ -60,9 +60,27 @@ function App() {
   const { googleUser } = useUser();
 
   useEffect(() => {
+    const updateNeeded = (): boolean => {
+      const currentUser = feedClient?.currentUser as ActivityActor | undefined;
+
+      if (!currentUser || !user) return false;
+
+      return Boolean(
+        currentUser.data.name === "Unknown" ||
+          (!currentUser.data.username && user.username)
+      );
+    };
+
+    const updateUserDataWhenNeeded = async () => {
+      const validState = feedClient && user && user._id === feedClient.userId;
+
+      if (validState && updateNeeded())
+        await feedClient.currentUser?.update({ id: user._id, ...user });
+    };
+
     initUser({ googleUser, setUser, user });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [googleUser, user]);
+    updateUserDataWhenNeeded();
+  }, [feedClient, googleUser, user]);
 
   useEffect(() => {
     setAppData(auth.decode(appDataJwt) as AppData);
