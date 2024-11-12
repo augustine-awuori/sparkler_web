@@ -2,11 +2,10 @@ import React from "react";
 import classNames from "classnames";
 import styled, { keyframes } from "styled-components";
 
-import { useFollow, useUser } from "../hooks";
+import { useFollow } from "../hooks";
 
 export default function FollowBtn({ userId }: { userId: string }) {
   const { isFollowing, toggleFollow, loading } = useFollow({ userId });
-  const { user } = useUser();
 
   const handleToggle = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -15,18 +14,16 @@ export default function FollowBtn({ userId }: { userId: string }) {
     toggleFollow();
   };
 
-  const validFollowing = Boolean(isFollowing && user);
-
   return (
     <Container>
       <button
-        className={classNames(validFollowing ? "following" : "not-following")}
+        className={classNames(isFollowing ? "following" : "not-following")}
         onClick={handleToggle}
         disabled={loading}
       >
         {loading ? (
           <div className="spinner" />
-        ) : validFollowing ? (
+        ) : isFollowing ? (
           <div className="follow-text">
             <span className="follow-text__following">Following</span>
             <span className="follow-text__unfollow">Unfollow</span>
