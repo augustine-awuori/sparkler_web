@@ -50,7 +50,7 @@ const WhoToFollow = ({ query }: Props) => {
 
   return (
     <FollowsContainer>
-      <h2>Members You May Know</h2>
+      <h2>Who You May Know</h2>
 
       {isLoading && (
         <div className="flex justify-center">
