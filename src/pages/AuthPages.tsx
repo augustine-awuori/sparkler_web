@@ -15,8 +15,8 @@ const AuthPages = () => {
 
   useEffect(() => {
     if (user) {
-      navigate(`/${user.username}`);
       setUser(getProfileUserDataFromUserInfo(user));
+      navigate(`/${user.username}`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
