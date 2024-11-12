@@ -21,6 +21,8 @@ export default function useFollow({ userId }: Props) {
   useEffect(() => {
     async function init() {
       try {
+        if (!user) return;
+
         setLoading(true);
         const response = await client
           ?.feed("timeline", client.userId)
