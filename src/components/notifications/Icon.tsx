@@ -12,7 +12,7 @@ const NotificationIcon = () => {
 
   return (
     <Container>
-      {!!newNotifications && (
+      {Boolean(newNotifications) && (
         <span className="notifications-count">{newNotifications}</span>
       )}
       <Bell

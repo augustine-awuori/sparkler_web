@@ -18,15 +18,12 @@ interface TabProps {
   Icon: IconType;
 }
 
-const BottomTab: React.FC<TabProps> = ({
-  children,
-  onClick,
-  pathname,
-  Icon,
-  value,
-}) => {
+const BottomTab: React.FC<TabProps> = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { children, onClick, pathname, Icon, value } = props;
+
   const isActive = location.pathname === pathname;
 
   const handleNavigation = () => {
