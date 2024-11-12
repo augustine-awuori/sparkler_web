@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { IoLogoGoogle } from "react-icons/io5";
+import { Box, Button, Heading, Text } from "@chakra-ui/react";
 import styled from "styled-components";
 
 import { useUser } from "../hooks";
 import auth from "../services/auth";
-import LoginForm from "./LoginPage";
-import RegisterForm from "./RegisterPage";
 
 const AuthPages = () => {
-  const [isLoggingIn, setIsLogginIn] = useState(true);
   const { user } = useUser();
   const navigate = useNavigate();
 
@@ -21,17 +20,36 @@ const AuthPages = () => {
 
   return (
     <Container>
-      {isLoggingIn ? (
-        <LoginForm
-          onSignUpRequest={() => setIsLogginIn(false)}
-          onSignInWithGoogle={handleGoogleSignIn}
-        />
-      ) : (
-        <RegisterForm
-          onSignInRequest={() => setIsLogginIn(true)}
-          onSignInWithGoogle={handleGoogleSignIn}
-        />
-      )}
+      <Box
+        maxW="md"
+        mx="auto"
+        p={6}
+        borderWidth={1}
+        borderRadius="lg"
+        fontFamily="quicksand"
+        boxShadow="lg"
+      >
+        <Heading
+          as="h2"
+          size="lg"
+          textAlign="center"
+          mb={6}
+          fontFamily="quicksand"
+        >
+          Welcome to Sparkler
+        </Heading>
+
+        <Button
+          leftIcon={<IoLogoGoogle />}
+          colorScheme="pink"
+          variant="outline"
+          mb={1}
+          width="full"
+          onClick={handleGoogleSignIn}
+        >
+          Continue with Google
+        </Button>
+      </Box>
     </Container>
   );
 };
