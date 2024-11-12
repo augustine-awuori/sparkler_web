@@ -244,7 +244,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     const isSparkler = user?.id === actor.id || hasResparkled;
     const actorName = actor.data.name;
 
-    if (isSparkler && actorName) return `You and ${actorName}`;
+    // if (isSparkler && actorName) return `You and ${actorName}`;
 
     return isSparkler ? "You" : actorName;
   };
