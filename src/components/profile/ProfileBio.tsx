@@ -1,23 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Avatar, useStreamContext } from "react-activity-feed";
 import { Box, Heading } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { FaShare } from "react-icons/fa";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
+import { appUrl } from "../../services/client";
+import { Calendar, Mail } from "../../assets/icons";
 import { formatStringWithLink } from "../../utils/string";
-import { Calendar, Mail, More } from "../../assets/icons";
 import { useProfile, useUser } from "../../hooks";
 import EditProfileButton from "../profile/EditProfileButton";
 import FollowBtn from "../FollowBtn";
 import usersService from "../../services/users";
 import verificationIcon from "../../assets/verified.svg";
+import SparkleShareModal from "../sparkle/SparkleShareModal";
 
 export default function ProfileBio() {
   const { client } = useStreamContext();
   const { user } = useProfile();
   const { user: currentUser } = useUser();
+  const [showShareModal, setShowShareModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,17 +37,20 @@ export default function ProfileBio() {
   }, [client?.userId, currentUser?.bio, user.data.bio, user.id]);
 
   const actions = [
-    {
-      Icon: More,
-      id: "more",
-      onClick: () => {},
-    },
+    // {
+    //   Icon: More,
+    //   id: "more",
+    //   onClick: () => {},
+    // },
     {
       Icon: Mail,
       id: "message",
       onClick: startDM,
     },
   ];
+
+  const followersCount: number = user.followers_count || 0;
+  const followingCount: number = user.following_count || 0;
 
   function startDM() {
     currentUser
@@ -68,24 +75,30 @@ export default function ProfileBio() {
         <figure className="image">
           <Avatar image={user.data.profileImage} alt="profile" />
         </figure>
-        {!isLoggedInUserProfile ? (
-          <div className="actions">
-            {actions.map((action) => (
-              <button
-                className="action-btn"
-                key={action.id}
-                onClick={action.onClick}
-              >
-                <action.Icon color="white" size={21} />
-              </button>
-            ))}
-            {user?.id && <FollowBtn userId={user.id} />}
-          </div>
-        ) : (
-          <div className="actions">
+        <div className="actions">
+          <button
+            className="action-btn"
+            onClick={() => setShowShareModal(true)}
+          >
+            <FaShare color="white" size={15} />
+          </button>
+          {isLoggedInUserProfile ? (
             <EditProfileButton />
-          </div>
-        )}
+          ) : (
+            <>
+              {actions.map((action) => (
+                <button
+                  className="action-btn"
+                  key={action.id}
+                  onClick={action.onClick}
+                >
+                  <action.Icon color="white" size={21} />
+                </button>
+              ))}
+              {user?.id && <FollowBtn userId={user.id} />}
+            </>
+          )}
+        </div>
       </div>
       <div className="details">
         <span className="user__name">
@@ -111,21 +124,21 @@ export default function ProfileBio() {
           <Box
             cursor="pointer"
             onClick={() => {
-              if (user.following_count) navigate("followings");
+              if (followingCount) navigate("followings");
             }}
             className="user__follows__following"
           >
-            <b>{user.following_count || 0}</b> Following
+            <b>{followingCount}</b> Following
           </Box>
           <Box
             cursor="pointer"
             className="user__follows__followers"
             onClick={() => {
-              if (user.followers_count) navigate("followers");
+              if (followersCount) navigate("followers");
             }}
           >
-            <b>{user.followers_count || 0}</b> Follower
-            {user.followers_count === 1 ? "" : "s"}
+            <b>{followersCount || 0}</b> Follower
+            {followersCount === 1 ? "" : "s"}
           </Box>
         </div>
         {!isLoggedInUserProfile && (
@@ -134,6 +147,13 @@ export default function ProfileBio() {
           </div>
         )}
       </div>
+      <SparkleShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        sparkleUrl={`${appUrl}/${user.data.username}`}
+        text={`${user.data.name} @${user.data.username} "${user.data.bio}" followers: ${followersCount} following: ${followingCount}`}
+        title="Profile"
+      />
     </Container>
   );
 }

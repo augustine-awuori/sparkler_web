@@ -7,15 +7,13 @@ interface Props {
   onClose: () => void;
   sparkleUrl: string;
   text?: string;
+  title?: string;
 }
 
-const SparkleShareModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  sparkleUrl,
-  text,
-}) => {
+const SparkleShareModal: React.FC<Props> = (props) => {
   const [copySuccess, setCopySuccess] = useState("");
+
+  const { isOpen, onClose, sparkleUrl, text, title } = props;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(sparkleUrl).then(() => {
@@ -35,7 +33,7 @@ const SparkleShareModal: React.FC<Props> = ({
           <button onClick={onClose} className="close-button">
             ✕
           </button>
-          <h3>Share this Sparkle</h3>
+          <h3>Share this {title || "Sparkle"}</h3>
 
           <div className="share-options">
             <a
