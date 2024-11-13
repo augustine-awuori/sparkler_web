@@ -199,6 +199,7 @@ const Container = styled.div`
         margin-right: 15px;
         height: var(--icon-size);
         width: var(--icon-size);
+        color: #9e9999;
 
         position: relative;
         .value-count {
@@ -217,7 +218,7 @@ const Container = styled.div`
 
       &.active {
         font-weight: bold;
-        color: var(--theme-color);
+        color: #fff;
 
         img {
           --size: 27px;
