@@ -4,17 +4,22 @@ import { toast } from "react-toastify";
 
 import { Activity } from "../utils/types";
 import { getEATZone } from "../utils/funcs";
-import { parseHashtags } from "../utils/string";
+import { getHashtags, getMentions } from "../utils/string";
 import useUser from "./useUser";
+import useUsers from "./useUsers";
 
 export default function useSparkle() {
   const { client } = useStreamContext();
   const { user } = useUser();
+  const { getUserIds } = useUsers();
 
   const userFeed = client?.feed("user", client.userId);
 
-  const getComputedHashtags = (hashtags: string[]): string[] | undefined => {
-    if (!hashtags.length || !user) return undefined;
+  const prepareMentionsIdsTags = (mentionsIds: string[]): string[] =>
+    mentionsIds.length ? mentionsIds.map((id) => `notification:${id}`) : [];
+
+  const prepareHashtagTags = (hashtags: string[]): string[] => {
+    if (!hashtags.length || !user) return [];
 
     const computed = [
       ...hashtags.map((tag) => `hashtags:${tag.toLowerCase()}`),
@@ -43,6 +48,11 @@ export default function useSparkle() {
 
     const time = getEATZone();
 
+    const mentionsIdsTags = prepareMentionsIdsTags(
+      getUserIds(getMentions(text))
+    );
+    const hashtagTags = prepareHashtagTags(getHashtags(text));
+
     await userFeed.addActivity({
       actor: `SU:${client.userId}`,
       verb: "tweet",
@@ -50,7 +60,7 @@ export default function useSparkle() {
       object: `SO:tweet:${collection.id}`,
       foreign_id: client.userId + time,
       time: time,
-      to: getComputedHashtags(parseHashtags(text)),
+      to: [...mentionsIdsTags, ...hashtagTags],
     });
   };
 

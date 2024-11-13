@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
 
 import { Activity } from "../utils/types";
-import { parseHashtags } from "../utils/string";
+import { getHashtags } from "../utils/string";
 
 type Hashtags = {
   [key: string]: number;
@@ -58,7 +58,7 @@ const useTrendingHashtags = () => {
     sparklesWithHashtags.forEach((sparkle) => {
       const text = sparkle.object.data.text;
 
-      parseHashtags(text).forEach(async (hashtag) => {
+      getHashtags(text).forEach(async (hashtag) => {
         let count = 0;
 
         sparklesWithHashtags.forEach((sparkle) => {

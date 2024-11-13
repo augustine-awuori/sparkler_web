@@ -33,7 +33,7 @@ export function formatStringWithLink(
   return modifiedText;
 }
 
-export function parseHashtags(text: string) {
+export function getHashtags(text: string) {
   const hashtagPattern = /#(\w+)/g;
   let match;
   const hashtags = [];
@@ -43,4 +43,16 @@ export function parseHashtags(text: string) {
   }
 
   return hashtags;
+}
+
+export function getMentions(text: string) {
+  const mentionPattern = /@(\w+)/g;
+  let match;
+  const mentions = [];
+
+  while ((match = mentionPattern.exec(text)) !== null) {
+    mentions.push(match[1]);
+  }
+
+  return mentions;
 }
