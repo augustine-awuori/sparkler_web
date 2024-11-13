@@ -80,7 +80,11 @@ function App() {
     };
 
     const removeInvalidAccounts = async () => {
-      if (await userInvalid()) await deleteAccount();
+      if (await userInvalid()) {
+        await deleteAccount();
+        auth.logout();
+        window.location.reload();
+      }
     };
 
     removeInvalidAccounts();
