@@ -60,6 +60,33 @@ function App() {
   const { googleUser } = useUser();
 
   useEffect(() => {
+    const getUserInfo = async () =>
+      user ? await usersService.getUser(user._id) : undefined;
+
+    const deleteAccount = async () => {
+      if (!feedClient?.currentUser) return;
+
+      await feedClient.currentUser?.delete();
+      await usersService.deleteUserAccont();
+    };
+
+    const userInvalid = async (): Promise<boolean> => {
+      if (user?.invalid) return true;
+
+      const res = await getUserInfo();
+      if (!res || !res?.ok) return false;
+
+      return Boolean((res.data as User).invalid);
+    };
+
+    const removeInvalidAccounts = async () => {
+      if (await userInvalid()) await deleteAccount();
+    };
+
+    removeInvalidAccounts();
+  }, [feedClient?.currentUser, user]);
+
+  useEffect(() => {
     const updateNeeded = (): boolean => {
       const currentUser = feedClient?.currentUser as ActivityActor | undefined;
 
