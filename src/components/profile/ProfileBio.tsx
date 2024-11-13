@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Avatar, useStreamContext } from "react-activity-feed";
 import { Box, Heading } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaShare } from "react-icons/fa";
 import { toast } from "react-toastify";
 import styled from "styled-components";
@@ -23,6 +23,7 @@ export default function ProfileBio() {
   const { user: currentUser } = useUser();
   const [showShareModal, setShowShareModal] = useState(false);
   const navigate = useNavigate();
+  const { username } = useParams();
 
   useEffect(() => {
     async function updateBio() {
@@ -111,7 +112,7 @@ export default function ProfileBio() {
             />
           )}
         </span>
-        <span className="user__id">@{user?.data?.username as string}</span>
+        <span className="user__id">@{username}</span>
         <span
           className="user__bio"
           dangerouslySetInnerHTML={{ __html: formattedBio }}
@@ -150,8 +151,8 @@ export default function ProfileBio() {
       <SparkleShareModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
-        sparkleUrl={`${appUrl}/${user.data.username}`}
-        text={`${user.data.name} @${user.data.username} "${user.data.bio}" followers: ${followersCount} following: ${followingCount}`}
+        sparkleUrl={`${appUrl}/${username}`}
+        text={`${user.data.name} @${username} "${user.data.bio}" followers: ${followersCount} following: ${followingCount}`}
         title="Profile"
       />
     </Container>

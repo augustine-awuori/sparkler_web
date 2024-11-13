@@ -16,7 +16,7 @@ const SparkleShareModal: React.FC<Props> = (props) => {
   const { isOpen, onClose, sparkleUrl, text, title } = props;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(sparkleUrl).then(() => {
+    navigator.clipboard.writeText(`${text} ${sparkleUrl}`).then(() => {
       setCopySuccess("Link copied!");
       setTimeout(() => setCopySuccess(""), 2000);
     });
