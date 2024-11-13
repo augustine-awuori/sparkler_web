@@ -2,15 +2,18 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { useStreamContext } from "react-activity-feed";
+import { Helmet } from "react-helmet";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { User } from "../users";
+import {
+  ProfileBio,
+  ProfileHeader,
+  ProfileTabList,
+} from "../components/profile";
 import { useProfile, useTitleChanger, useUser } from "../hooks";
+import { User } from "../users";
 import LoadingIndicator from "../components/LoadingIndicator";
-import ProfileBio from "../components/profile/ProfileBio";
-import ProfileHeader from "../components/profile/ProfileHeader";
 import service from "../services/users";
-import ProfileTabList from "../components/profile/ProfileTabList";
 
 export default function ProfilePage() {
   const { client } = useStreamContext();
@@ -106,15 +109,25 @@ export default function ProfilePage() {
   if (!client || !user) return <LoadingIndicator />;
 
   return (
-    <Container>
-      <ProfileHeader />
-      <main>
-        <ProfileBio />
-        <div className="tab-list">
-          <ProfileTabList />
-        </div>
-      </main>
-    </Container>
+    <>
+      <Helmet>
+        <title>{user.data.name}</title>
+        <meta name="description" content={user.data.bio} />
+        <meta name="og:description" content={user.data.bio} />
+        <meta property="og:image" content={user.data.profileImage} />
+        <link rel="canonical" href={`https://sparkler.lol/${username}`} />
+      </Helmet>
+
+      <Container>
+        <ProfileHeader />
+        <main>
+          <ProfileBio />
+          <div className="tab-list">
+            <ProfileTabList />
+          </div>
+        </main>
+      </Container>
+    </>
   );
 }
 
