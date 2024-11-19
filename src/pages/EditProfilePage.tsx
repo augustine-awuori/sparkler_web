@@ -11,6 +11,10 @@ import storage from "../storage/files";
 const EditProfilePage: React.FC = () => {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
+  const [youtube, setYoutube] = useState("");
+  const [tiktok, setTiktok] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [customLink, setCustomLink] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<File | string>("");
   const [coverImage, setCoverImage] = useState<File | string>("");
@@ -18,13 +22,42 @@ const EditProfilePage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { name, bio, profileImage, coverImage } = (
-      client?.currentUser as unknown as ActivityActor
-    )?.data || { name: "", bio: "", profileImage: "", coverImage: "" };
-    setName(name);
-    if (bio) setBio(bio);
-    if (profileImage) setProfileImage(profileImage);
-    if (coverImage) setCoverImage(coverImage);
+    const emptyUserInfo = {
+      name: "",
+      bio: "",
+      profileImage: "",
+      coverImage: "",
+      youtube: "",
+      tiktok: "",
+      instagram: "",
+      customLink: "",
+    };
+
+    function initUserInfo() {
+      const {
+        name,
+        bio,
+        profileImage,
+        coverImage,
+        youtube,
+        tiktok,
+        instagram,
+        customLink,
+      } =
+        (client?.currentUser as unknown as ActivityActor)?.data ||
+        emptyUserInfo;
+
+      setName(name);
+      if (bio) setBio(bio);
+      if (profileImage) setProfileImage(profileImage);
+      if (coverImage) setCoverImage(coverImage);
+      if (youtube) setYoutube(youtube);
+      if (tiktok) setTiktok(tiktok);
+      if (instagram) setInstagram(instagram);
+      if (customLink) setCustomLink(customLink);
+    }
+
+    initUserInfo();
   }, [client?.currentUser]);
 
   const handleSave = async () => {
@@ -55,17 +88,26 @@ const EditProfilePage: React.FC = () => {
 
     const computedCoverImage =
       uploadedBannerImageUrl || client?.currentUser?.data?.coverImage;
+
     await client?.currentUser?.update({
       ...info,
       name,
       bio,
+      youtube,
+      tiktok,
+      instagram,
+      customLink,
       profileImage: newProfileImage,
       coverImage: computedCoverImage,
     });
     await service.updateUserInfo({
       name,
-      profileImage: newProfileImage,
       bio,
+      youtube,
+      tiktok,
+      instagram,
+      customLink,
+      profileImage: newProfileImage,
       coverImage: computedCoverImage,
     });
     setIsLoading(false);
@@ -131,6 +173,42 @@ const EditProfilePage: React.FC = () => {
         <FormControl>
           <Label>Bio</Label>
           <TextArea value={bio} onChange={(e) => setBio(e.target.value)} />
+        </FormControl>
+        <FormControl>
+          <Label>YouTube</Label>
+          <Input
+            type="url"
+            placeholder="https://youtube.com/yourchannel"
+            value={youtube}
+            onChange={(e) => setYoutube(e.target.value)}
+          />
+        </FormControl>
+        <FormControl>
+          <Label>TikTok</Label>
+          <Input
+            type="url"
+            placeholder="https://tiktok.com/@yourhandle"
+            value={tiktok}
+            onChange={(e) => setTiktok(e.target.value)}
+          />
+        </FormControl>
+        <FormControl>
+          <Label>Instagram</Label>
+          <Input
+            type="url"
+            placeholder="https://instagram.com/yourhandle"
+            value={instagram}
+            onChange={(e) => setInstagram(e.target.value)}
+          />
+        </FormControl>
+        <FormControl>
+          <Label>Custom Link</Label>
+          <Input
+            type="url"
+            placeholder="https://yourwebsite.com"
+            value={customLink}
+            onChange={(e) => setCustomLink(e.target.value)}
+          />
         </FormControl>
       </Form>
     </PageContainer>

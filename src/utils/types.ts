@@ -18,6 +18,10 @@ export interface ActivityActor extends Common {
     profileImage?: string;
     coverImage?: string;
     verified?: boolean;
+    youtube?: string;
+    tiktok?: string;
+    instagram?: string;
+    customLink?: string;
   };
 }
 
