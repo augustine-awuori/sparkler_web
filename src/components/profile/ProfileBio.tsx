@@ -34,7 +34,6 @@ export default function ProfileBio() {
   useEffect(() => {
     async function updateBio() {
       if (client?.userId !== user.id) return;
-
       const bio = user.data.bio;
 
       if (bio && !currentUser?.bio) await usersService.updateUserInfo({ bio });
@@ -44,11 +43,6 @@ export default function ProfileBio() {
   }, [client?.userId, currentUser?.bio, user.data.bio, user.id]);
 
   const actions = [
-    // {
-    //   Icon: More,
-    //   id: "more",
-    //   onClick: () => {},
-    // },
     {
       Icon: Mail,
       id: "message",
@@ -57,22 +51,13 @@ export default function ProfileBio() {
   ];
 
   const accounts = [
-    {
-      icon: FaYoutube,
-      link: user.data.youtube,
-    },
-    {
-      icon: FaTiktok,
-      link: user.data.tiktok,
-    },
-    {
-      icon: FaInstagram,
-      link: user.data.instagram,
-    },
+    { icon: FaYoutube, link: user.data.youtube },
+    { icon: FaTiktok, link: user.data.tiktok },
+    { icon: FaInstagram, link: user.data.instagram },
   ];
 
-  const followersCount: number = user.followers_count || 0;
-  const followingCount: number = user.following_count || 0;
+  const followersCount = user.followers_count || 0;
+  const followingCount = user.following_count || 0;
 
   function startDM() {
     currentUser
@@ -82,7 +67,7 @@ export default function ProfileBio() {
 
   const joinedDate = format(
     new Date(user?.created_at || Date.now()),
-    "MMMM RRRR"
+    "MMMM yyyy"
   );
 
   const isLoggedInUserProfile = user?.id === client?.userId;
@@ -124,7 +109,7 @@ export default function ProfileBio() {
       </div>
       <div className="details">
         <span className="user__name">
-          {user.data?.name as string}
+          {user.data?.name}
           {user.data?.verified && (
             <img
               src={verificationIcon}
@@ -160,22 +145,17 @@ export default function ProfileBio() {
         <div className="user__follows">
           <Box
             cursor="pointer"
-            onClick={() => {
-              if (followingCount) navigate("followings");
-            }}
+            onClick={() => navigate("followings")}
             className="user__follows__following"
           >
             <b>{followingCount}</b> Following
           </Box>
           <Box
             cursor="pointer"
+            onClick={() => navigate("followers")}
             className="user__follows__followers"
-            onClick={() => {
-              if (followersCount) navigate("followers");
-            }}
           >
-            <b>{followersCount}</b> Follower
-            {followersCount === 1 ? "" : "s"}
+            <b>{followersCount}</b> Follower{followersCount === 1 ? "" : "s"}
           </Box>
         </div>
         <div className="user__accounts">
@@ -211,11 +191,11 @@ const Container = styled.div`
   .top {
     display: flex;
     justify-content: space-between;
-    margin-top: calc(var(--profile-image-size) / -1.5);
+    margin-top: -50px;
 
     .image {
-      width: var(--profile-image-size);
-      height: var(--profile-image-size);
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       overflow: hidden;
       border: 4px solid black;
@@ -230,7 +210,7 @@ const Container = styled.div`
 
     .actions {
       position: relative;
-      top: 55px;
+      top: 60px;
       display: flex;
 
       .action-btn {
@@ -251,23 +231,6 @@ const Container = styled.div`
     margin-top: 20px;
 
     .user {
-      &__accounts {
-        margin-top: 20px;
-        display: flex;
-
-        .account-link {
-          align-items: center;
-          margin-right: 8px;
-          color: white;
-          cursor: pointer;
-
-          .account-url {
-            color: var(--theme-color);
-            text-decoration: none;
-          }
-        }
-      }
-
       &__name {
         color: white;
         font-weight: bold;
@@ -279,11 +242,6 @@ const Container = styled.div`
           height: 16px;
           margin-left: 5px;
         }
-      }
-
-      &__id {
-        margin-top: 2px;
-        font-size: 15px;
       }
 
       &__bio {
@@ -320,11 +278,6 @@ const Container = styled.div`
         }
       }
 
-      &__followed-by {
-        font-size: 13px;
-        margin-top: 15px;
-      }
-
       &__custom-link {
         margin-top: 7px;
 
@@ -349,7 +302,7 @@ const Container = styled.div`
           }
 
           &:active {
-            background-color: #1a91d1; /* Slightly darker on active state */
+            background-color: #1a91d1;
             transform: translateY(0);
           }
         }
