@@ -3,7 +3,13 @@ import { format } from "date-fns";
 import { Avatar, useStreamContext } from "react-activity-feed";
 import { Box, Heading } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaShare } from "react-icons/fa";
+import {
+  FaInstagram,
+  FaLink,
+  FaShare,
+  FaTiktok,
+  FaYoutube,
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
@@ -13,9 +19,9 @@ import { formatStringWithLink } from "../../utils/string";
 import { useProfile, useUser } from "../../hooks";
 import EditProfileButton from "../profile/EditProfileButton";
 import FollowBtn from "../FollowBtn";
+import SparkleShareModal from "../sparkle/SparkleShareModal";
 import usersService from "../../services/users";
 import verificationIcon from "../../assets/verified.svg";
-import SparkleShareModal from "../sparkle/SparkleShareModal";
 
 export default function ProfileBio() {
   const { client } = useStreamContext();
@@ -47,6 +53,21 @@ export default function ProfileBio() {
       Icon: Mail,
       id: "message",
       onClick: startDM,
+    },
+  ];
+
+  const accounts = [
+    {
+      icon: FaYoutube,
+      link: user.data.youtube,
+    },
+    {
+      icon: FaTiktok,
+      link: user.data.tiktok,
+    },
+    {
+      icon: FaInstagram,
+      link: user.data.instagram,
     },
   ];
 
@@ -117,6 +138,21 @@ export default function ProfileBio() {
           className="user__bio"
           dangerouslySetInnerHTML={{ __html: formattedBio }}
         />
+
+        {user.data.customLink && (
+          <div className="user__custom-link">
+            <a
+              href={user.data.customLink}
+              className="custom-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaLink className="link-icon" size={16} />
+              <span className="custom-link-text">{user.data.customLink}</span>
+            </a>
+          </div>
+        )}
+
         <div className="user__joined">
           <Calendar color="#777" size={20} />
           <span className="user__joined--text">Joined {joinedDate}</span>
@@ -138,9 +174,18 @@ export default function ProfileBio() {
               if (followersCount) navigate("followers");
             }}
           >
-            <b>{followersCount || 0}</b> Follower
+            <b>{followersCount}</b> Follower
             {followersCount === 1 ? "" : "s"}
           </Box>
+        </div>
+        <div className="user__accounts">
+          {accounts.map((account, index) =>
+            account.link ? (
+              <div key={index} className="account-link">
+                <account.icon size={20} />
+              </div>
+            ) : null
+          )}
         </div>
         {!isLoggedInUserProfile && (
           <div className="user__followed-by">
@@ -206,6 +251,23 @@ const Container = styled.div`
     margin-top: 20px;
 
     .user {
+      &__accounts {
+        margin-top: 20px;
+        display: flex;
+
+        .account-link {
+          align-items: center;
+          margin-right: 8px;
+          color: white;
+          cursor: pointer;
+
+          .account-url {
+            color: var(--theme-color);
+            text-decoration: none;
+          }
+        }
+      }
+
       &__name {
         color: white;
         font-weight: bold;
@@ -213,7 +275,7 @@ const Container = styled.div`
         align-items: center;
 
         .verified-icon {
-          width: 16px; /* Adjust icon size */
+          width: 16px;
           height: 16px;
           margin-left: 5px;
         }
@@ -261,6 +323,36 @@ const Container = styled.div`
       &__followed-by {
         font-size: 13px;
         margin-top: 15px;
+      }
+
+      &__custom-link {
+        margin-top: 7px;
+
+        .custom-link {
+          display: inline-flex;
+          align-items: center;
+          background-color: var(--theme-color);
+          color: white;
+          padding: 8px 12px;
+          border-radius: 30px;
+          text-decoration: none;
+          font-size: 14px;
+          transition: background-color 0.3s, transform 0.3s ease;
+
+          .link-icon {
+            margin-right: 8px;
+          }
+
+          &:hover {
+            background-color: var(--conc-theme-color);
+            transform: translateY(-2px);
+          }
+
+          &:active {
+            background-color: #1a91d1; /* Slightly darker on active state */
+            transform: translateY(0);
+          }
+        }
       }
     }
   }
