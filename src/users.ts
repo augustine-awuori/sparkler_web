@@ -11,4 +11,8 @@ export type User = {
   username: string;
   verified?: boolean;
   invalid?: boolean;
+  youtube?: string;
+  tiktok?: string;
+  instagram?: string;
+  customLink?: string;
 };

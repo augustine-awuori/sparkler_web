@@ -3,13 +3,7 @@ import { format } from "date-fns";
 import { Avatar, useStreamContext } from "react-activity-feed";
 import { Box, Heading } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  FaInstagram,
-  FaLink,
-  FaShare,
-  FaTiktok,
-  FaYoutube,
-} from "react-icons/fa";
+import { FaLink, FaShare } from "react-icons/fa";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
@@ -20,6 +14,7 @@ import { useProfile, useUser } from "../../hooks";
 import EditProfileButton from "../profile/EditProfileButton";
 import FollowBtn from "../FollowBtn";
 import SparkleShareModal from "../sparkle/SparkleShareModal";
+import UserAccounts from "../UserAccounts";
 import usersService from "../../services/users";
 import verificationIcon from "../../assets/verified.svg";
 
@@ -50,12 +45,6 @@ export default function ProfileBio() {
     },
   ];
 
-  const accounts = [
-    { icon: FaYoutube, link: user.data.youtube },
-    { icon: FaTiktok, link: user.data.tiktok },
-    { icon: FaInstagram, link: user.data.instagram },
-  ];
-
   const followersCount = user.followers_count || 0;
   const followingCount = user.following_count || 0;
 
@@ -82,6 +71,7 @@ export default function ProfileBio() {
         <figure className="image">
           <Avatar image={user.data.profileImage} alt="profile" />
         </figure>
+
         <div className="actions">
           <button
             className="action-btn"
@@ -89,6 +79,7 @@ export default function ProfileBio() {
           >
             <FaShare color="white" size={15} />
           </button>
+
           {isLoggedInUserProfile ? (
             <EditProfileButton />
           ) : (
@@ -107,6 +98,7 @@ export default function ProfileBio() {
           )}
         </div>
       </div>
+
       <div className="details">
         <span className="user__name">
           {user.data?.name}
@@ -158,20 +150,14 @@ export default function ProfileBio() {
             <b>{followersCount}</b> Follower{followersCount === 1 ? "" : "s"}
           </Box>
         </div>
-        <div className="user__accounts">
-          {accounts.map((account, index) =>
-            account.link ? (
-              <div key={index} className="account-link">
-                <account.icon size={20} />
-              </div>
-            ) : null
-          )}
-        </div>
+
         {!isLoggedInUserProfile && (
           <div className="user__followed-by">
             Not followed by anyone you are following
           </div>
         )}
+
+        <UserAccounts user={user} />
       </div>
       <SparkleShareModal
         isOpen={showShareModal}

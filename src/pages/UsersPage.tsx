@@ -14,6 +14,7 @@ import SearchInput from "../components/trends/SearchInput";
 import TabsList, { Tab } from "../components/TabsList";
 import verificationIcon from "../assets/verified.svg";
 import Button from "../components/Button";
+import UserAccounts from "../components/UserAccounts";
 
 type TabId = "all" | "verified";
 
@@ -120,11 +121,14 @@ const UsersPage = () => {
               onClick={() => navigateToProfile(leader)}
             />
           </div>
+
           {leader.bio && (
             <Text noOfLines={2} fontSize="small" className="bio" color="#fff">
               {leader.bio}
             </Text>
           )}
+
+          <UserAccounts user={{ data: leader }} />
         </div>
       ))}
     </Container>
