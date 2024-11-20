@@ -125,7 +125,9 @@ export default function ProfileBio() {
               rel="noopener noreferrer"
             >
               <FaLink className="link-icon" size={16} />
-              <span className="custom-link-text">{user.data.customLink}</span>
+              <span className="custom-link-text">
+                {user.data.customLink.replace("https://", "")}
+              </span>
             </a>
           </div>
         )}
