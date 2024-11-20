@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { Avatar, Gallery, useFeedContext } from "react-activity-feed";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useRef, useState } from "react";
 import { Activity as MainActivity } from "getstream";
@@ -12,6 +12,7 @@ import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
 import {
   useActivity,
+  useProfile,
   useQuotes,
   useResparkle,
   useSparkle,
@@ -19,6 +20,7 @@ import {
 } from "../../hooks";
 import { appUrl } from "../../services/client";
 import { Comment, Heart, More, Resparkle, Upload } from "../../assets/icons";
+import { FeedUser } from "../../contexts/ProfileContext";
 import { generateSparkleLink } from "../../utils/links";
 import CommentDialog from "../sparkle/CommentDialog ";
 import FollowBtn from "../FollowBtn";
@@ -43,6 +45,7 @@ export default function SparkleContent({ activity }: Props) {
   const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const { createComment } = useComment();
   const { setActivity } = useActivity();
+  const { setUser } = useProfile();
   const { setQuotes } = useQuotes();
   const { toggleLike } = useLike();
   const { toggleResparkle } = useResparkle();
@@ -142,13 +145,19 @@ export default function SparkleContent({ activity }: Props) {
     feed.refresh();
   };
 
+  const visitProfile = () => {
+    setUser(sparkleActor as unknown as FeedUser);
+    navigate(`/${sparkleActor.username}`);
+  };
+
   return (
     <>
       <Container>
-        <Link to={`/${sparkleActor.username}`} className="user">
+        <div onClick={visitProfile} className="user">
           <figure className="user__image">
             <Avatar image={sparkleActor.profileImage} />
           </figure>
+
           <div className="user__name">
             <span className="user__name--name">
               {sparkleActor.name}
@@ -162,6 +171,7 @@ export default function SparkleContent({ activity }: Props) {
             </span>
             <span className="user__name--id">@{sparkleActor.username}</span>
           </div>
+
           <div className="user__option">
             {user?._id !== sparkleActor.id && (
               <div className="user__actions">
@@ -170,7 +180,7 @@ export default function SparkleContent({ activity }: Props) {
               </div>
             )}
           </div>
-        </Link>
+        </div>
 
         <div className="tweet">
           <p
@@ -182,6 +192,7 @@ export default function SparkleContent({ activity }: Props) {
               ).replace(/\n/g, "<br/>"),
             }}
           />
+
           {Boolean(images.length) && (
             <Box mt={2}>
               <Gallery
@@ -190,6 +201,7 @@ export default function SparkleContent({ activity }: Props) {
               />
             </Box>
           )}
+
           {isAQuote && (
             <EmbeddedSparkleBlock
               activity={
@@ -198,6 +210,7 @@ export default function SparkleContent({ activity }: Props) {
               }
             />
           )}
+
           <div className="tweet__time">
             <span className="tweet__time--time">{time}</span>
             <span className="tweet__time--date">{date}</span>
