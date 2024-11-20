@@ -11,10 +11,10 @@ import Header from "../Header";
 import SparkleContent from "./SparkleContent";
 
 export default function ThreadContent() {
+  const [activity, setActivity] = useState<Activity>();
   const { client } = useStreamContext();
   const { id } = useParams();
   const feed = useFeedContext();
-  const [activity, setActivity] = useState<Activity>();
   const navigate = useNavigate();
 
   useEffect(() => {

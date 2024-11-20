@@ -17,35 +17,39 @@ import {
   useSparkle,
   useUser,
 } from "../../hooks";
+import { appUrl } from "../../services/client";
 import { Comment, Heart, More, Resparkle, Upload } from "../../assets/icons";
+import { generateSparkleLink } from "../../utils/links";
 import CommentDialog from "../sparkle/CommentDialog ";
+import FollowBtn from "../FollowBtn";
 import ResparklePopup from "../sparkle/ResparklePopup";
 import SparkleCommentBlock from "./SparkleCommentBlock";
+import SparkleShareModal from "../sparkle/SparkleShareModal";
 import TweetForm from "../sparkle/SparkleForm";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
 import verifiedIcon from "../../assets/verified.svg";
-import FollowBtn from "../FollowBtn";
 
 interface Props {
   activity: MainActivity;
 }
 
 export default function SparkleContent({ activity }: Props) {
-  const feed = useFeedContext();
-  const { createComment } = useComment();
-  const { toggleLike } = useLike();
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
-  const [resparklePopupOpened, setResparklePopupOpened] = useState(false);
+  const [commenting, setCommenting] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-  const navigate = useNavigate();
+  const [resparklePopupOpened, setResparklePopupOpened] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
+  const { createComment } = useComment();
   const { setActivity } = useActivity();
   const { setQuotes } = useQuotes();
-  const resparkleButtonRef = useRef<HTMLButtonElement>(null);
-  const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
-  const { user } = useUser();
+  const { toggleLike } = useLike();
   const { toggleResparkle } = useResparkle();
-  const [commenting, setCommenting] = useState(false);
+  const { user } = useUser();
+  const feed = useFeedContext();
+  const navigate = useNavigate();
+  const resparkleButtonRef = useRef<HTMLButtonElement>(null);
 
   const time = format(new Date(activity.time), "p");
   const date = format(new Date(activity.time), "PP");
@@ -61,6 +65,11 @@ export default function SparkleContent({ activity }: Props) {
   const isAQuote = activity.verb === "quote";
   const images: string[] = appActivity.attachments?.images || [];
   const hasResparkled = checkIfHasResparkled(appActivity);
+  const sparkleLink = generateSparkleLink(
+    appActivity.actor.data.username,
+    appActivity.id
+  );
+  const completeSparkleLink = `${appUrl}${sparkleLink}`;
 
   const onToggleLike = async () => {
     await toggleLike(activity, hasLikedSparkled);
@@ -90,7 +99,11 @@ export default function SparkleContent({ activity }: Props) {
       Icon: Heart,
       onClick: onToggleLike,
     },
-    { id: "upload", Icon: Upload },
+    {
+      id: "upload",
+      Icon: Upload,
+      onClick: () => setShowShareModal(true),
+    },
   ];
 
   const onPostComment = async (text: string) => {
@@ -286,9 +299,17 @@ export default function SparkleContent({ activity }: Props) {
             sparkling={commenting}
           />
         </div>
+
         {appActivity.latest_reactions?.comment?.map((comment) => (
           <SparkleCommentBlock key={comment.id} comment={comment} />
         ))}
+
+        <SparkleShareModal
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+          sparkleUrl={completeSparkleLink}
+          text={tweet.text}
+        />
       </Container>
     </>
   );
