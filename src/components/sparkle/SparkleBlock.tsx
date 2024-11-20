@@ -146,6 +146,8 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     initMoreOptions();
 
     function initMoreOptions() {
+      if (moreOptions.length) return;
+
       const isTheAuthor = appActivity.actor.id === user?.id;
 
       const generalOptions: Option[] = [
@@ -192,6 +194,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     completeSparkleLink,
     feed,
     isFollowing,
+    moreOptions.length,
     toggleFollow,
     user?.id,
   ]);

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
 import { Helmet } from "react-helmet";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,6 +20,7 @@ export default function ProfilePage() {
   const { user, setUser } = useProfile();
   const { user: currentUser } = useUser();
   const { username } = useParams();
+  const [profileFetched, setProfileFetched] = useState(false);
   const navigate = useNavigate();
   useTitleChanger(user?.data.name || "User Profile");
 
@@ -61,6 +62,8 @@ export default function ProfilePage() {
     if (!username) return navigate(-1);
 
     const initUser = async () => {
+      if (profileFetched) return;
+
       let userId = user?.id;
 
       if (!userId) {
@@ -79,17 +82,22 @@ export default function ProfilePage() {
           ?.user(userId)
           .get({ with_follow_counts: true });
 
-        if (fetchedUser?.full)
+        if (fetchedUser?.full) {
+          setProfileFetched(true);
           setUser({
             ...fetchedUser.full,
             data: { ...fetchedUser.full.data, ...user.data },
           });
+        }
       } catch (error) {
         if (client?.userId !== currentUser?._id) return;
 
         let fetchedUser: User | undefined = undefined;
         const res = await service.getUserByUsername(username);
-        if (res.ok) fetchedUser = res.data as User;
+        if (res.ok) {
+          fetchedUser = res.data as User;
+          setProfileFetched(true);
+        }
         if (fetchedUser)
           client?.user(userId).getOrCreate({ ...fetchedUser, id: userId });
       }
@@ -104,6 +112,8 @@ export default function ProfilePage() {
     user.data,
     user?.id,
     username,
+    user,
+    profileFetched,
   ]);
 
   if (!client || !user) return <LoadingIndicator />;
