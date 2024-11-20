@@ -46,7 +46,7 @@ export default function Timeline() {
 
   useEffect(() => {
     const logOutUser = async () => {
-      auth.logout();
+      await auth.logout();
       window.location.reload();
     };
 
@@ -66,7 +66,7 @@ export default function Timeline() {
   if (!user) return <Heading>User not logged in</Heading>;
 
   return (
-    <div>
+    <div className="test">
       <FlatFeed
         Activity={SparkleBlock}
         userId={user.id}

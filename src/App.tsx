@@ -120,7 +120,7 @@ function App() {
   useEffect(() => {
     const initChatClient = async () => {
       try {
-        if (!appData) return;
+        if (!appData || chatClient) return;
 
         const client = StreamChat.getInstance(appData.key);
 
@@ -141,11 +141,12 @@ function App() {
     };
 
     initChatClient();
-  }, [appData, user]);
+  }, [appData, chatClient, user]);
 
   useEffect(() => {
     const initFeedClient = async () => {
-      if (!appData || (user && user._id === feedClient?.userId)) return;
+      if (!appData || (user && user._id === feedClient?.userId) || feedClient)
+        return;
 
       try {
         setFeedClient(

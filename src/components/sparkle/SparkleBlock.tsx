@@ -188,13 +188,10 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     }
   }, [
     activity.id,
-    actor.data.username,
     appActivity.actor.id,
-    appActivity.id,
     completeSparkleLink,
     feed,
     isFollowing,
-    sparkleLink,
     toggleFollow,
     user?.id,
   ]);
