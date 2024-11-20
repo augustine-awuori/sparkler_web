@@ -281,7 +281,7 @@ export default function SparkleContent({ activity }: Props) {
             submitText="Reply"
             collapsedOnMount={true}
             placeholder="Sparkle your reply"
-            replyingTo={sparkleActor.id}
+            replyingTo={sparkleActor.username}
             sparkling={commenting}
           />
         </div>
