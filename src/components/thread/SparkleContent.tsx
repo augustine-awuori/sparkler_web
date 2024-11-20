@@ -137,27 +137,13 @@ export default function SparkleContent({ activity }: Props) {
     }
   };
 
-  const handleResparkle = () =>
-    toggleResparkle(activity as unknown as MainActivity, hasResparkled);
+  const handleResparkle = async () => {
+    await toggleResparkle(activity as unknown as MainActivity, hasResparkled);
+    feed.refresh();
+  };
 
   return (
     <>
-      {resparklePopupOpened && (
-        <ResparklePopup
-          onClose={() => setResparklePopupOpened(false)}
-          onQuote={quoteSparkle}
-          onResparkle={handleResparkle}
-          position={popupPosition}
-          hasBeenResparkled={hasBeenResparkled}
-        />
-      )}
-      {commentDialogOpened && (
-        <CommentDialog
-          activity={activity}
-          onPostComment={onPostComment}
-          onClickOutside={() => setCommentDialogOpened(false)}
-        />
-      )}
       <Container>
         <Link to={`/${sparkleActor.username}`} className="user">
           <figure className="user__image">
@@ -310,6 +296,23 @@ export default function SparkleContent({ activity }: Props) {
           sparkleUrl={completeSparkleLink}
           text={tweet.text}
         />
+
+        {resparklePopupOpened && (
+          <ResparklePopup
+            onClose={() => setResparklePopupOpened(false)}
+            onQuote={quoteSparkle}
+            onResparkle={handleResparkle}
+            position={popupPosition}
+            hasBeenResparkled={hasBeenResparkled}
+          />
+        )}
+        {commentDialogOpened && (
+          <CommentDialog
+            activity={activity}
+            onPostComment={onPostComment}
+            onClickOutside={() => setCommentDialogOpened(false)}
+          />
+        )}
       </Container>
     </>
   );
