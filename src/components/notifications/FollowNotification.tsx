@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { NotificationActivity } from "getstream";
 import { AvatarGroup } from "@chakra-ui/react";
 import styled from "styled-components";
@@ -17,7 +17,7 @@ export default function FollowNotification({ followActivities }: Props) {
   const navigate = useNavigate();
 
   const firstActivity = followActivities.activities[0] as unknown as Activity;
-  const activitiesCount = followActivities.activities.length;
+  const activitiesCount = followActivities.activity_count;
 
   const visitProfile = (actor: ActivityActor) => {
     navigate(`/${actor.data.username}`);
@@ -26,7 +26,7 @@ export default function FollowNotification({ followActivities }: Props) {
 
   return (
     <Block>
-      <User color="#1c9bef" size={25} />
+      <User color="var(--theme-color)" size={25} />
       <div className="right">
         <AvatarGroup>
           {(followActivities.activities as unknown as Activity[]).map(
@@ -42,14 +42,17 @@ export default function FollowNotification({ followActivities }: Props) {
         </AvatarGroup>
 
         <p className="actors__text">
-          <Link className="actors__name" to={`/${firstActivity.actor.id}`}>
+          <span
+            className="actors__name"
+            onClick={() => visitProfile(firstActivity.actor)}
+          >
             {firstActivity.actor.data.name}
-          </Link>{" "}
+          </span>
           <span>
-            {activitiesCount > 1 &&
+            {followActivities.activity_count > 1 &&
               `and ${activitiesCount - 1} other${
                 activitiesCount === 2 ? "" : "s"
-              }`}{" "}
+              } `}
             followed you
           </span>
         </p>

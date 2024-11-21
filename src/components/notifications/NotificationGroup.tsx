@@ -3,9 +3,11 @@ import { useFeedContext, useStreamContext } from "react-activity-feed";
 import { NotificationActivity } from "getstream";
 import styled from "styled-components";
 
+import { SPARKLE_VERB } from "../../hooks/useSparkle";
 import CommentNotification from "./CommentNotification";
 import FollowNotification from "./FollowNotification";
 import LikeNotification from "./LikeNotification";
+import MentionNotification from "./MentionNotification";
 
 interface Props {
   activityGroup: NotificationActivity;
@@ -44,6 +46,9 @@ export default function NotificationGroup({ activityGroup }: Props) {
 
   return (
     <Container ref={notificationContainerRef}>
+      {activityGroup.verb === SPARKLE_VERB && (
+        <MentionNotification activityGroup={activityGroup} />
+      )}
       {activityGroup.verb === "like" && (
         <LikeNotification likeGroupActivity={activityGroup} />
       )}

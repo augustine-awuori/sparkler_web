@@ -97,8 +97,8 @@ function App() {
       if (!currentUser || !user) return false;
 
       return Boolean(
-        currentUser.data.name === "Unknown" ||
-          (!currentUser.data.username && user.username)
+        currentUser?.data?.name === "Unknown" ||
+          (!currentUser?.data?.username && user.username)
       );
     };
 

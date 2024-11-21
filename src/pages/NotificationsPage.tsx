@@ -2,7 +2,10 @@ import { useState } from "react";
 import { LoadMorePaginator, NotificationFeed } from "react-activity-feed";
 import styled from "styled-components";
 
-import { NotificationGroup } from "../components/notifications";
+import {
+  MentionNotification,
+  NotificationGroup,
+} from "../components/notifications";
 import { useTitleChanger } from "../hooks";
 import LoadingIndicator from "../components/LoadingIndicator";
 import LoadMoreButton from "../components/LoadMoreButton";
@@ -38,7 +41,7 @@ export default function NotificationPage() {
       />
 
       <NotificationFeed
-        Group={NotificationGroup}
+        Group={activeTab === "all" ? NotificationGroup : MentionNotification}
         LoadingIndicator={LoadingIndicator}
         Paginator={(props) => (
           <LoadMorePaginator

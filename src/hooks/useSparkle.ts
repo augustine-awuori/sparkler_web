@@ -8,6 +8,8 @@ import { getHashtags, getMentions } from "../utils/string";
 import useUser from "./useUser";
 import useUsers from "./useUsers";
 
+export const SPARKLE_VERB = "tweet";
+
 export default function useSparkle() {
   const { client } = useStreamContext();
   const { user } = useUser();
@@ -42,7 +44,7 @@ export default function useSparkle() {
       return;
     }
 
-    const collection = await client.collections.add("tweet", nanoid(), {
+    const collection = await client.collections.add(SPARKLE_VERB, nanoid(), {
       text,
     });
 
@@ -55,18 +57,17 @@ export default function useSparkle() {
 
     await userFeed.addActivity({
       actor: `SU:${client.userId}`,
-      verb: "tweet",
+      verb: SPARKLE_VERB,
       attachments: { images },
-      object: `SO:tweet:${collection.id}`,
+      object: `SO:${SPARKLE_VERB}:${collection.id}`,
       foreign_id: client.userId + time,
       time: time,
       to: [...mentionsIdsTags, ...hashtagTags],
     });
   };
 
-  const deleteSparkle = (sparkleId: string) => {
+  const deleteSparkle = (sparkleId: string) =>
     userFeed?.removeActivity(sparkleId);
-  };
 
   const checkIfHasResparkled = (activity: Activity) => {
     let hasResparkled = false;
