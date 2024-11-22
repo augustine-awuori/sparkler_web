@@ -38,7 +38,7 @@ import { User } from "./users";
 import auth from "./services/auth";
 import Layout from "./components/Layout";
 import LoadingPage from "./pages/LoadingPage";
-import ProfileContext, { FeedUser } from "./contexts/ProfileContext";
+import ProfileContext, { FeedUser } from "./contexts/ProfileUserContext";
 import UsersContext, { Users } from "./contexts/UsersContext";
 import usersService from "./services/users";
 import useUser, { initUser } from "./hooks/useUser";
@@ -213,7 +213,10 @@ function App() {
                 <QuotesContext.Provider value={{ quotes, setQuotes }}>
                   <FilesContext.Provider value={{ files, setFiles }}>
                     <ProfileContext.Provider
-                      value={{ user: profileUser, setUser: setProfileUser }}
+                      value={{
+                        profileUser: profileUser,
+                        setProfileUser: setProfileUser,
+                      }}
                     >
                       <ShowSparkleModalContext.Provider
                         value={{ setShowSparkleModal, showSparkleModal }}

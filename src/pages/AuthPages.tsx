@@ -5,11 +5,11 @@ import { Box, Button, Heading } from "@chakra-ui/react";
 import styled from "styled-components";
 
 import { getProfileUserDataFromUserInfo } from "../utils/funcs";
-import { useUser, useProfile } from "../hooks";
+import { useUser, useProfileUser } from "../hooks";
 import auth from "../services/auth";
 
 const AuthPages = () => {
-  const { setUser } = useProfile();
+  const { setProfileUser: setUser } = useProfileUser();
   const { user } = useUser();
   const navigate = useNavigate();
 

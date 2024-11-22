@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { getProfileUserDataFromUserInfo } from "../../utils/funcs";
-import { useProfile } from "../../hooks";
+import { useProfileUser } from "../../hooks";
 import { User } from "../../users";
 import usersService from "../../services/users";
 import verificationIcon from "../../assets/verified.svg";
@@ -20,7 +20,7 @@ const WhoToFollow = ({ query }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [leaderSuggestions, setLeadersSuggestions] = useState<User[]>([]);
   const { client } = useStreamContext();
-  const { setUser } = useProfile();
+  const { setProfileUser: setUser } = useProfileUser();
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { Avatar, useStreamContext } from "react-activity-feed";
+import { Avatar } from "react-activity-feed";
 import { Box } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { NotificationActivity } from "getstream";
@@ -6,50 +6,45 @@ import styled from "styled-components";
 
 import { Activity, ActivityActor } from "../../utils/types";
 import { Heart } from "../../assets/icons";
-import { useProfile } from "../../hooks";
+import { useProfileUser } from "../../hooks";
 
 interface Props {
-  likeGroupActivity: NotificationActivity;
+  activityGroup: NotificationActivity;
 }
 
-export default function LikeNotification({ likeGroupActivity }: Props) {
-  const { setUser } = useProfile();
-  const { user } = useStreamContext();
+export default function LikeNotification({ activityGroup }: Props) {
+  const { setProfileUser: setUser } = useProfileUser();
   const likedGroup: { [id: string]: Activity[] } = {};
   const navigate = useNavigate();
 
   const visitProfile = (actor: ActivityActor) => {
-    navigate(`/${actor.data.username}`);
     setUser(actor);
+    navigate(`/${actor.data.username}`);
   };
 
-  (likeGroupActivity.activities as unknown as Activity[]).forEach(
-    (activity) => {
-      if (activity.object.id in likedGroup) {
-        likedGroup[activity.object.id].push(activity);
-      } else likedGroup[activity.object.id] = [activity];
-    }
-  );
+  (activityGroup.activities as unknown as Activity[]).forEach((sparkle) => {
+    if (sparkle.object.id in likedGroup) {
+      likedGroup[sparkle.object.id].push(sparkle);
+    } else likedGroup[sparkle.object.id] = [sparkle];
+  });
 
   return (
     <>
       {Object.keys(likedGroup).map((groupKey) => {
-        const activities = likedGroup[groupKey];
-
-        const lastActivity = activities[0];
-
-        const tweetLink = `/${user?.id}/status/${lastActivity.object.id}`;
+        const sparkles = likedGroup[groupKey];
+        const { actor, object } = sparkles[0];
+        const link = `/${actor.data.username}/status/${object.id}`;
 
         return (
           <Block
             className="active"
-            onClick={() => navigate(tweetLink)}
+            onClick={() => navigate(link)}
             key={groupKey}
           >
             <Heart color="var(--theme-color)" size={25} fill={true} />
             <div className="right">
               <div className="liked-actors__images">
-                {activities.map(({ id, actor }) => (
+                {sparkles.map(({ id, actor }) => (
                   <Box
                     key={id}
                     className="liked-actors__images__image"
@@ -60,22 +55,16 @@ export default function LikeNotification({ likeGroupActivity }: Props) {
                 ))}
               </div>
               <span className="liked-actors__text">
-                <Link
-                  className="liked-actor__name"
-                  to={`/${lastActivity.actor.id}`}
-                >
-                  {lastActivity.actor.data.name}
+                <Link className="liked-actor__name" to={`/${actor.id}`}>
+                  {actor.data.name}
                 </Link>{" "}
-                <Link to={tweetLink}>
-                  {activities.length > 1 &&
-                    `and ${activities.length - 1} others`}{" "}
+                <Link to={link}>
+                  {sparkles.length > 1 && `and ${sparkles.length - 1} others`}{" "}
                   liked your sparkle
                 </Link>
               </span>
 
-              <p className="tweet-text">
-                {lastActivity.object.data?.text || ""}
-              </p>
+              <p className="tweet-text">{object.data?.text || ""}</p>
             </div>
           </Block>
         );

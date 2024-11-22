@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
-import { useProfile } from "../../hooks";
-import SparkleBlock from "../sparkle/SparkleBlock";
 import { Activity } from "getstream";
+
 import { ProfileResparklesPlaceholder } from "../placeholders";
+import { useProfileUser } from "../../hooks";
 import LoadingIndicator from "../LoadingIndicator";
+import SparkleBlock from "../sparkle/SparkleBlock";
 
 export default function ProfileTweets() {
-  const { user } = useProfile();
+  const { user } = useProfileUser();
   const { client } = useStreamContext();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(false);

@@ -31,7 +31,7 @@ import {
   useComment,
   useFollow,
   useLike,
-  useProfile,
+  useProfileUser,
   useQuoting,
   useResparkle,
   useSparkle,
@@ -76,7 +76,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const { toggleResparkle } = useResparkle();
   const { createQuote } = useQuoting();
   const location = useLocation();
-  const { setUser } = useProfile();
+  const { setProfileUser: setUser } = useProfileUser();
   const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const isAReaction = activity.foreign_id.startsWith("reaction");
   const appActivity = isAReaction

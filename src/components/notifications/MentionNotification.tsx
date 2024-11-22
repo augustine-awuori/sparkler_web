@@ -8,7 +8,7 @@ import { FiAtSign } from "react-icons/fi";
 import { Activity } from "../../utils/types";
 import { generateSparkleLink } from "../../utils/links";
 import { SPARKLE_VERB } from "../../hooks/useSparkle";
-import { useProfile } from "../../hooks";
+import { useProfileUser } from "../../hooks";
 import Avatar from "../Avatar";
 import SparkleBlock from "../sparkle/SparkleBlock";
 
@@ -18,7 +18,7 @@ interface Props {
 
 const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
   const [showSparkles, setShowSparkles] = useState(false);
-  const { setUser } = useProfile();
+  const { setProfileUser: setUser } = useProfileUser();
   const navigate = useNavigate();
 
   const { activities, activity_count, actor_count, verb } = activityGroup;

@@ -10,14 +10,14 @@ import {
   ProfileHeader,
   ProfileTabList,
 } from "../components/profile";
-import { useProfile, useTitleChanger, useUser } from "../hooks";
+import { useProfileUser, useTitleChanger, useUser } from "../hooks";
 import { User } from "../users";
 import LoadingIndicator from "../components/LoadingIndicator";
 import service from "../services/users";
 
 export default function ProfilePage() {
   const { client } = useStreamContext();
-  const { user, setUser } = useProfile();
+  const { user, setProfileUser: setUser } = useProfileUser();
   const { user: currentUser } = useUser();
   const { username } = useParams();
   const [profileFetched, setProfileFetched] = useState(false);

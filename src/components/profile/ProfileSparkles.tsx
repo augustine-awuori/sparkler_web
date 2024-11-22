@@ -1,13 +1,13 @@
 import { FlatFeed, LoadMorePaginator } from "react-activity-feed";
 
 import { ProfileSparklesPlaceholder } from "../placeholders";
-import { useProfile } from "../../hooks";
+import { useProfileUser } from "../../hooks";
 import LoadingIndicator from "../LoadingIndicator";
 import LoadMoreButton from "../LoadMoreButton";
 import SparkleBlock from "../sparkle/SparkleBlock";
 
 export default function ProfileSparkles() {
-  const { user } = useProfile();
+  const { user } = useProfileUser();
 
   return (
     <FlatFeed

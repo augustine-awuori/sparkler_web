@@ -13,9 +13,11 @@ interface Props {
 }
 
 export default function NotificationGroup({ activityGroup }: Props) {
+  const { user, client } = useStreamContext();
   const feed = useFeedContext();
   const notificationContainerRef = useRef<HTMLDivElement>(null);
-  const { user, client } = useStreamContext();
+
+  const { verb } = activityGroup;
 
   useEffect(() => {
     // stop event propagation on links
@@ -34,28 +36,26 @@ export default function NotificationGroup({ activityGroup }: Props) {
   }, []);
 
   useEffect(() => {
-    const notifFeed = client?.feed("notification", user?.id);
+    const notificationFeed = client?.feed("notification", user?.id);
 
-    notifFeed?.subscribe((data) => {
-      if (data.new.length) feed.refresh();
+    notificationFeed?.subscribe((message) => {
+      if (message.new.length) feed.refresh();
     });
 
-    return () => notifFeed?.unsubscribe();
-  }, [client, user, feed]);
+    return () => notificationFeed?.unsubscribe();
+  }, [client, feed, user?.id]);
 
   return (
     <div ref={notificationContainerRef}>
-      {activityGroup.verb === SPARKLE_VERB && (
+      {verb === SPARKLE_VERB && (
         <MentionNotification activityGroup={activityGroup} />
       )}
-      {activityGroup.verb === "like" && (
-        <LikeNotification likeGroupActivity={activityGroup} />
+      {verb === "like" && <LikeNotification activityGroup={activityGroup} />}
+      {verb === "follow" && (
+        <FollowNotification activityGroup={activityGroup} />
       )}
-      {activityGroup.verb === "follow" && (
-        <FollowNotification followActivities={activityGroup} />
-      )}
-      {activityGroup.verb === "comment" && (
-        <CommentNotification activity={activityGroup} />
+      {verb === "comment" && (
+        <CommentNotification activityGroup={activityGroup} />
       )}
     </div>
   );

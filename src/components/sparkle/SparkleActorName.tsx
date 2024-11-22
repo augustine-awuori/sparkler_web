@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import { useProfile } from "../../hooks";
+import { useProfileUser } from "../../hooks";
 import verificationIcon from "../../assets/verified.svg";
 
 interface Props {
@@ -22,7 +22,7 @@ export default function SparkleActorName({
   verified,
 }: Props) {
   const navigate = useNavigate();
-  const { setUser } = useProfile();
+  const { setProfileUser: setUser } = useProfileUser();
 
   const timeDiff = Date.now() - new Date(time).getTime();
   const hoursBetweenDates = timeDiff / (60 * 60 * 1000);

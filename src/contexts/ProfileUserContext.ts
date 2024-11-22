@@ -10,13 +10,13 @@ type DefaultUT = DefaultGenerics & {
 export interface FeedUser extends UserAPIResponse<DefaultUT> {}
 
 export interface Value {
-  user: FeedUser | undefined;
-  setUser: (user: FeedUser) => void;
+  profileUser: FeedUser | undefined;
+  setProfileUser: (user: FeedUser) => void;
 }
 
 export const ProfileUserContext = createContext<Value>({
-  user: undefined,
-  setUser: () => {},
+  profileUser: undefined,
+  setProfileUser: () => {},
 });
 
 ProfileUserContext.displayName = "Profile User Context";

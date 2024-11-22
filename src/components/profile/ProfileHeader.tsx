@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { ArrowLeft } from "../../assets/icons";
-import { useProfile } from "../../hooks";
+import { useProfileUser } from "../../hooks";
 
 export interface ProfileUser {
   id: string;
@@ -17,7 +17,7 @@ export interface ProfileUser {
 export default function ProfileHeader() {
   const [activitiesCount, setActivitiesCount] = useState(0);
   const { client } = useStreamContext();
-  const { user } = useProfile();
+  const { user } = useProfileUser();
   const navigate = useNavigate();
 
   useEffect(() => {

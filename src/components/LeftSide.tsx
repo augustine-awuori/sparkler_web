@@ -11,7 +11,7 @@ import { getProfileUserDataFromUserInfo } from "../utils/funcs";
 import { logout } from "../hooks/useAuth";
 import {
   useNewNotifications,
-  useProfile,
+  useProfileUser,
   useUnreadMessages,
   useUser,
   useShowSparkleModal,
@@ -32,7 +32,7 @@ type Menu = {
 export default function LeftSide() {
   const { count } = useUnreadMessages();
   const { newNotifications } = useNewNotifications();
-  const { setUser } = useProfile();
+  const { setProfileUser: setUser } = useProfileUser();
   const { user } = useUser();
   const { setShowSparkleModal } = useShowSparkleModal();
   const location = useLocation();

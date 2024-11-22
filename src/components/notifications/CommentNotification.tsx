@@ -1,12 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useStreamContext } from "react-activity-feed";
+import { useNavigate } from "react-router-dom";
 import { NotificationActivity } from "getstream";
 import styled from "styled-components";
 
 import { Activity, ActivityActor } from "../../utils/types";
 import { Comment } from "../../assets/icons";
 import { generateSparkleLink } from "../../utils/links";
-import { useProfile } from "../../hooks";
+import { useProfileUser } from "../../hooks";
 import Avatar from "../Avatar";
 import SparkleActorName from "../sparkle/SparkleActorName";
 
@@ -17,15 +16,15 @@ export interface CommentNotificationActivity extends NotificationActivity {
 }
 
 interface Props {
-  activity: NotificationActivity;
+  activityGroup: NotificationActivity;
 }
 
-export default function CommentNotification({ activity }: Props) {
-  const { actor, time, object } = activity.activities[0] as unknown as Activity;
-  const { setUser } = useProfile();
-  const { user } = useStreamContext();
+export default function CommentNotification({ activityGroup }: Props) {
+  const { setProfileUser: setUser } = useProfileUser();
   const navigate = useNavigate();
 
+  const { actor, time, object } = activityGroup
+    .activities[0] as unknown as Activity;
   const sparkleLink = generateSparkleLink(actor.id, object.id);
 
   const visitProfile = (actor: ActivityActor) => {
@@ -34,7 +33,7 @@ export default function CommentNotification({ activity }: Props) {
   };
 
   return (
-    <Block key={activity.id} onClick={() => navigate(sparkleLink)}>
+    <Block onClick={() => navigate(sparkleLink)}>
       <Comment color="#1c9bef" size={25} />
       <div className="right">
         <Avatar
@@ -52,7 +51,9 @@ export default function CommentNotification({ activity }: Props) {
           />
           <span className="user__reply-to">
             Replying to{" "}
-            <Link to={`/${user?.id}`}>@{user?.data?.username as string}</Link>
+            <div onClick={() => visitProfile(actor)}>
+              @{actor.data.username}
+            </div>
             <p className="user__text">{object.data?.text}</p>
           </span>
         </div>

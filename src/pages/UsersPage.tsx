@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { ANONYMOUS_USER_ID } from "../components/explore/WhoToFollow";
 import { getProfileUserDataFromUserInfo } from "../utils/funcs";
-import { useProfile, useUser, useUsers } from "../hooks";
+import { useProfileUser, useUser, useUsers } from "../hooks";
 import { User } from "../users";
 // import FollowBtn from "../components/FollowBtn";
 import LoadingIndicator from "../components/LoadingIndicator";
@@ -28,7 +28,7 @@ const UsersPage = () => {
   const [query, setQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const { allUsers, isLoading } = useUsers();
-  const { setUser } = useProfile();
+  const { setProfileUser: setUser } = useProfileUser();
   const { user } = useUser();
   const navigate = useNavigate();
 

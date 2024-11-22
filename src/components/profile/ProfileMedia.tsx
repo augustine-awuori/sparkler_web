@@ -1,13 +1,13 @@
 import { FlatFeed, LoadMorePaginator } from "react-activity-feed";
 
 import { ProfileMediaPlaceholder } from "../placeholders";
-import { useProfile } from "../../hooks";
+import { useProfileUser } from "../../hooks";
 import LoadingIndicator from "../LoadingIndicator";
 import LoadMoreButton from "../LoadMoreButton";
 import SparkleBlock from "../sparkle/SparkleBlock";
 
 const ProfileMedia = () => {
-  const { user } = useProfile();
+  const { user } = useProfileUser();
 
   if (!user) return null;
 

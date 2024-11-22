@@ -10,7 +10,7 @@ import styled from "styled-components";
 import { appUrl } from "../../services/client";
 import { Calendar, Mail } from "../../assets/icons";
 import { formatStringWithLink } from "../../utils/string";
-import { useProfile, useUser } from "../../hooks";
+import { useProfileUser, useUser } from "../../hooks";
 import EditProfileButton from "../profile/EditProfileButton";
 import FollowBtn from "../FollowBtn";
 import SparkleShareModal from "../sparkle/SparkleShareModal";
@@ -20,7 +20,7 @@ import verificationIcon from "../../assets/verified.svg";
 
 export default function ProfileBio() {
   const { client } = useStreamContext();
-  const { user } = useProfile();
+  const { user } = useProfileUser();
   const { user: currentUser } = useUser();
   const [showShareModal, setShowShareModal] = useState(false);
   const navigate = useNavigate();

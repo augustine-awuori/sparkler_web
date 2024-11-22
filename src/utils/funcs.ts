@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-import { FeedUser } from "../contexts/ProfileContext";
+import { FeedUser } from "../contexts/ProfileUserContext";
 import { User } from "../users";
 
 export function getEATZone() {

@@ -4,20 +4,20 @@ import { AvatarGroup } from "@chakra-ui/react";
 import styled from "styled-components";
 
 import { Activity, ActivityActor } from "../../utils/types";
-import { useProfile } from "../../hooks";
+import { useProfileUser } from "../../hooks";
 import { User } from "../../assets/icons";
 import Avatar from "../Avatar";
 
 interface Props {
-  followActivities: NotificationActivity;
+  activityGroup: NotificationActivity;
 }
 
-export default function FollowNotification({ followActivities }: Props) {
-  const { setUser } = useProfile();
+export default function FollowNotification({ activityGroup }: Props) {
+  const { setProfileUser: setUser } = useProfileUser();
   const navigate = useNavigate();
 
-  const firstActivity = followActivities.activities[0] as unknown as Activity;
-  const activitiesCount = followActivities.activity_count;
+  const { activities, activity_count } = activityGroup;
+  const firstSparkle = activities[0] as unknown as Activity;
 
   const visitProfile = (actor: ActivityActor) => {
     navigate(`/${actor.data.username}`);
@@ -29,29 +29,27 @@ export default function FollowNotification({ followActivities }: Props) {
       <User color="var(--theme-color)" size={25} />
       <div className="right">
         <AvatarGroup>
-          {(followActivities.activities as unknown as Activity[]).map(
-            (activity) => (
-              <Avatar
-                key={activity.id}
-                name={activity.actor.data.name}
-                onClick={() => visitProfile(activity.actor)}
-                src={activity.actor.data.profileImage}
-              />
-            )
-          )}
+          {(activities as unknown as Activity[]).map(({ actor }, index) => (
+            <Avatar
+              key={index}
+              name={actor.data.name}
+              onClick={() => visitProfile(actor)}
+              src={actor.data.profileImage}
+            />
+          ))}
         </AvatarGroup>
 
         <p className="actors__text">
           <span
             className="actors__name"
-            onClick={() => visitProfile(firstActivity.actor)}
+            onClick={() => visitProfile(firstSparkle.actor)}
           >
-            {firstActivity.actor.data.name}
+            {firstSparkle.actor.data.name}
           </span>
           <span>
-            {followActivities.activity_count > 1 &&
-              `and ${activitiesCount - 1} other${
-                activitiesCount === 2 ? "" : "s"
+            {activity_count > 1 &&
+              `and ${activity_count - 1} other${
+                activity_count === 2 ? "" : "s"
               } `}
             followed you
           </span>
