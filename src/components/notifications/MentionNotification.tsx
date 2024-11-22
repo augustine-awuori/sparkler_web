@@ -25,6 +25,12 @@ const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
   const sparkles = activities as unknown as Activity[];
   const firstSparkle = sparkles[0];
 
+  const getNoun = (): string => {
+    let noun = "Sparkle";
+    noun += activity_count > 1 ? "s" : "";
+    return noun;
+  };
+
   const generateLink = ({ actor, id }: Activity): string =>
     generateSparkleLink(actor.data.username, id);
 
@@ -39,25 +45,34 @@ const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
   return (
     <Container>
       <FiAtSign size={25} color="var(--theme-color)" />
-      <div className="right">
-        <AvatarGroup>
-          {sparkles.map((sparkle, index) => {
-            const { name, profileImage } = sparkle.actor.data;
 
-            return (
-              <Avatar
-                key={index}
-                src={profileImage}
-                name={name}
-                onClick={() => viewMention(sparkle)}
-              />
-            );
-          })}
-        </AvatarGroup>
+      <div className="right">
+        {actor_count === 1 ? (
+          <Avatar
+            src={firstSparkle.actor.data.profileImage}
+            name={firstSparkle.actor.data.name}
+            onClick={() => viewMention(firstSparkle)}
+          />
+        ) : (
+          <AvatarGroup>
+            {sparkles.map((sparkle, index) => {
+              const { name, profileImage } = sparkle.actor.data;
+
+              return (
+                <Avatar
+                  key={index}
+                  src={profileImage}
+                  name={name}
+                  onClick={() => viewMention(sparkle)}
+                />
+              );
+            })}
+          </AvatarGroup>
+        )}
 
         <p className="actors__text">
           <span className="actors__name" onClick={viewFirstSparklerProfile}>
-            {firstSparkle.actor.data.name + " "}
+            {firstSparkle.actor.data.name}
           </span>
 
           <span>
@@ -65,9 +80,7 @@ const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
               ` and ${activity_count - 1} other${
                 activity_count === 2 ? "" : "s"
               } `}
-            {`mentioned you in ${
-              actor_count === 1 ? "his/her" : "their"
-            } sparkle${activity_count > 1 ? "s" : ""}`}
+            {`_ mentioned you in ${getNoun()}`}
           </span>
 
           {!showSparkles && (
@@ -90,7 +103,7 @@ const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
             ml={1}
             onClick={() => setShowSparkles(!showSparkles)}
           >
-            {showSparkles ? "Hide Sparkles" : "View Sparkles here"}
+            {showSparkles ? `Hide ${getNoun()}` : `View ${getNoun()} here`}
           </Button>
 
           {showSparkles &&
