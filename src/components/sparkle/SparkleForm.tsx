@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import { events, logEvent } from "../../storage/analytics";
 import { Image } from "../../assets/icons";
-import { useFiles, useUser } from "../../hooks";
+import { useFiles, useUser, useUsers } from "../../hooks";
 import filesStorage from "../../storage/files";
 import TextProgressRing from "../TextProgressRing";
 import TextArea from "../TextArea";
@@ -47,7 +47,10 @@ export default function SparkleForm({
   const [expanded, setExpanded] = useState(!collapsedOnMount);
   const [text, setText] = useState("");
   const { user } = useUser();
+  const { users } = useUsers();
+  const [filteredUsers, setFilteredUsers] = useState<string[]>([]);
   const [isSelectingImages, setIsSelectingImages] = useState(false);
+  const [mentionVisible, setMentionVisible] = useState(false);
   const { files, removeAllFiles, filesCount } = useFiles(IMAGES_LIMIT);
 
   useEffect(() => {
@@ -73,6 +76,20 @@ export default function SparkleForm({
     },
   ];
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setText(value);
+
+    const match = value.match(/@(\w*)$/);
+    if (match) {
+      const query = match[1].toLowerCase();
+      setFilteredUsers(
+        Object.keys(users).filter((u) => u.toLowerCase().startsWith(query))
+      );
+      setMentionVisible(true);
+    } else setMentionVisible(false);
+  };
+
   const handleEmojiSelect = (emojiData: any) => {
     const emoji = emojiData.native;
     if (inputRef.current) {
@@ -89,19 +106,32 @@ export default function SparkleForm({
     }
   };
 
+  const handleMentionClick = (username: string) => {
+    const updatedText = text.replace(/@(\w*)$/, `@${username} `);
+    setText(updatedText);
+    setMentionVisible(false);
+    inputRef?.current?.focus();
+  };
+
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     let imagesUrl: string[] = [];
 
+    if (!user) {
+      toast.info("Login to sparkle");
+      return;
+    }
+
+    if (text.length > MAX_CHARS) {
+      toast.error("Sparkle cannot exceed " + MAX_CHARS + " characters");
+      return;
+    }
+
+    if (textLimitExceeded)
+      return alert("Sparkle cannot exceed " + MAX_CHARS + " characters");
+
     try {
-      e.preventDefault();
-      if (!user) {
-        toast.info("Login to sparkle");
-        return;
-      }
-
-      if (exceededMax)
-        return alert("Sparkle cannot exceed " + MAX_CHARS + " characters");
-
       if (filesCount) imagesUrl = await filesStorage.saveFiles(files);
       await onSubmit(text, imagesUrl);
 
@@ -120,7 +150,7 @@ export default function SparkleForm({
 
   const isInputEmpty = !Boolean(text);
   const charsLeft = MAX_CHARS - text.length;
-  const exceededMax = charsLeft < 0;
+  const textLimitExceeded = charsLeft < 0;
   const isReplying = Boolean(replyingTo);
 
   return (
@@ -142,11 +172,23 @@ export default function SparkleForm({
         <div className="input-section">
           <TextArea
             ref={inputRef}
-            onChange={(e) => setText(e.target.value)}
+            onChange={handleInputChange}
             placeholder={placeholder}
             value={text}
             onClick={onClick}
           />
+          {mentionVisible && (
+            <MentionsDropdown>
+              {filteredUsers.map((username) => (
+                <MentionItem
+                  key={username}
+                  onClick={() => handleMentionClick(username)}
+                >
+                  @{username}
+                </MentionItem>
+              ))}
+            </MentionsDropdown>
+          )}
           <div className="actions">
             {expanded &&
               actions.map((action) => {
@@ -171,7 +213,7 @@ export default function SparkleForm({
               <button
                 type="submit"
                 className="submit-btn"
-                disabled={isInputEmpty || sparkling}
+                disabled={!text.trim() || sparkling}
               >
                 {submitText}
               </button>
@@ -273,5 +315,25 @@ const Form = styled.form<FormProps>`
         }
       }
     }
+  }
+`;
+
+const MentionsDropdown = styled.div`
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1000;
+  width: 100%;
+`;
+
+const MentionItem = styled.div`
+  padding: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f0f0f0;
   }
 `;
