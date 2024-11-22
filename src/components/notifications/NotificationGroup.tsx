@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useFeedContext, useStreamContext } from "react-activity-feed";
 import { NotificationActivity } from "getstream";
-import styled from "styled-components";
 
 import { SPARKLE_VERB } from "../../hooks/useSparkle";
 import CommentNotification from "./CommentNotification";
@@ -45,7 +44,7 @@ export default function NotificationGroup({ activityGroup }: Props) {
   }, [client, user, feed]);
 
   return (
-    <Container ref={notificationContainerRef}>
+    <div ref={notificationContainerRef}>
       {activityGroup.verb === SPARKLE_VERB && (
         <MentionNotification activityGroup={activityGroup} />
       )}
@@ -58,12 +57,6 @@ export default function NotificationGroup({ activityGroup }: Props) {
       {activityGroup.verb === "comment" && (
         <CommentNotification activity={activityGroup} />
       )}
-    </Container>
+    </div>
   );
 }
-
-const Container = styled.div`
-  button {
-    width: 100%;
-  }
-`;
