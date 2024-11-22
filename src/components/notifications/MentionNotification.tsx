@@ -21,52 +21,56 @@ const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
   const { setUser } = useProfile();
   const navigate = useNavigate();
 
-  if (activityGroup.verb !== SPARKLE_VERB) return null;
+  const { activities, activity_count, actor_count, verb } = activityGroup;
+  const sparkles = activities as unknown as Activity[];
+  const firstSparkle = sparkles[0];
 
-  const activities = activityGroup.activities as unknown as Activity[];
+  const generateLink = ({ actor, id }: Activity): string =>
+    generateSparkleLink(actor.data.username, id);
 
-  const firstActivity = activityGroup.activities[0] as unknown as Activity;
+  const viewMention = (sparkle: Activity) => navigate(generateLink(sparkle));
 
-  const generateActivityLink = (activity: Activity): string =>
-    generateSparkleLink(activity.actor.data.username, activity.id);
+  const viewTheFirstSparkle = () => navigate(generateLink(firstSparkle));
 
-  const viewMention = (activity: Activity) =>
-    navigate(generateActivityLink(activity));
-
-  const viewTheFirstSparkle = () =>
-    navigate(generateActivityLink(firstActivity));
-
-  const viewFirstActorProfile = () => {
-    setUser(firstActivity.actor);
-    navigate(`/${firstActivity.actor.data.username}`);
+  const viewFirstSparklerProfile = () => {
+    setUser(firstSparkle.actor);
+    navigate(`/${firstSparkle.actor.data.username}`);
   };
+
+  if (verb !== SPARKLE_VERB) return null;
 
   return (
     <Container>
       <FiAtSign size={25} color="var(--theme-color)" />
       <div className="right">
         <AvatarGroup>
-          {activities.map((activity) => (
-            <Avatar
-              key={activity.id}
-              src={activity.actor.data.profileImage}
-              name={activity.actor.data.name}
-              onClick={() => viewMention(activity)}
-            />
-          ))}
+          {sparkles.map((sparkle, index) => {
+            const { name, profileImage } = sparkle.actor.data;
+
+            return (
+              <Avatar
+                key={index}
+                src={profileImage}
+                name={name}
+                onClick={() => viewMention(sparkle)}
+              />
+            );
+          })}
         </AvatarGroup>
 
         <p className="actors__text">
-          <span className="actors__name" onClick={viewFirstActorProfile}>
-            {firstActivity.actor.data.name + " "}
+          <span className="actors__name" onClick={viewFirstSparklerProfile}>
+            {firstSparkle.actor.data.name + " "}
           </span>
 
           <span>
-            {activityGroup.activity_count > 1 &&
-              ` and ${activityGroup.activity_count - 1} other${
-                activityGroup.activity_count === 2 ? "" : "s"
+            {actor_count > 1 &&
+              ` and ${activity_count - 1} other${
+                activity_count === 2 ? "" : "s"
               } `}
-            mentioned you in their sparkles
+            {`mentioned you in ${
+              actor_count === 1 ? "his/her" : "their"
+            } sparkle${activity_count > 1 ? "s" : ""}`}
           </span>
 
           {!showSparkles && (
@@ -74,25 +78,27 @@ const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
               color="var(--gray-color)"
               cursor="pointer"
               fontStyle="italic"
+              ml={1}
               mt={3}
               noOfLines={1}
               onClick={viewTheFirstSparkle}
             >
-              "{firstActivity.object.data.text}"
+              "{firstSparkle.object.data.text}"
             </Text>
           )}
 
           <Button
             size="xs"
             my={3}
+            ml={1}
             onClick={() => setShowSparkles(!showSparkles)}
           >
             {showSparkles ? "Hide Sparkles" : "View Sparkles here"}
           </Button>
 
           {showSparkles &&
-            activityGroup.activities.map((activity) => (
-              <SparkleBlock activity={activity} />
+            activities.map((sparkle) => (
+              <SparkleBlock key={sparkle.id} activity={sparkle} />
             ))}
         </p>
       </div>
