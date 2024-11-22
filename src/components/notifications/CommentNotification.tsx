@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { NotificationActivity } from "getstream";
+import { AvatarGroup } from "@chakra-ui/react";
 import styled from "styled-components";
 
 import { Activity } from "../../utils/types";
@@ -23,19 +24,41 @@ export default function CommentNotification({ activityGroup }: Props) {
   const { viewUserProfile } = useProfileUser();
   const navigate = useNavigate();
 
-  const { activities, is_seen } = activityGroup;
-  const { actor, time, object } = activities[0] as unknown as Activity;
-  const sparkleLink = generateSparkleLink(actor.id, object.id);
+  const { activities, actor_count, is_seen } = activityGroup;
+  const sparkles = activities as unknown as Activity[];
+  const { actor, time, object } = sparkles[0];
+  const sparkleLink = generateSparkleLink(actor.data.username, object.id);
 
   return (
     <Block onClick={() => navigate(sparkleLink)} isSeen={is_seen}>
       <Comment color="#1c9bef" size={25} />
+
       <div className="right">
-        <Avatar
-          onClick={() => viewUserProfile(actor)}
-          src={actor.data.profileImage}
-          name={actor.data.name}
-        />
+        {actor_count === 1 ? (
+          <Avatar
+            src={actor.data.profileImage}
+            name={actor.data.name}
+            onClick={() => navigate(sparkleLink)}
+          />
+        ) : (
+          <AvatarGroup>
+            {sparkles.map((sparkle, index) => {
+              const { name, profileImage, username } = sparkle.actor.data;
+
+              return (
+                <Avatar
+                  key={index}
+                  src={profileImage}
+                  name={name}
+                  onClick={() =>
+                    navigate(generateSparkleLink(username, sparkle.id))
+                  }
+                />
+              );
+            })}
+          </AvatarGroup>
+        )}
+
         <div className="user__details">
           <SparkleActorName
             id={actor.id}

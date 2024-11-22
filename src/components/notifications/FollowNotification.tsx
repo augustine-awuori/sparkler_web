@@ -14,23 +14,33 @@ interface Props {
 export default function FollowNotification({ activityGroup }: Props) {
   const { viewUserProfile } = useProfileUser();
 
-  const { activities, activity_count, is_seen } = activityGroup;
-  const firstSparkle = activities[0] as unknown as Activity;
+  const { activities, activity_count, actor_count, is_seen } = activityGroup;
+  const sparkles = activities as unknown as Activity[];
+  const firstSparkle = sparkles[0];
 
   return (
     <Block isSeen={is_seen}>
       <User color="var(--theme-color)" size={25} />
+
       <div className="right">
-        <AvatarGroup>
-          {(activities as unknown as Activity[]).map(({ actor }, index) => (
-            <Avatar
-              key={index}
-              name={actor.data.name}
-              onClick={() => viewUserProfile(actor)}
-              src={actor.data.profileImage}
-            />
-          ))}
-        </AvatarGroup>
+        {actor_count === 1 ? (
+          <Avatar
+            name={firstSparkle.actor.data.name}
+            onClick={() => viewUserProfile(firstSparkle.actor)}
+            src={firstSparkle.actor.data.profileImage}
+          />
+        ) : (
+          <AvatarGroup>
+            {sparkles.map(({ actor }, index) => (
+              <Avatar
+                key={index}
+                name={actor.data.name}
+                onClick={() => viewUserProfile(actor)}
+                src={actor.data.profileImage}
+              />
+            ))}
+          </AvatarGroup>
+        )}
 
         <p className="actors__text">
           <span
