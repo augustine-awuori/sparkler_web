@@ -23,12 +23,12 @@ export default function CommentNotification({ activityGroup }: Props) {
   const { viewUserProfile } = useProfileUser();
   const navigate = useNavigate();
 
-  const { actor, time, object } = activityGroup
-    .activities[0] as unknown as Activity;
+  const { activities, is_seen } = activityGroup;
+  const { actor, time, object } = activities[0] as unknown as Activity;
   const sparkleLink = generateSparkleLink(actor.id, object.id);
 
   return (
-    <Block onClick={() => navigate(sparkleLink)}>
+    <Block onClick={() => navigate(sparkleLink)} isSeen={is_seen}>
       <Comment color="#1c9bef" size={25} />
       <div className="right">
         <Avatar
@@ -57,10 +57,12 @@ export default function CommentNotification({ activityGroup }: Props) {
   );
 }
 
-const Block = styled.button`
+const Block = styled.button<{ isSeen: boolean }>`
   padding: 15px;
   border-bottom: 1px solid #333;
   display: flex;
+  background-color: ${(props) =>
+    props.isSeen ? "transparent" : "var(--light-gray)"};
 
   a {
     color: white;

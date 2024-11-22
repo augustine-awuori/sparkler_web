@@ -14,11 +14,11 @@ interface Props {
 export default function FollowNotification({ activityGroup }: Props) {
   const { viewUserProfile } = useProfileUser();
 
-  const { activities, activity_count } = activityGroup;
+  const { activities, activity_count, is_seen } = activityGroup;
   const firstSparkle = activities[0] as unknown as Activity;
 
   return (
-    <Block>
+    <Block isSeen={is_seen}>
       <User color="var(--theme-color)" size={25} />
       <div className="right">
         <AvatarGroup>
@@ -52,10 +52,12 @@ export default function FollowNotification({ activityGroup }: Props) {
   );
 }
 
-const Block = styled.div`
+const Block = styled.div<{ isSeen: boolean }>`
   padding: 15px;
   border-bottom: 1px solid #333;
   display: flex;
+  background-color: ${(props) =>
+    props.isSeen ? "transparent" : "var(--light-gray)"};
 
   a {
     color: white;

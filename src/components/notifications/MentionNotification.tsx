@@ -21,7 +21,8 @@ const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
   const { viewUserProfile } = useProfileUser();
   const navigate = useNavigate();
 
-  const { activities, activity_count, actor_count, verb } = activityGroup;
+  const { activities, activity_count, actor_count, verb, is_seen } =
+    activityGroup;
   const sparkles = activities as unknown as Activity[];
   const firstSparkle = sparkles[0];
 
@@ -43,7 +44,7 @@ const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
   if (verb !== SPARKLE_VERB) return null;
 
   return (
-    <Container>
+    <Container isSeen={is_seen}>
       <FiAtSign size={25} color="var(--theme-color)" />
 
       <div className="right">
@@ -116,10 +117,12 @@ const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ isSeen: boolean }>`
   padding: 15px;
   border-bottom: 1px solid #333;
   display: flex;
+  background-color: ${(props) =>
+    props.isSeen ? "transparent" : "var(--light-gray)"};
 
   a {
     color: white;

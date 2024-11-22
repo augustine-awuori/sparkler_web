@@ -14,11 +14,12 @@ interface Props {
 
 export default function LikeNotification({ activityGroup }: Props) {
   const { viewUserProfile } = useProfileUser();
-
-  const likedGroup: { [id: string]: Activity[] } = {};
   const navigate = useNavigate();
 
-  (activityGroup.activities as unknown as Activity[]).forEach((sparkle) => {
+  const { activities, is_seen } = activityGroup;
+  const likedGroup: { [id: string]: Activity[] } = {};
+
+  (activities as unknown as Activity[]).forEach((sparkle) => {
     if (sparkle.object.id in likedGroup) {
       likedGroup[sparkle.object.id].push(sparkle);
     } else likedGroup[sparkle.object.id] = [sparkle];
@@ -33,6 +34,7 @@ export default function LikeNotification({ activityGroup }: Props) {
 
         return (
           <Block
+            isSeen={is_seen}
             className="active"
             onClick={() => navigate(link)}
             key={groupKey}
@@ -69,10 +71,12 @@ export default function LikeNotification({ activityGroup }: Props) {
   );
 }
 
-const Block = styled.button`
+const Block = styled.button<{ isSeen: boolean }>`
   padding: 15px;
   border-bottom: 1px solid #333;
   display: flex;
+  background-color: ${(props) =>
+    props.isSeen ? "transparent" : "var(--light-gray)"};
 
   a {
     color: white;
