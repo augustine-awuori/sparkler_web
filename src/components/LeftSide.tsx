@@ -7,7 +7,6 @@ import styled from "styled-components";
 
 import { Bell, Home, Mail, Search, Sparkle, User } from "../assets/icons";
 import { events, logEvent } from "../storage/analytics";
-import { getProfileUserDataFromUserInfo } from "../utils/funcs";
 import { logout } from "../hooks/useAuth";
 import {
   useNewNotifications,
@@ -32,7 +31,7 @@ type Menu = {
 export default function LeftSide() {
   const { count } = useUnreadMessages();
   const { newNotifications } = useNewNotifications();
-  const { setProfileUser: setUser } = useProfileUser();
+  const { viewUserProfile } = useProfileUser();
   const { user } = useUser();
   const { setShowSparkleModal } = useShowSparkleModal();
   const location = useLocation();
@@ -82,8 +81,7 @@ export default function LeftSide() {
   const handleItemClick = (menuItem: Menu) => {
     logEvent(events.general.PAGE_VIEW, { pageLink: menuItem.link });
 
-    if (menuItem.id === "profile" && user)
-      setUser(getProfileUserDataFromUserInfo(user));
+    if (menuItem.id === "profile" && user) return viewUserProfile(user);
 
     navigate(getRoute(menuItem));
   };

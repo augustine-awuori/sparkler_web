@@ -1,23 +1,17 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { IoLogoGoogle } from "react-icons/io5";
 import { Box, Button, Heading } from "@chakra-ui/react";
 import styled from "styled-components";
 
-import { getProfileUserDataFromUserInfo } from "../utils/funcs";
 import { useUser, useProfileUser } from "../hooks";
 import auth from "../services/auth";
 
 const AuthPages = () => {
-  const { setProfileUser: setUser } = useProfileUser();
+  const { viewUserProfile } = useProfileUser();
   const { user } = useUser();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      setUser(getProfileUserDataFromUserInfo(user));
-      navigate(`/${user.username}`);
-    }
+    if (user) viewUserProfile(user);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);

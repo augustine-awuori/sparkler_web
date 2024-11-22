@@ -18,7 +18,7 @@ interface Props {
 
 const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
   const [showSparkles, setShowSparkles] = useState(false);
-  const { setProfileUser: setUser } = useProfileUser();
+  const { viewUserProfile } = useProfileUser();
   const navigate = useNavigate();
 
   const { activities, activity_count, actor_count, verb } = activityGroup;
@@ -32,10 +32,7 @@ const MentionNotification: React.FC<Props> = ({ activityGroup }) => {
 
   const viewTheFirstSparkle = () => navigate(generateLink(firstSparkle));
 
-  const viewFirstSparklerProfile = () => {
-    setUser(firstSparkle.actor);
-    navigate(`/${firstSparkle.actor.data.username}`);
-  };
+  const viewFirstSparklerProfile = () => viewUserProfile(firstSparkle.actor);
 
   if (verb !== SPARKLE_VERB) return null;
 

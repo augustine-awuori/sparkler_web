@@ -76,7 +76,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const { toggleResparkle } = useResparkle();
   const { createQuote } = useQuoting();
   const location = useLocation();
-  const { setProfileUser: setUser } = useProfileUser();
+  const { viewUserProfile } = useProfileUser();
   const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const isAReaction = activity.foreign_id.startsWith("reaction");
   const appActivity = isAReaction
@@ -252,10 +252,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
 
   const viewDetails = () => navigate(activity.id ? sparkleLink : "#");
 
-  const navigateToProfile = () => {
-    navigate(`/${actor.data.username}`);
-    setUser(actor);
-  };
+  const navigateToProfile = () => viewUserProfile(actor);
 
   const images: string[] = appActivity.attachments?.images || [];
 

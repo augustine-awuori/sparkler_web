@@ -4,7 +4,6 @@ import { Spinner, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import { getProfileUserDataFromUserInfo } from "../../utils/funcs";
 import { useProfileUser } from "../../hooks";
 import { User } from "../../users";
 import usersService from "../../services/users";
@@ -20,7 +19,7 @@ const WhoToFollow = ({ query }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [leaderSuggestions, setLeadersSuggestions] = useState<User[]>([]);
   const { client } = useStreamContext();
-  const { setProfileUser: setUser } = useProfileUser();
+  const { viewUserProfile } = useProfileUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,10 +34,7 @@ const WhoToFollow = ({ query }: Props) => {
     if (res?.ok) setLeadersSuggestions(res?.data as User[]);
   }
 
-  const navigateToProfile = (leader: User) => {
-    setUser(getProfileUserDataFromUserInfo(leader));
-    navigate(`/${leader.username}`);
-  };
+  const navigateToProfile = (leader: User) => viewUserProfile(leader);
 
   const leaders = query
     ? leaderSuggestions.filter(

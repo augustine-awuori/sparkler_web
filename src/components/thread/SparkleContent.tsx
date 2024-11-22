@@ -20,7 +20,6 @@ import {
 } from "../../hooks";
 import { appUrl } from "../../services/client";
 import { Comment, Heart, More, Resparkle, Upload } from "../../assets/icons";
-import { FeedUser } from "../../contexts/ProfileUserContext";
 import { generateSparkleLink } from "../../utils/links";
 import CommentDialog from "../sparkle/CommentDialog ";
 import FollowBtn from "../FollowBtn";
@@ -45,7 +44,7 @@ export default function SparkleContent({ activity }: Props) {
   const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
   const { createComment } = useComment();
   const { setActivity } = useActivity();
-  const { setProfileUser: setUser } = useProfileUser();
+  const { viewUserProfile } = useProfileUser();
   const { setQuotes } = useQuotes();
   const { toggleLike } = useLike();
   const { toggleResparkle } = useResparkle();
@@ -145,10 +144,7 @@ export default function SparkleContent({ activity }: Props) {
     feed.refresh();
   };
 
-  const visitProfile = () => {
-    setUser(sparkleActor as unknown as FeedUser);
-    navigate(`/${sparkleActor.username}`);
-  };
+  const visitProfile = () => viewUserProfile(appActivity.actor);
 
   return (
     <>

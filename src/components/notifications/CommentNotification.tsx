@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { NotificationActivity } from "getstream";
 import styled from "styled-components";
 
-import { Activity, ActivityActor } from "../../utils/types";
+import { Activity } from "../../utils/types";
 import { Comment } from "../../assets/icons";
 import { generateSparkleLink } from "../../utils/links";
 import { useProfileUser } from "../../hooks";
@@ -20,24 +20,19 @@ interface Props {
 }
 
 export default function CommentNotification({ activityGroup }: Props) {
-  const { setProfileUser: setUser } = useProfileUser();
+  const { viewUserProfile } = useProfileUser();
   const navigate = useNavigate();
 
   const { actor, time, object } = activityGroup
     .activities[0] as unknown as Activity;
   const sparkleLink = generateSparkleLink(actor.id, object.id);
 
-  const visitProfile = (actor: ActivityActor) => {
-    navigate(`/${actor.data.username}`);
-    setUser(actor);
-  };
-
   return (
     <Block onClick={() => navigate(sparkleLink)}>
       <Comment color="#1c9bef" size={25} />
       <div className="right">
         <Avatar
-          onClick={() => visitProfile(actor)}
+          onClick={() => viewUserProfile(actor)}
           src={actor.data.profileImage}
           name={actor.data.name}
         />
@@ -51,7 +46,7 @@ export default function CommentNotification({ activityGroup }: Props) {
           />
           <span className="user__reply-to">
             Replying to{" "}
-            <div onClick={() => visitProfile(actor)}>
+            <div onClick={() => viewUserProfile(actor)}>
               @{actor.data.username}
             </div>
             <p className="user__text">{object.data?.text}</p>

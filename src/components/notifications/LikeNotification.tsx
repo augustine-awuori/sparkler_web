@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { NotificationActivity } from "getstream";
 import styled from "styled-components";
 
-import { Activity, ActivityActor } from "../../utils/types";
+import { Activity } from "../../utils/types";
 import { Heart } from "../../assets/icons";
 import { useProfileUser } from "../../hooks";
 
@@ -13,14 +13,10 @@ interface Props {
 }
 
 export default function LikeNotification({ activityGroup }: Props) {
-  const { setProfileUser: setUser } = useProfileUser();
+  const { viewUserProfile } = useProfileUser();
+
   const likedGroup: { [id: string]: Activity[] } = {};
   const navigate = useNavigate();
-
-  const visitProfile = (actor: ActivityActor) => {
-    setUser(actor);
-    navigate(`/${actor.data.username}`);
-  };
 
   (activityGroup.activities as unknown as Activity[]).forEach((sparkle) => {
     if (sparkle.object.id in likedGroup) {
@@ -48,7 +44,7 @@ export default function LikeNotification({ activityGroup }: Props) {
                   <Box
                     key={id}
                     className="liked-actors__images__image"
-                    onClick={() => visitProfile(actor)}
+                    onClick={() => viewUserProfile(actor)}
                   >
                     <Avatar image={actor.data.profileImage} alt="profile" />
                   </Box>

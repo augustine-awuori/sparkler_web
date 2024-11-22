@@ -29,6 +29,7 @@ export default function SparkleActorName({
   const lessThan24hrs = hoursBetweenDates < 24;
   const lessThan1hr = hoursBetweenDates < 1;
 
+  //TODO: Code refactor
   const timeText = lessThan1hr
     ? `${Math.floor(timeDiff / (60 * 1000))}m`
     : lessThan24hrs
@@ -36,7 +37,6 @@ export default function SparkleActorName({
     : format(new Date(time), "MMM d");
 
   const navigateToProfile = () => {
-    navigate(`/${username}`);
     setUser({
       created_at: "",
       id,
@@ -44,6 +44,7 @@ export default function SparkleActorName({
       duration: "",
       data: { time, name, id, username, verified },
     });
+    navigate(`/${username}`);
   };
 
   return (

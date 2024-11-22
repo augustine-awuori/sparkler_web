@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Avatar } from "react-activity-feed";
 import { Text } from "@chakra-ui/react";
 import styled from "styled-components";
 
 import { ANONYMOUS_USER_ID } from "../components/explore/WhoToFollow";
-import { getProfileUserDataFromUserInfo } from "../utils/funcs";
 import { useProfileUser, useUser, useUsers } from "../hooks";
 import { User } from "../users";
 // import FollowBtn from "../components/FollowBtn";
@@ -28,9 +26,8 @@ const UsersPage = () => {
   const [query, setQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const { allUsers, isLoading } = useUsers();
-  const { setProfileUser: setUser } = useProfileUser();
+  const { viewUserProfile } = useProfileUser();
   const { user } = useUser();
-  const navigate = useNavigate();
 
   useEffect(() => {
     function getVerifiedFirst(users: User[]): User[] {
@@ -67,11 +64,6 @@ const UsersPage = () => {
     setQuery("");
   };
 
-  const navigateToProfile = (leader: User) => {
-    setUser(getProfileUserDataFromUserInfo(leader));
-    navigate(`/${leader.username}`);
-  };
-
   return (
     <Container>
       <h1 className="heading">Users</h1>
@@ -95,7 +87,7 @@ const UsersPage = () => {
         <div className="user-container" key={leader._id}>
           <div className="user">
             <div
-              onClick={() => navigateToProfile(leader)}
+              onClick={() => viewUserProfile(leader)}
               className="user__details"
             >
               <Avatar circle image={leader.profileImage} size={40} />
@@ -118,7 +110,7 @@ const UsersPage = () => {
               outline
               outlineText="Visit"
               blockText="Click"
-              onClick={() => navigateToProfile(leader)}
+              onClick={() => viewUserProfile(leader)}
             />
           </div>
 

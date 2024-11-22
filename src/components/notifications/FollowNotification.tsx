@@ -1,9 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { NotificationActivity } from "getstream";
 import { AvatarGroup } from "@chakra-ui/react";
 import styled from "styled-components";
 
-import { Activity, ActivityActor } from "../../utils/types";
+import { Activity } from "../../utils/types";
 import { useProfileUser } from "../../hooks";
 import { User } from "../../assets/icons";
 import Avatar from "../Avatar";
@@ -13,16 +12,10 @@ interface Props {
 }
 
 export default function FollowNotification({ activityGroup }: Props) {
-  const { setProfileUser: setUser } = useProfileUser();
-  const navigate = useNavigate();
+  const { viewUserProfile } = useProfileUser();
 
   const { activities, activity_count } = activityGroup;
   const firstSparkle = activities[0] as unknown as Activity;
-
-  const visitProfile = (actor: ActivityActor) => {
-    navigate(`/${actor.data.username}`);
-    setUser(actor);
-  };
 
   return (
     <Block>
@@ -33,7 +26,7 @@ export default function FollowNotification({ activityGroup }: Props) {
             <Avatar
               key={index}
               name={actor.data.name}
-              onClick={() => visitProfile(actor)}
+              onClick={() => viewUserProfile(actor)}
               src={actor.data.profileImage}
             />
           ))}
@@ -42,7 +35,7 @@ export default function FollowNotification({ activityGroup }: Props) {
         <p className="actors__text">
           <span
             className="actors__name"
-            onClick={() => visitProfile(firstSparkle.actor)}
+            onClick={() => viewUserProfile(firstSparkle.actor)}
           >
             {firstSparkle.actor.data.name}
           </span>
