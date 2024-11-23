@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Activity as MainActivity } from "getstream";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 
-import { Activity, ActivityActor } from "../../utils/types";
+import { Activity } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import Modal from "../Modal";
 import SparkleActorName from "./SparkleActorName";
 import SparkleForm from "./SparkleForm";
-import { toast } from "react-toastify";
 
 interface Props {
   activity: MainActivity;
@@ -23,10 +23,9 @@ export default function CommentDialog({
   const [commenting, setCommenting] = useState(false);
 
   const {
+    actor,
     object: { data: sparkle },
   } = activity as unknown as Activity;
-
-  const sparkleActor = activity.actor as unknown as ActivityActor;
 
   const handleCommentSubmit = async (text: string) => {
     if (commenting) return;
@@ -46,15 +45,15 @@ export default function CommentDialog({
         <BlockContent>
           <div className="tweet">
             <div className="img">
-              <img src={sparkleActor.data.profileImage} alt="" />
+              <img src={actor.data.profileImage} alt="" />
             </div>
             <div className="details">
               <SparkleActorName
                 time={activity.time}
-                name={sparkleActor.data.name}
-                username={sparkleActor.data.username}
-                id={sparkleActor.data.id}
-                verified={Boolean(sparkleActor.data.verified)}
+                name={actor.data.name}
+                username={actor.data.username}
+                id={actor.data.id}
+                verified={Boolean(actor.data.verified)}
               />
               <p
                 className="tweet-text"
@@ -69,7 +68,7 @@ export default function CommentDialog({
               <div className="replying-info">
                 Replying to{" "}
                 <span className="replying-info--actor">
-                  @{sparkleActor.data.username}
+                  @{actor.data.username}
                 </span>
               </div>
             </div>

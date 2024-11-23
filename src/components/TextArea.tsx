@@ -1,43 +1,26 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
-interface TextAreaProps {
-  value: string;
+interface Props {
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onClick?: () => void;
   placeholder?: string;
   ref?: React.RefObject<HTMLTextAreaElement>;
-  onClick?: () => void;
+  value: string;
 }
 
-const TextArea: React.FC<TextAreaProps> = ({
-  value,
-  onChange,
-  placeholder,
-  ref,
-  onClick,
-}) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null) || ref;
+const TextArea: React.FC<Props> = (props) => {
+  const ref = useRef<HTMLTextAreaElement>(null) || props.ref;
 
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    if (ref.current) {
+      ref.current.style.height = "auto";
+      ref.current.style.height = `${ref.current.scrollHeight}px`;
     }
-  }, [textareaRef, value]);
+  }, [ref]);
 
-  return (
-    <StyledTextarea
-      autoFocus
-      ref={textareaRef}
-      onClick={onClick}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-    />
-  );
+  return <StyledTextarea autoFocus {...props} />;
 };
-
-export default TextArea;
 
 const StyledTextarea = styled.textarea`
   width: 100%;
@@ -59,3 +42,5 @@ const StyledTextarea = styled.textarea`
     color: #657786;
   }
 `;
+
+export default TextArea;

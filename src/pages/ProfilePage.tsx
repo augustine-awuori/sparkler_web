@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useStreamContext } from "react-activity-feed";
-import { Helmet } from "react-helmet";
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
@@ -120,14 +119,6 @@ export default function ProfilePage() {
 
   return (
     <>
-      <Helmet>
-        <title>{user.data.name}</title>
-        <meta name="description" content={user.data.bio} />
-        <meta name="og:description" content={user.data.bio} />
-        <meta property="og:image" content={user.data.profileImage} />
-        <link rel="canonical" href={`https://sparkler.lol/${username}`} />
-      </Helmet>
-
       <Container>
         <ProfileHeader />
         <main>

@@ -5,13 +5,13 @@ import styled from "styled-components";
 import { MAX_CHARS } from "./sparkle/SparkleForm";
 import { ProgressRing } from "../assets/icons";
 
-interface ProgressRingProps {
+interface Props {
   textLength: number;
 }
 
-const TextProgressRing: React.FC<ProgressRingProps> = ({ textLength }) => {
+const TextProgressRing: React.FC<Props> = ({ textLength }) => {
   const charsLeft = MAX_CHARS - textLength;
-  const exceededMax = charsLeft < 0;
+  const charLimitExceeded = charsLeft < 0;
   const maxAlmostReached = charsLeft <= 20;
   const percentage =
     textLength >= MAX_CHARS ? 100 : (textLength / MAX_CHARS) * 100;
@@ -24,7 +24,7 @@ const TextProgressRing: React.FC<ProgressRingProps> = ({ textLength }) => {
         <ProgressRing
           stroke={2.2}
           color={
-            exceededMax
+            charLimitExceeded
               ? "red"
               : maxAlmostReached
               ? "#ffd400"
@@ -35,7 +35,10 @@ const TextProgressRing: React.FC<ProgressRingProps> = ({ textLength }) => {
         />
         {maxAlmostReached && (
           <span
-            className={classNames("tweet-length__text", exceededMax && "red")}
+            className={classNames(
+              "tweet-length__text",
+              charLimitExceeded && "red"
+            )}
           >
             {charsLeft}
           </span>
