@@ -6,9 +6,9 @@ import { useSparkle, useUser } from "../../hooks";
 import SparkleForm from "../sparkle/SparkleForm";
 
 export default function CreateSparkleTop() {
+  const [sparkling, setSparkling] = useState(false);
   const { createSparkle } = useSparkle();
   const { user } = useUser();
-  const [sparkling, setSparkling] = useState(false);
 
   const handleSubmit = async (text: string, images: string[]) => {
     if (sparkling) return;

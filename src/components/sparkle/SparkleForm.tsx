@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Avatar, EmojiPicker, useStreamContext } from "react-activity-feed";
+import { Avatar, EmojiPicker } from "react-activity-feed";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
@@ -7,9 +7,9 @@ import { events, logEvent } from "../../storage/analytics";
 import { Image } from "../../assets/icons";
 import { useFiles, useUser, useUsers } from "../../hooks";
 import filesStorage from "../../storage/files";
-import TextProgressRing from "../TextProgressRing";
-import TextArea from "../TextArea";
 import ImageInputList from "../common/ImageInputList";
+import TextArea from "../TextArea";
+import TextProgressRing from "../TextProgressRing";
 
 interface FormProps {
   inline?: boolean;
@@ -43,7 +43,6 @@ export default function SparkleForm({
   sparkling,
 }: SparkleFormProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const { client } = useStreamContext();
   const [expanded, setExpanded] = useState(!collapsedOnMount);
   const [text, setText] = useState("");
   const { user } = useUser();
@@ -56,11 +55,11 @@ export default function SparkleForm({
   useEffect(() => {
     if (filesCount) removeAllFiles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [filesCount]);
 
   useEffect(() => {
     if (shouldFocus && inputRef.current) inputRef.current.focus();
-  }, [shouldFocus, client?.currentUser, user?._id]);
+  }, [shouldFocus]);
 
   const actions = [
     {
@@ -76,8 +75,9 @@ export default function SparkleForm({
     },
   ];
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
+  const handleInputChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(value);
 
     const match = value.match(/@(\w*)$/);
@@ -92,18 +92,17 @@ export default function SparkleForm({
 
   const handleEmojiSelect = (emojiData: any) => {
     const emoji = emojiData.native;
-    if (inputRef.current) {
-      const start = inputRef.current.selectionStart;
-      const end = inputRef.current.selectionEnd;
-      const newText =
-        text.substring(0, start) + emoji + text.substring(end, text.length);
-      setText(newText);
 
-      inputRef.current.selectionStart = inputRef.current.selectionEnd =
-        start + emoji.length;
-    } else {
-      setText(text + emoji);
-    }
+    if (!inputRef.current) return setText(text + emoji);
+
+    const start = inputRef.current.selectionStart;
+    const end = inputRef.current.selectionEnd;
+    const newText =
+      text.substring(0, start) + emoji + text.substring(end, text.length);
+    setText(newText);
+
+    inputRef.current.selectionStart = inputRef.current.selectionEnd =
+      start + emoji.length;
   };
 
   const handleMentionClick = (username: string) => {
@@ -115,8 +114,6 @@ export default function SparkleForm({
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    let imagesUrl: string[] = [];
 
     if (!user) {
       toast.info("Login to sparkle");
@@ -130,6 +127,8 @@ export default function SparkleForm({
 
     if (textLimitExceeded)
       return alert("Sparkle cannot exceed " + MAX_CHARS + " characters");
+
+    let imagesUrl: string[] = [];
 
     try {
       if (filesCount) imagesUrl = await filesStorage.saveFiles(files);
@@ -160,6 +159,7 @@ export default function SparkleForm({
           Replying to <span className="reply-to--name">@{replyingTo}</span>
         </span>
       )}
+
       <Form
         minheight={minHeight + "px"}
         inline={!expanded}
@@ -221,6 +221,7 @@ export default function SparkleForm({
           </div>
         </div>
       </Form>
+
       {isSelectingImages && <ImageInputList imagesLimit={IMAGES_LIMIT} />}
     </Container>
   );
