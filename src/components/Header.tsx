@@ -10,11 +10,9 @@ interface Props {
 export default function Header({ title = "Sparkle" }: Props) {
   const navigate = useNavigate();
 
-  const navigateBack = () => navigate(-1);
-
   return (
     <AppHeader>
-      <button className="back-button" onClick={navigateBack}>
+      <button className="back-button" onClick={() => navigate(-1)}>
         <ArrowLeft size={20} color="white" />
       </button>
       <span className="title">{title}</span>

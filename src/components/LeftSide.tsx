@@ -68,7 +68,7 @@ export default function LeftSide() {
       id: "profile",
       label: "Profile",
       Icon: User,
-      link: `/${user?.username || ""}`,
+      link: `/${user?.username}`,
     },
   ];
 

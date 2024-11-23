@@ -39,10 +39,12 @@ export default function Layout({ children }: PropsWithChildren) {
               <LeftSide />
             </Box>
           )}
+
           <Box as="main" className="main-content">
             {children}
             <BottomNav />
           </Box>
+
           {showRightSidebar && (
             <Box className="right-side-bar">
               <RightSide />
