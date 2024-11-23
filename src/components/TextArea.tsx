@@ -27,6 +27,7 @@ const TextArea: React.FC<TextAreaProps> = ({
 
   return (
     <StyledTextarea
+      autoFocus
       ref={textareaRef}
       onClick={onClick}
       value={value}
