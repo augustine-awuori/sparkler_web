@@ -1,10 +1,10 @@
 import { Activity } from "getstream";
 import { useFeedContext } from "react-activity-feed";
+import { toast } from "react-toastify";
 
 import { Activity as AppActivity } from "../utils/types";
 import useNotification from "./useNotification";
 import useUser from "./useUser";
-import { toast } from "react-toastify";
 
 export default function useComment() {
   const feed = useFeedContext();
