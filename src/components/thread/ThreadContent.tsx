@@ -18,7 +18,7 @@ export default function ThreadContent() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchActivity = async () => {
+    const fetchSparkle = async () => {
       if (feed.refreshing || !feed.hasDoneRequest || !id) return;
 
       const activityPaths = feed.feedManager.getActivityPaths(id) || [];
@@ -43,7 +43,7 @@ export default function ThreadContent() {
       }
     };
 
-    fetchActivity();
+    fetchSparkle();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feed.refreshing, id]);
 
