@@ -53,8 +53,6 @@ export default function useComment() {
           `SO:tweet:${appActivity.object.id}`
         );
       }
-
-      console.log("Comment added at EAT time:", eatTime);
     } catch (error) {
       console.error("Failed to add comment reaction:", error);
     }

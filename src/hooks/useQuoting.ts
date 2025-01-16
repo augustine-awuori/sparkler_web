@@ -27,7 +27,7 @@ const useQuote = () => {
     });
 
     const time = getEATZone();
-
+    //TODO: parse for mentions and hashtags
     const newActivity = await userFeed?.addActivity({
       actor: `SU:${user?._id}`,
       verb,

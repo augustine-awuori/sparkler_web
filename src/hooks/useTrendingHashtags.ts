@@ -3,15 +3,18 @@ import { useStreamContext } from "react-activity-feed";
 
 import { Activity } from "../utils/types";
 import { getHashtags } from "../utils/string";
+import { PROJECT_VERB } from "./useProjects";
 
-type Hashtags = {
+type HashtagsToCountMap = {
   [key: string]: number;
 };
 
 const useTrendingHashtags = () => {
   const { client } = useStreamContext();
-  const [hashtags, setHashtags] = useState<Hashtags>({});
-  const [verifiedHashtags, setVerifiedHashtags] = useState<Hashtags>({});
+  const [hashtags, setHashtags] = useState<HashtagsToCountMap>({});
+  const [verifiedHashtags, setVerifiedHashtags] = useState<HashtagsToCountMap>(
+    {}
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [sparklesWithHashtags, setSparklesWithHashtags] = useState<Activity[]>(
     []
@@ -52,20 +55,19 @@ const useTrendingHashtags = () => {
     return results;
   }
 
-  function parseHashtagsFromSparkles(sparklesWithHashtags: Activity[]) {
-    let hashtags: Hashtags = {};
+  function parseHashtagsFromSparkles(
+    sparklesWithHashtags: Activity[]
+  ): HashtagsToCountMap {
+    let hashtags: HashtagsToCountMap = {};
 
     sparklesWithHashtags.forEach((sparkle) => {
-      const text = sparkle.object.data.text;
+      const isAProject = sparkle.verb === PROJECT_VERB;
+      const sparkleHashtags: string[] = isAProject
+        ? ["project"]
+        : getHashtags(sparkle.object.data.text);
 
-      getHashtags(text).forEach(async (hashtag) => {
-        let count = 0;
-
-        sparklesWithHashtags.forEach((sparkle) => {
-          if (sparkle.object.data.text.includes(`#${hashtag}`)) count++;
-        });
-
-        return (hashtags[hashtag] = count);
+      sparkleHashtags.forEach((hashtag) => {
+        hashtags[hashtag] = hashtag in hashtags ? hashtags[hashtag] + 1 : 1;
       });
     });
 

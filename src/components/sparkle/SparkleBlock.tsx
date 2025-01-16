@@ -9,6 +9,7 @@ import { Activity } from "getstream";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { BsLink, BsPencil, BsTrash } from "react-icons/bs";
 import { FaUserMinus, FaUserPlus } from "react-icons/fa";
+import { HiLightBulb } from "react-icons/hi";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
@@ -21,7 +22,11 @@ import {
 } from "../../utils/types";
 import { appUrl } from "../../services/client";
 import { Comment, Heart, More, Resparkle, Upload } from "../../assets/icons";
-import { copyToClipBorad } from "../../utils/funcs";
+import {
+  copyToClipBorad,
+  describeProject,
+  ProjectData,
+} from "../../utils/funcs";
 import { EmbeddedSparkleBlock } from "../resparkle";
 import { formatStringWithLink } from "../../utils/string";
 import { generateSparkleLink } from "../../utils/links";
@@ -101,9 +106,12 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const hasLikedSparkle = checkIfHasLiked(appActivity);
   const hasResparkled = checkIfHasResparkled(appActivity);
   const isAQuote = activity.verb === "quote";
+  const isAProject = activity.verb === "project";
   const sparkleLink = generateSparkleLink(actor.data.username, appActivity.id);
   const completeSparkleLink = `${appUrl}${sparkleLink}`;
-  const sparkleText = (sparkle || { text: "" }).text;
+  const sparkleText = isAProject
+    ? describeProject(appActivity.object?.data as unknown as ProjectData)
+    : (sparkle || { text: "" }).text;
 
   const actions: Action[] = [
     {
@@ -268,14 +276,28 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   return (
     <Box _hover={{ bg: "#111" }} onClick={viewDetails}>
       <Block>
-        {(isAReaction || hasResparkled) && (
-          <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={10}>
-            <Resparkle color="#777" size={13} />
-            <Text ml={1} fontWeight={700}>
-              {getResparklerName()} resparkled
-            </Text>
-          </Flex>
-        )}
+        <Flex align="center" ml={10}>
+          {isAProject && (
+            <Flex align="center">
+              <Box mb={1.5}>
+                <HiLightBulb color="#fff" size={24} />
+              </Box>
+              <Text ml={2} fontWeight={600} color="#fff">
+                Project
+              </Text>
+            </Flex>
+          )}
+
+          {(isAReaction || hasResparkled) && (
+            <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={5}>
+              <Resparkle color="#777" size={13} />
+              <Text ml={1} fontWeight={700}>
+                {getResparklerName()} resparkled
+              </Text>
+            </Flex>
+          )}
+        </Flex>
+
         <Flex cursor="pointer">
           <figure className="user-image" onClick={navigateToProfile}>
             <Avatar image={actor.data.profileImage} />
