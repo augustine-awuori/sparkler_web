@@ -11,6 +11,7 @@ import {
 
 import {
   AuthPages,
+  CSAEPolicyPage,
   EditProfilePage,
   ExplorePage,
   FollowersPage,
@@ -223,6 +224,10 @@ function App() {
                       >
                         <Layout>
                           <Routes>
+                            <Route
+                              element={<CSAEPolicyPage />}
+                              path="/docs/policy"
+                            />
                             <Route element={<AuthPages />} path="/auth" />
                             <Route
                               element={<NotificationsPage />}
