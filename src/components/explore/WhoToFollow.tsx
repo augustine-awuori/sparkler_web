@@ -169,10 +169,10 @@ const FollowsContainer = styled.div`
           text-overflow: ellipsis;
 
           .verified-icon {
-            width: 16px; /* Adjust icon size */
+            width: 16px;
             height: 16px;
             margin-left: 5px;
-            flex-shrink: 0; /* Prevent icon from shrinking */
+            flex-shrink: 0;
           }
         }
 

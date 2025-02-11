@@ -1,9 +1,9 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { Avatar } from "react-activity-feed";
+import styled from "styled-components";
 
 import { User } from "../users";
-import { useUser } from "../hooks";
 import FollowBtn from "./FollowBtn";
 import LoadingIndicator from "./LoadingIndicator";
 
@@ -14,7 +14,6 @@ interface Props {
 
 const UsersList = ({ loading, users }: Props) => {
   const navigate = useNavigate();
-  const { user: currentUser } = useUser();
 
   if (loading) return <LoadingIndicator />;
 
@@ -29,9 +28,10 @@ const UsersList = ({ loading, users }: Props) => {
   }
 
   return (
-    <div>
+    <Container>
       {users.map((user) => {
-        const { profileImage, name, username, _id } = user;
+        const { bio, profileImage, name, username, _id, verified, isAdmin } =
+          user;
 
         return (
           <Flex
@@ -54,22 +54,46 @@ const UsersList = ({ loading, users }: Props) => {
             />
 
             <Flex flex="1" direction="column" justify="center">
-              <Text fontWeight="bold" fontSize="md" color="#ccc">
-                {name}
-              </Text>
+              <Flex align="center">
+                <Text fontWeight="bold" fontSize="md" color="#ccc">
+                  {name}
+                </Text>
+                {verified && (
+                  <img
+                    src={
+                      isAdmin
+                        ? require("../assets/admin.png")
+                        : require("../assets/verified.png")
+                    }
+                    alt="Verified"
+                    className="verified-icon"
+                  />
+                )}
+              </Flex>
               <Text fontSize="sm" color="var(--theme-color)">
                 @{username}
               </Text>
-              {/* <Text mt={2} fontSize="sm" noOfLines={2} color="#777">
-                {bio}
-              </Text> */}
+              {bio && (
+                <Text mt={2} fontSize="sm" noOfLines={2} color="#777">
+                  {bio}
+                </Text>
+              )}
             </Flex>
-            {_id !== currentUser?._id && <FollowBtn userId={_id} />}
+            <FollowBtn userId={_id} />
           </Flex>
         );
       })}
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  .verified-icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+    flex-shrink: 0;
+  }
+`;
 
 export default UsersList;
