@@ -19,7 +19,7 @@ const TextArea: React.FC<Props> = (props) => {
     }
   }, [ref]);
 
-  return <StyledTextarea autoFocus {...props} />;
+  return <StyledTextarea {...props} />;
 };
 
 const StyledTextarea = styled.textarea`
