@@ -34,7 +34,7 @@ import {
   UserContext,
 } from "./contexts";
 import { AppData, appDataJwt } from "./utils/app";
-import { ActivityActor, Quote } from "./utils/types";
+import { ActivityActor, FollowersResult, Quote } from "./utils/types";
 import { User } from "./users";
 import auth from "./services/auth";
 import Layout from "./components/Layout";
@@ -61,35 +61,31 @@ function App() {
   const { googleUser } = useUser();
 
   useEffect(() => {
-    const getUserInfo = async () =>
-      user ? await usersService.getUser(user._id) : undefined;
+    const fetchUserFollowing = async () => {
+      try {
+        if (!user || user?.followersId) return;
 
-    const deleteAccount = async () => {
-      if (!feedClient?.currentUser) return;
+        const followersRes = await usersService.getUserFollowers(user._id);
+        const followingRes = await usersService.getUserFollowing(user._id);
+        if (!followersRes.ok || !followingRes.ok) return;
 
-      await feedClient.currentUser?.delete();
-      await usersService.deleteUserAccont();
-    };
+        const followingId = new Set<string>();
+        (followingRes.data as FollowersResult).forEach(({ target_id }) => {
+          followingId.add(target_id.replace("user:", ""));
+        });
 
-    const userInvalid = async (): Promise<boolean> => {
-      if (user?.invalid) return true;
-
-      const res = await getUserInfo();
-      if (!res || !res?.ok) return false;
-
-      return Boolean((res.data as User).invalid);
-    };
-
-    const removeInvalidAccounts = async () => {
-      if (await userInvalid()) {
-        await deleteAccount();
-        auth.logout();
-        window.location.reload();
+        const followersId = new Set<string>();
+        (followersRes.data as FollowersResult).forEach(({ feed_id }) => {
+          followersId.add(feed_id.replace("timeline:", ""));
+        });
+        setUser({ ...user, followersId, followingId });
+      } catch (error) {
+        console.log(`Error fetching user's following: ${error}`);
       }
     };
 
-    removeInvalidAccounts();
-  }, [feedClient?.currentUser, user]);
+    fetchUserFollowing();
+  }, [user]);
 
   useEffect(() => {
     const updateNeeded = (): boolean => {

@@ -117,3 +117,17 @@ export type Activity = {
   target: string;
   verb: string;
 };
+
+export type FollowersResult = {
+  created_at: string;
+  updated_at: string;
+  feed_id: "timeline:";
+  target_id: "user:";
+}[];
+
+export type FollowingResult = {
+  created_at: string;
+  updated_at: string;
+  feed_id: "timeline:";
+  target_id: "user:";
+}[];

@@ -21,15 +21,11 @@ export default function useFollow({ userId }: Props) {
   useEffect(() => {
     async function init() {
       try {
-        if (!user) return;
+        if (!user || userId === user?._id) return;
 
         setLoading(true);
-        const response = await client
-          ?.feed("timeline", client.userId)
-          .following({ filter: [`user:${userId}`] });
+        setIsFollowing(!!user?.followingId?.has(userId));
         setLoading(false);
-
-        setIsFollowing(Boolean(response?.results.length));
       } catch (error) {}
     }
 

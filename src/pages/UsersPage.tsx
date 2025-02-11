@@ -6,11 +6,10 @@ import styled from "styled-components";
 import { ANONYMOUS_USER_ID } from "../components/explore/WhoToFollow";
 import { useProfileUser, useUser, useUsers } from "../hooks";
 import { User } from "../users";
-// import FollowBtn from "../components/FollowBtn";
+import FollowBtn from "../components/FollowBtn";
 import LoadingIndicator from "../components/LoadingIndicator";
 import SearchInput from "../components/trends/SearchInput";
 import TabsList, { Tab } from "../components/TabsList";
-import Button from "../components/Button";
 import UserAccounts from "../components/UserAccounts";
 
 type TabId = "all" | "verified";
@@ -108,13 +107,7 @@ const UsersPage = () => {
                 <span className="user__id">@{leader.username}</span>
               </div>
             </div>
-            {/* <FollowBtn userId={leader._id} /> */}
-            <Button
-              outline
-              outlineText="Visit"
-              blockText="Click"
-              onClick={() => viewUserProfile(leader)}
-            />
+            <FollowBtn userId={leader._id} />
           </div>
 
           {leader.bio && (

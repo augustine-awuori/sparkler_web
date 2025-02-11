@@ -79,11 +79,29 @@ const deleteUserAccont = async () => {
   }
 };
 
+const getUserFollowers = async (userId: string) => {
+  try {
+    return processResponse(await client.get(`${endpoint}/${userId}/followers`));
+  } catch (error) {
+    return getFailedResponse(error);
+  }
+};
+
+const getUserFollowing = async (userId: string) => {
+  try {
+    return processResponse(await client.get(`${endpoint}/${userId}/following`));
+  } catch (error) {
+    return getFailedResponse(error);
+  }
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   deleteUserAccont,
   getAllUsers,
   getUser,
+  getUserFollowers,
+  getUserFollowing,
   getUserByUsername,
   login,
   quickAuth,

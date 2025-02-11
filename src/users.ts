@@ -16,4 +16,6 @@ export type User = {
   tiktok?: string;
   instagram?: string;
   customLink?: string;
+  followersId?: Set<string>;
+  followingId?: Set<string>;
 };

@@ -2,10 +2,11 @@ import React from "react";
 import classNames from "classnames";
 import styled, { keyframes } from "styled-components";
 
-import { useFollow } from "../hooks";
+import { useFollow, useUser } from "../hooks";
 
 export default function FollowBtn({ userId }: { userId: string }) {
   const { isFollowing, toggleFollow, loading } = useFollow({ userId });
+  const { user } = useUser();
 
   const handleToggle = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -13,6 +14,8 @@ export default function FollowBtn({ userId }: { userId: string }) {
     event.stopPropagation();
     toggleFollow();
   };
+
+  if (user?._id === userId) return null;
 
   return (
     <Container>
