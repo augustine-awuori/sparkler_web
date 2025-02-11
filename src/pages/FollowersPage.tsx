@@ -1,43 +1,41 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 import { Box, Spinner, Text } from "@chakra-ui/react";
 
+import { FollowersResult } from "../utils/types";
 import { User } from "../users";
 import { useUsers } from "../hooks";
-import usersService from "../services/users";
 import UsersList from "../components/UsersList";
+import usersService from "../services/users";
 
 const FollowersPage = () => {
-  const { allUsers: users } = useUsers();
   const [followers, setFollowers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const { user_id } = useParams();
-  const navigate = useNavigate();
+  const { idUserMap, usernameIdMap } = useUsers();
+  const { username } = useParams();
 
   useEffect(() => {
-    const initFollowers = async () => {
-      if (!user_id) return navigate(-1);
+    const loadFollowers = async () => {
+      if (!username) return;
+
+      const userId = usernameIdMap[username];
+      if (userId) return;
 
       setLoading(true);
-      const res = await usersService.getUser(user_id);
-      if (!res.ok) {
-        toast.error("Something went wrong, try again later!");
-        return navigate(-1);
-      }
+      const res = await usersService.getUserFollowers(userId);
 
-      const user = res.data as User;
-      const followers = user.followers || {};
-
-      setFollowers(users.filter((user) => followers[user._id]));
+      if (res.ok)
+        setFollowers(
+          (res.data as FollowersResult).map(({ feed_id }) => {
+            return idUserMap[feed_id.replace("timeline:", "")];
+          })
+        );
       setLoading(false);
     };
 
-    initFollowers();
-
+    loadFollowers();
     window.scroll(0, 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user_id, users]);
+  }, [idUserMap, username, usernameIdMap]);
 
   if (loading) {
     return (
