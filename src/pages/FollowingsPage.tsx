@@ -10,45 +10,46 @@ import {
   AlertDescription,
   Button,
 } from "@chakra-ui/react";
-import { toast } from "react-toastify";
 
+import { FollowersResult } from "../utils/types";
 import { User } from "../users";
 import { useUsers } from "../hooks";
 import UsersList from "../components/UsersList";
 import usersService from "../services/users";
 
 const FollowingsPage = () => {
-  const { allUsers: users } = useUsers();
-  const [followings, setFollowings] = useState<User[]>([]);
+  const [followings, setFollowing] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const { user_id } = useParams();
+  const { idUserMap, usernameIdMap } = useUsers();
+  const { username } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getFollowings = async () => {
-      if (!user_id) return navigate(-1);
+    const loadFollowers = async () => {
+      if (!username) return;
+
+      const userId = usernameIdMap[username];
+      if (!userId) return;
 
       setLoading(true);
-      const res = await usersService.getUser(user_id);
-      if (!res.ok) {
-        toast.error("Something went wrong, try again later!");
-        setError(true);
-        return navigate(-1);
-      }
+      const res = await usersService.getUserFollowing(userId);
 
-      const user = res.data as User;
-      const following = user.following || {};
-
-      setFollowings(users.filter((user) => following[user._id]));
+      if (res.ok)
+        setFollowing(
+          (res.data as FollowersResult)
+            .map(({ target_id }) => {
+              return idUserMap[target_id.replace("user:", "")];
+            })
+            .filter((user) => user?._id)
+        );
+      else setError(!res.ok);
       setLoading(false);
     };
 
+    loadFollowers();
     window.scroll(0, 0);
-
-    getFollowings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user_id, users]);
+  }, [idUserMap, username, usernameIdMap]);
 
   if (loading) {
     return (

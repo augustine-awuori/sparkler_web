@@ -19,7 +19,6 @@ const FollowersPage = () => {
       if (!username) return;
 
       const userId = usernameIdMap[username];
-      console.log(userId);
       if (!userId) return;
 
       setLoading(true);
@@ -27,9 +26,11 @@ const FollowersPage = () => {
 
       if (res.ok)
         setFollowers(
-          (res.data as FollowersResult).map(({ feed_id }) => {
-            return idUserMap[feed_id.replace("timeline:", "")];
-          })
+          (res.data as FollowersResult)
+            .map(({ feed_id }) => {
+              return idUserMap[feed_id.replace("timeline:", "")];
+            })
+            .filter((user) => user?._id)
         );
       setLoading(false);
     };
