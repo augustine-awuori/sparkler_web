@@ -320,7 +320,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                   <button
                     onClick={() => setMorePopupOpened(true)}
                     style={{
-                      color: "var(--theme-color)",
+                      color: "var(--blue-color)",
                       cursor: "pointer",
                       background: "transparent",
                       border: "none",
@@ -468,7 +468,7 @@ const Block = styled.div`
       width: 100%;
 
       &--link {
-        color: var(--theme-color);
+        color: var(--blue-color);
         text-decoration: none;
       }
     }
