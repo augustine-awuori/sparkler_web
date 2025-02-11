@@ -40,7 +40,11 @@ import auth from "./services/auth";
 import Layout from "./components/Layout";
 import LoadingPage from "./pages/LoadingPage";
 import ProfileContext, { FeedUser } from "./contexts/ProfileUserContext";
-import UsersContext, { Users } from "./contexts/UsersContext";
+import UsersContext, {
+  IdUserMap,
+  UsernameIdMap,
+  Users,
+} from "./contexts/UsersContext";
 import usersService from "./services/users";
 import useUser, { initUser } from "./hooks/useUser";
 
@@ -48,16 +52,18 @@ function App() {
   const [feedClient, setFeedClient] = useState<StreamClient<DefaultGenerics>>();
   const [chatClient, setChatClient] =
     useState<StreamChat<ChatDefaultGenerics>>();
-  const [user, setUser] = useState<User>();
-  const [profileUser, setProfileUser] = useState<FeedUser>();
   const [activity, setActivity] = useState<Activity<DefaultGenerics>>();
-  const [users, setUsers] = useState<Users>({});
   const [allUsers, setAllUsers] = useState<User[]>([]);
-  const [quotes, setQuotes] = useState<Quote[]>([]);
-  const [files, setFiles] = useState<File[]>([]);
-  const [usersLoading, setUsersLoading] = useState(false);
-  const [showSparkleModal, setShowSparkleModal] = useState(false);
   const [appData, setAppData] = useState<AppData>();
+  const [files, setFiles] = useState<File[]>([]);
+  const [idUserMap, setIdUserMap] = useState<IdUserMap>({});
+  const [profileUser, setProfileUser] = useState<FeedUser>();
+  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [showSparkleModal, setShowSparkleModal] = useState(false);
+  const [user, setUser] = useState<User>();
+  const [usernameIdMap, setUsernameIdMap] = useState<UsernameIdMap>({});
+  const [users, setUsers] = useState<Users>({});
+  const [usersLoading, setUsersLoading] = useState(false);
   const { googleUser } = useUser();
 
   useEffect(() => {
@@ -172,10 +178,18 @@ function App() {
           setAllUsers(res.data as User[]);
 
           let users: Users = {};
-          (res.data as User[]).forEach(({ _id, username }) => {
+          let idUserMap: IdUserMap = {};
+          let usernameIdMap: UsernameIdMap = {};
+          (res.data as User[]).forEach((user) => {
+            const { _id, username } = user;
+
             if (!users[username]) users[username] = _id;
+            idUserMap[_id] = user;
+            usernameIdMap[username] = _id;
           });
           setUsers(users);
+          setIdUserMap(idUserMap);
+          setUsernameIdMap(usernameIdMap);
         }
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -203,6 +217,10 @@ function App() {
               users,
               isLoading: usersLoading,
               setLoading: setUsersLoading,
+              idUserMap,
+              setIdUserMap,
+              setUsernameIdMap,
+              usernameIdMap,
             }}
           >
             <UserContext.Provider value={{ setUser, user }}>
