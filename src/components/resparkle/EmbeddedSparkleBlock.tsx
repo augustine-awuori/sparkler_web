@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { Avatar } from "react-activity-feed";
-import { Flex, Image, Text } from "@chakra-ui/react";
+import { Avatar, Gallery } from "react-activity-feed";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { Activity, DefaultGenerics } from "getstream";
 import { useNavigate } from "react-router-dom";
 
@@ -26,6 +26,7 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
   const appActivity = activity as unknown as AppActivity;
   const actor = appActivity.actor;
   const sparkle = appActivity.object.data;
+  const images: string[] = appActivity.attachments?.images || [];
 
   // Extract reaction counts with proper typing
   const reactionCounts: ReactionCounts = activity.reaction_counts || {};
@@ -61,6 +62,16 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
           }}
         />
       </div>
+
+      {Boolean(images.length) && (
+        <Box mt={2}>
+          <Gallery
+            images={images}
+            style={{ borderRadius: 15, border: "none" }}
+          />
+        </Box>
+      )}
+
       <ReactionCountsComp>
         {comment > 0 && (
           <Text>
