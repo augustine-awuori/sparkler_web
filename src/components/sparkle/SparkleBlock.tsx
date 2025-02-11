@@ -304,13 +304,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
           </figure>
           <div className="tweet" onClick={viewDetails}>
             <button className="link">
-              <TweetActorName
-                name={actor.data.name}
-                id={actor.id}
-                username={actor.data.username}
-                time={activity.time}
-                verified={Boolean(actor.data.verified)}
-              />
+              <TweetActorName {...actor.data} time={activity.time} />
               <div className="tweet__details">
                 <Text
                   noOfLines={morePopupOpened ? undefined : 3}

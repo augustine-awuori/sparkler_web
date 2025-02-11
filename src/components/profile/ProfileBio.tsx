@@ -16,7 +16,6 @@ import FollowBtn from "../FollowBtn";
 import SparkleShareModal from "../sparkle/SparkleShareModal";
 import UserAccounts from "../UserAccounts";
 import usersService from "../../services/users";
-import verificationIcon from "../../assets/verified.svg";
 
 export default function ProfileBio() {
   const { client } = useStreamContext();
@@ -104,7 +103,11 @@ export default function ProfileBio() {
           {user.data?.name}
           {user.data?.verified && (
             <img
-              src={verificationIcon}
+              src={
+                user.data?.isAdmin
+                  ? require("../../assets/admin.png")
+                  : require("../../assets/verified.png")
+              }
               alt="Verified"
               className="verified-icon"
             />

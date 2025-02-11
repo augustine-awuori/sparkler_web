@@ -4,14 +4,14 @@ import styled from "styled-components";
 
 import { More } from "../../assets/icons";
 import { useTrendingHashtags } from "../../hooks";
-import VerifiedIcon from "../../assets/verified.svg";
 
 interface Props {
+  isAdmin?: boolean;
   query: string;
   verified?: boolean;
 }
 
-const Trends = ({ query, verified }: Props) => {
+const Trends = ({ isAdmin, query, verified }: Props) => {
   const navigate = useNavigate();
   const { hashtags, isLoading, verifiedHashtags } = useTrendingHashtags();
 
@@ -32,7 +32,15 @@ const Trends = ({ query, verified }: Props) => {
     <TrendsContainer>
       <h2>
         {verified && (
-          <img src={VerifiedIcon} alt="Verified" className="verified-icon" />
+          <img
+            src={
+              isAdmin
+                ? require("../../assets/admin.png")
+                : require("../../assets/verified.png")
+            }
+            alt="Verified"
+            className="verified-icon"
+          />
         )}
         Hashtags
       </h2>

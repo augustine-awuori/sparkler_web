@@ -24,13 +24,7 @@ export default function SparkleCommentBlock({ comment }: Props) {
       </figure>
       <div className="comment-tweet">
         <div>
-          <SparkleActorName
-            verified={Boolean(user.data.verified)}
-            name={user.data.name}
-            username={user.data.username}
-            id={user.id}
-            time={comment.created_at}
-          />
+          <SparkleActorName {...user.data} time={comment.created_at} />
           <div className="tweet__details">
             <p
               className="comment-tweet__text"

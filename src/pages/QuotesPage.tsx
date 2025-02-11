@@ -24,13 +24,7 @@ const QuotesPage = () => {
       <Header title="Quotes" />
       <div style={{ width: "100%" }}>
         {quotes.map(({ id, user, created_at, data }) => {
-          const {
-            id: userId,
-            name,
-            username,
-            profileImage,
-            verified,
-          } = user.data;
+          const { name, username, profileImage } = user.data;
 
           return (
             <Flex
@@ -45,13 +39,7 @@ const QuotesPage = () => {
             >
               <Avatar src={profileImage} name={name} size="sm" mr={2} mt={1} />
               <Box width="100%">
-                <SparkleActorName
-                  id={userId}
-                  name={name}
-                  username={username}
-                  verified={Boolean(verified)}
-                  time={created_at}
-                />
+                <SparkleActorName {...user.data} time={created_at} />
                 <Text mb={1.5} color="#fff">
                   {data.text}
                 </Text>

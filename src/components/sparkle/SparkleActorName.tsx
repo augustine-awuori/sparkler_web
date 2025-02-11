@@ -2,28 +2,19 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import { ActivityActorData } from "../../utils/types";
 import { useProfileUser } from "../../hooks";
-import verificationIcon from "../../assets/verified.svg";
 
-interface Props {
+interface Props extends ActivityActorData {
   time: string;
-  name: string;
-  username: string;
-  id: string;
-  verified: boolean;
 }
 
 //TODO: pass the whole user data
-export default function SparkleActorName({
-  time,
-  name,
-  id,
-  username,
-  verified,
-}: Props) {
+export default function SparkleActorName(props: Props) {
   const navigate = useNavigate();
   const { setProfileUser: setUser } = useProfileUser();
 
+  const { time, isAdmin, name, id, username, verified } = props;
   const timeDiff = Date.now() - new Date(time).getTime();
   const hoursBetweenDates = timeDiff / (60 * 60 * 1000);
   const lessThan24hrs = hoursBetweenDates < 24;
@@ -51,7 +42,15 @@ export default function SparkleActorName({
     <TextBlock onClick={navigateToProfile}>
       <span className="user--name">{name}</span>
       {verified && (
-        <img src={verificationIcon} alt="Verified" className="verified-icon" />
+        <img
+          src={
+            isAdmin
+              ? require("../../assets/admin.png")
+              : require("../../assets/verified.png")
+          }
+          alt="Verified"
+          className="verified-icon"
+        />
       )}
       <span className="user--id">@{username}</span>
       <span className="tweet-date">{timeText}</span>

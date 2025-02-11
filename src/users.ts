@@ -10,6 +10,7 @@ export type User = {
   profileImage: string;
   username: string;
   verified?: boolean;
+  isAdmin?: boolean;
   invalid?: boolean;
   youtube?: string;
   tiktok?: string;

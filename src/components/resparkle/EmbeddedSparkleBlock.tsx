@@ -9,7 +9,6 @@ import { Activity as AppActivity } from "../../utils/types";
 import { formatStringWithLink } from "../../utils/string";
 import SparkleActorName from "../sparkle/SparkleActorName";
 
-// Define the type for reaction counts
 interface ReactionCounts {
   comment?: number;
   like?: number;
@@ -49,13 +48,7 @@ const EmbeddedSparkleBlock: React.FC<Props> = ({ activity }) => {
             <Avatar />
           )}
         </figure>
-        <SparkleActorName
-          name={actor.data.name}
-          id={actor.id}
-          username={actor.data.username}
-          time={activity.time}
-          verified={Boolean(actor.data.verified)}
-        />
+        <SparkleActorName {...actor.data} time={activity.time} />
       </Flex>
       <div className="tweet__details" onClick={handleNavigation}>
         <p

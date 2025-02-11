@@ -29,7 +29,6 @@ import SparkleShareModal from "../sparkle/SparkleShareModal";
 import TweetForm from "../sparkle/SparkleForm";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
-import verifiedIcon from "../../assets/verified.svg";
 
 interface Props {
   activity: MainActivity;
@@ -159,7 +158,11 @@ export default function SparkleContent({ activity }: Props) {
               {sparkleActor.name}
               {sparkleActor.verified && (
                 <img
-                  src={verifiedIcon}
+                  src={
+                    sparkleActor.isAdmin
+                      ? require("../../assets/admin.png")
+                      : require("../../assets/verified.png")
+                  }
                   alt="Verified"
                   className="verified-icon"
                 />

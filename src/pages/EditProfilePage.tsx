@@ -40,12 +40,11 @@ const EditProfilePage: React.FC = () => {
         profileImage,
         coverImage,
         youtube,
-        tiktok,
+        linkedIn: tiktok,
         instagram,
         customLink,
-      } =
-        (client?.currentUser as unknown as ActivityActor)?.data ||
-        emptyUserInfo;
+      } = (client?.currentUser as unknown as ActivityActor)?.data ||
+      emptyUserInfo;
 
       setName(name);
       if (bio) setBio(bio);

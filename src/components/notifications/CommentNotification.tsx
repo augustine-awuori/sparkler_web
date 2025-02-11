@@ -60,13 +60,7 @@ export default function CommentNotification({ activityGroup }: Props) {
         )}
 
         <div className="user__details">
-          <SparkleActorName
-            id={actor.id}
-            name={actor.data.name}
-            time={time}
-            verified={Boolean(actor.data.verified)}
-            username={actor.data.username}
-          />
+          <SparkleActorName time={time} {...actor.data} />
           <span className="user__reply-to">
             Replying to{" "}
             <div onClick={() => viewUserProfile(actor)}>

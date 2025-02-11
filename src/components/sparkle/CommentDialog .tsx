@@ -48,13 +48,7 @@ export default function CommentDialog({
               <img src={actor.data.profileImage} alt="" />
             </div>
             <div className="details">
-              <SparkleActorName
-                time={activity.time}
-                name={actor.data.name}
-                username={actor.data.username}
-                id={actor.data.id}
-                verified={Boolean(actor.data.verified)}
-              />
+              <SparkleActorName time={activity.time} {...actor.data} />
               <p
                 className="tweet-text"
                 dangerouslySetInnerHTML={{

@@ -8,21 +8,24 @@ export interface QuoteActivity extends Activity {
   quoted_activity: Activity;
 }
 
+export type ActivityActorData = {
+  id: string;
+  bio?: string;
+  email: string;
+  name: string;
+  username: string;
+  profileImage?: string;
+  coverImage?: string;
+  verified?: boolean;
+  isAdmin?: boolean;
+  youtube?: string;
+  linkedIn?: string;
+  instagram?: string;
+  customLink?: string;
+};
+
 export interface ActivityActor extends Common {
-  data: {
-    id: string;
-    bio?: string;
-    email: string;
-    name: string;
-    username: string;
-    profileImage?: string;
-    coverImage?: string;
-    verified?: boolean;
-    youtube?: string;
-    tiktok?: string;
-    instagram?: string;
-    customLink?: string;
-  };
+  data: ActivityActorData;
 }
 
 export interface ActivityObject extends Common {

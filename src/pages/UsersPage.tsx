@@ -10,7 +10,6 @@ import { User } from "../users";
 import LoadingIndicator from "../components/LoadingIndicator";
 import SearchInput from "../components/trends/SearchInput";
 import TabsList, { Tab } from "../components/TabsList";
-import verificationIcon from "../assets/verified.svg";
 import Button from "../components/Button";
 import UserAccounts from "../components/UserAccounts";
 
@@ -96,7 +95,11 @@ const UsersPage = () => {
                   {leader.name}
                   {leader.verified && (
                     <img
-                      src={verificationIcon}
+                      src={
+                        leader.isAdmin
+                          ? require("../assets/admin.png")
+                          : require("../assets/verified.png")
+                      }
                       alt="Verified"
                       className="verified-icon"
                     />

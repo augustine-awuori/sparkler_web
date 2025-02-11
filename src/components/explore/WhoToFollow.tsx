@@ -7,7 +7,6 @@ import styled from "styled-components";
 import { useProfileUser } from "../../hooks";
 import { User } from "../../users";
 import usersService from "../../services/users";
-import verificationIcon from "../../assets/verified.svg";
 
 interface Props {
   query: string;
@@ -77,7 +76,11 @@ const WhoToFollow = ({ query }: Props) => {
                     {leader.name}
                     {leader.verified && (
                       <img
-                        src={verificationIcon}
+                        src={
+                          leader.isAdmin
+                            ? require("../../assets/admin.png")
+                            : require("../../assets/verified.png")
+                        }
                         alt="Verified"
                         className="verified-icon"
                       />
