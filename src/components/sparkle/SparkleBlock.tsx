@@ -307,7 +307,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
               <TweetActorName {...actor.data} time={activity.time} />
               <div className="tweet__details">
                 <Text
-                  noOfLines={morePopupOpened ? undefined : 3}
+                  noOfLines={morePopupOpened ? undefined : 8}
                   className="tweet__text"
                   dangerouslySetInnerHTML={{
                     __html: formatStringWithLink(
