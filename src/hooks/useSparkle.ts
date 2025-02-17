@@ -9,8 +9,7 @@ import { getHashtags, getMentions } from "../utils/string";
 import useUser from "./useUser";
 import useUsers from "./useUsers";
 
-//TODO:  Change sparkle verb to 'sparkle'
-export const SPARKLE_VERB = "tweet";
+export const SPARKLE_VERB = "sparkle";
 
 export default function useSparkle() {
   const { client } = useStreamContext();
