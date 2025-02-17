@@ -71,6 +71,6 @@
     "@types/config": "^3.3.4",
     "@types/react-helmet": "^6.1.11",
     "@types/uuid": "^10.0.0",
-    "babel-preset-react-app": "^10.0.1"
+    "babel-preset-react-app": "^10.1.0"
   }
 }

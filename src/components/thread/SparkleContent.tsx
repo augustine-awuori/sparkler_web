@@ -19,7 +19,14 @@ import {
   useUser,
 } from "../../hooks";
 import { appUrl } from "../../services/client";
-import { Comment, Heart, More, Resparkle, Upload } from "../../assets/icons";
+import {
+  Bookmark,
+  Comment,
+  Heart,
+  More,
+  Resparkle,
+  Upload,
+} from "../../assets/icons";
 import { generateSparkleLink } from "../../utils/links";
 import CommentDialog from "../sparkle/CommentDialog ";
 import FollowBtn from "../FollowBtn";
@@ -40,7 +47,7 @@ export default function SparkleContent({ activity }: Props) {
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
   const [resparklePopupOpened, setResparklePopupOpened] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
+  const { hasBookmarked, hasLiked, hasResparkled } = useSparkle();
   const { createComment } = useComment();
   const { setActivity } = useActivity();
   const { viewUserProfile } = useProfileUser();
@@ -61,11 +68,12 @@ export default function SparkleContent({ activity }: Props) {
   const likesCount = appActivity.reaction_counts.like || 0;
   const resparklesCount = appActivity.reaction_counts.resparkle || 0;
   const quotesCount = appActivity.reaction_counts.quote || 0;
-  const hasLikedSparkled = checkIfHasLiked(appActivity);
-  const hasBeenResparkled = checkIfHasResparkled(appActivity);
+  const hasLikedSparkled = hasLiked(appActivity);
+  const hasBeenResparkled = hasResparkled(appActivity);
+  const hasBookmarkedSparkle = hasBookmarked(appActivity);
   const isAQuote = activity.verb === "quote";
   const images: string[] = appActivity.attachments?.images || [];
-  const hasResparkled = checkIfHasResparkled(appActivity);
+  const hasResparkledSparkle = hasResparkled(appActivity);
   const sparkleLink = generateSparkleLink(
     appActivity.actor.data.username,
     appActivity.id
@@ -105,6 +113,12 @@ export default function SparkleContent({ activity }: Props) {
       Icon: Upload,
       onClick: () => setShowShareModal(true),
     },
+    {
+      id: "bookmark",
+      Icon: Bookmark,
+      alt: "Bookmark",
+      onClick: () => {},
+    },
   ];
 
   const onPostComment = async (text: string) => {
@@ -139,7 +153,10 @@ export default function SparkleContent({ activity }: Props) {
   };
 
   const handleResparkle = async () => {
-    await toggleResparkle(activity as unknown as MainActivity, hasResparkled);
+    await toggleResparkle(
+      activity as unknown as MainActivity,
+      hasResparkledSparkle
+    );
     feed.refresh();
   };
 
@@ -188,7 +205,7 @@ export default function SparkleContent({ activity }: Props) {
               __html: formatStringWithLink(
                 tweet.text,
                 "tweet__text--link"
-              ).replace(/\n/g, "<br/>"),
+              )?.replace(/\n/g, "<br/>"),
             }}
           />
 
@@ -279,7 +296,10 @@ export default function SparkleContent({ activity }: Props) {
                       ? "#17BF63"
                       : "#888"
                   }
-                  fill={action.id === "heart" && hasLikedSparkled}
+                  fill={
+                    (action.id === "heart" && hasLikedSparkled) ||
+                    (action.id === "bookmark" && hasBookmarkedSparkle)
+                  }
                   size={20}
                 />
               </button>

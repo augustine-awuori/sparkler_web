@@ -49,7 +49,7 @@ export default function MainHeader() {
   );
 }
 
-const Header = styled.header`
+export const Header = styled.header`
   display: flex;
   align-items: center;
   padding: 15px;

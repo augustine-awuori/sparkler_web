@@ -11,6 +11,7 @@ import {
 
 import {
   AuthPages,
+  BookmarksPage,
   CSAEPolicyPage,
   EditProfilePage,
   ExplorePage,
@@ -246,6 +247,10 @@ function App() {
                             <Route
                               element={<NotificationsPage />}
                               path="/notifications"
+                            />
+                            <Route
+                              element={<BookmarksPage />}
+                              path="/bookmarks"
                             />
                             <Route
                               element={<MessagesPage />}

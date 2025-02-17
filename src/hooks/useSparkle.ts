@@ -1,19 +1,22 @@
+import { Activity } from "getstream";
 import { nanoid } from "nanoid";
-import { useStreamContext } from "react-activity-feed";
+import { useFeedContext, useStreamContext } from "react-activity-feed";
 import { toast } from "react-toastify";
 
-import { Activity } from "../utils/types";
+import { Activity as SparkleActivity } from "../utils/types";
 import { getEATZone } from "../utils/funcs";
 import { getHashtags, getMentions } from "../utils/string";
 import useUser from "./useUser";
 import useUsers from "./useUsers";
 
+//TODO:  Change sparkle verb to 'sparkle'
 export const SPARKLE_VERB = "tweet";
 
 export default function useSparkle() {
   const { client } = useStreamContext();
   const { user } = useUser();
   const { getUserIds } = useUsers();
+  const feed = useFeedContext();
 
   const userFeed = client?.feed("user", client.userId);
 
@@ -66,39 +69,34 @@ export default function useSparkle() {
     });
   };
 
+  const toggleBookmark = async (sparkle: Activity) => {
+    try {
+      if (!user) return toast("Login to bookmark");
+
+      await feed?.onToggleReaction("bookmark", sparkle);
+    } catch (error) {
+      toast.error("Error bookmarking/unbookmarking a sparkle");
+    }
+  };
+
   const deleteSparkle = (sparkleId: string) =>
     userFeed?.removeActivity(sparkleId);
 
-  const checkIfHasResparkled = (activity: Activity) => {
-    let hasResparkled = false;
+  const hasResparkled = (sparkle: Activity | SparkleActivity): boolean =>
+    Boolean((sparkle as unknown as SparkleActivity).own_reactions?.resparkle);
 
-    if (activity?.own_reactions?.resparkle && user) {
-      const myReaction = activity.own_reactions.resparkle.find(
-        (act) => act.user.id === user._id
-      );
-      hasResparkled = Boolean(myReaction);
-    }
+  const hasLiked = (sparkle: Activity | SparkleActivity): boolean =>
+    Boolean((sparkle as unknown as SparkleActivity).own_reactions?.like);
 
-    return hasResparkled;
-  };
-
-  const checkIfHasLiked = (activity: Activity) => {
-    let hasLikedSparkle = false;
-
-    if (activity?.own_reactions?.like && user) {
-      const myReaction = activity.own_reactions.like.find(
-        (l) => l.user.id === user?._id
-      );
-      hasLikedSparkle = Boolean(myReaction);
-    }
-
-    return hasLikedSparkle;
-  };
+  const hasBookmarked = (sparkle: Activity | SparkleActivity): boolean =>
+    Boolean((sparkle as unknown as SparkleActivity).own_reactions?.bookmark);
 
   return {
     createSparkle,
     deleteSparkle,
-    checkIfHasLiked,
-    checkIfHasResparkled,
+    hasBookmarked,
+    hasLiked,
+    hasResparkled,
+    toggleBookmark,
   };
 }

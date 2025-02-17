@@ -51,26 +51,28 @@ type ChildrenCounts = {
   comment?: number;
 };
 
-export interface Comment extends Common {
+interface Reaction extends Common {
   activity_id: string;
   children_counts: ChildrenCounts;
-  data: { text: string };
-  kind: "comment";
+  data: object;
+  kind: string;
   latest_children: object;
   parent: string;
   user: ActivityActor;
   user_id: string;
 }
 
-interface Like extends Common {
-  activity_id: string;
-  children_counts: ChildrenCounts;
-  data: object;
+export interface Comment extends Reaction {
+  data: { text: string };
+  kind: "comment";
+}
+
+interface Like extends Reaction {
   kind: "like";
-  latest_children: object;
-  parent: string;
-  user: ActivityActor;
-  user_id: string;
+}
+
+interface Bookmark extends Reaction {
+  kind: "bookmark";
 }
 
 interface Resparkle extends Common {
@@ -96,16 +98,18 @@ export type Activity = {
   };
   time: string;
   latest_reactions?: {
-    like?: Like[];
+    bookmark?: Bookmark[];
     comment?: Comment[];
-    resparkle?: Resparkle[];
+    like?: Like[];
     quote?: Quote[];
+    resparkle?: Resparkle[];
   };
   own_reactions: {
+    bookmark?: Bookmark[];
     comment?: Comment[];
     like?: Like[];
-    resparkle?: Resparkle[];
     quote?: Quote[];
+    resparkle?: Resparkle[];
   };
   quoted_activity?: Activity;
   reaction_counts: {
@@ -115,6 +119,7 @@ export type Activity = {
     quote?: number;
   };
   target: string;
+  parent: string;
   verb: string;
 };
 

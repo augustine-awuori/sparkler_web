@@ -18,6 +18,7 @@ export default function ThreadContent() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // TODO: Fetch sparkle the right way
     const fetchSparkle = async () => {
       if (feed.refreshing || !feed.hasDoneRequest || !id) return;
 

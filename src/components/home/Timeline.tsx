@@ -73,6 +73,14 @@ export default function Timeline() {
         feedGroup="timeline"
         LoadingIndicator={LoadingIndicator}
         Placeholder={Placeholder}
+        options={{
+          enrich: true,
+          ownReactions: true,
+          withOwnChildren: true,
+          withReactionCounts: true,
+          withOwnReactions: true,
+          withRecentReactions: true,
+        }}
         Paginator={(props) => (
           <LoadMorePaginator
             {...props}

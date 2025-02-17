@@ -23,11 +23,11 @@ const SparkleReactions = ({
   setPopupPosition,
 }: Props) => {
   const { toggleLike } = useLike();
-  const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
+  const { hasLiked, hasResparkled } = useSparkle();
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
 
-  const hasResparkled = checkIfHasResparkled(appActivity);
-  const hasLikedSparkle = checkIfHasLiked(appActivity);
+  const hasResparkledSparkle = hasResparkled(appActivity);
+  const hasLikedSparkle = hasLiked(appActivity);
 
   const actions = [
     {
@@ -73,7 +73,8 @@ const SparkleReactions = ({
   const getColor = (name: string) => {
     if (name === "heart")
       return hasLikedSparkle ? "var(--theme-color)" : "#777";
-    else if (name === "resparkle") return hasResparkled ? "#17BF63" : "#777";
+    else if (name === "resparkle")
+      return hasResparkledSparkle ? "#17BF63" : "#777";
     return "#777";
   };
 
@@ -99,8 +100,8 @@ const SparkleReactions = ({
               className={classNames("value", {
                 colored:
                   (action.id === "heart" && hasLikedSparkle) ||
-                  (action.id === "resparkle" && hasResparkled),
-                green: action.id === "resparkle" && hasResparkled,
+                  (action.id === "resparkle" && hasResparkledSparkle),
+                green: action.id === "resparkle" && hasResparkledSparkle,
               })}
             >
               {action.value}

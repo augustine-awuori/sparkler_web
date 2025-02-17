@@ -15,6 +15,14 @@ export default function ProfileSparkles() {
       userId={user?.id}
       feedGroup="user"
       notify
+      options={{
+        enrich: true,
+        ownReactions: true,
+        withOwnChildren: true,
+        withReactionCounts: true,
+        withOwnReactions: true,
+        withRecentReactions: true,
+      }}
       LoadingIndicator={LoadingIndicator}
       Placeholder={<ProfileSparklesPlaceholder />}
       Paginator={(props) => (

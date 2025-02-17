@@ -21,7 +21,14 @@ import {
   QuoteActivity,
 } from "../../utils/types";
 import { appUrl } from "../../services/client";
-import { Comment, Heart, More, Resparkle, Upload } from "../../assets/icons";
+import {
+  Bookmark,
+  Comment,
+  Heart,
+  More,
+  Resparkle,
+  Upload,
+} from "../../assets/icons";
 import {
   copyToClipBorad,
   describeProject,
@@ -53,7 +60,7 @@ interface Props {
   activity: Activity;
 }
 
-type ActionId = "comment" | "resparkle" | "heart" | "upload";
+type ActionId = "comment" | "resparkle" | "heart" | "upload" | "bookmark";
 
 type Action = {
   id: ActionId;
@@ -64,26 +71,27 @@ type Action = {
 };
 
 const SparkleBlock: React.FC<Props> = ({ activity }) => {
-  const { user } = useStreamContext();
-  const feed = useFeedContext();
-  const { toggleLike } = useLike();
-  const { createComment } = useComment();
-  const navigate = useNavigate();
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
+  const [moreOptions, setMoreOptions] = useState<Option[]>([]);
+  const [morePopupOpened, setMorePopupOpened] = useState(false);
   const [quoteDialogOpened, setQuoteDialogOpened] = useState(false);
   const [retweetPopupOpened, setResparklePopupOpened] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [morePopupOpened, setMorePopupOpened] = useState(false);
-  const [moreOptions, setMoreOptions] = useState<Option[]>([]);
-  const resparkleButtonRef = useRef<HTMLButtonElement>(null);
-  const moreButtonRef = useRef<HTMLButtonElement>(null);
-  const { setActivity } = useActivity();
-  const { toggleResparkle } = useResparkle();
+  const { createComment } = useComment();
   const { createQuote } = useQuoting();
-  const location = useLocation();
+  const { hasBookmarked, hasLiked, hasResparkled, toggleBookmark } =
+    useSparkle();
+  const { setActivity } = useActivity();
+  const { toggleLike } = useLike();
+  const { toggleResparkle } = useResparkle();
+  const { user } = useStreamContext();
   const { viewUserProfile } = useProfileUser();
-  const { checkIfHasLiked, checkIfHasResparkled } = useSparkle();
+  const feed = useFeedContext();
   const isAReaction = activity.foreign_id.startsWith("reaction");
+  const location = useLocation();
+  const moreButtonRef = useRef<HTMLButtonElement>(null);
+  const navigate = useNavigate();
+  const resparkleButtonRef = useRef<HTMLButtonElement>(null);
   const appActivity = isAReaction
     ? (activity.object as unknown as AppActivity)
     : (activity as unknown as AppActivity);
@@ -103,8 +111,9 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     ? (activity.object as unknown as AppActivity).object.data
     : (activity.object as unknown as ActivityObject).data;
   const actor = appActivity.actor;
-  const hasLikedSparkle = checkIfHasLiked(appActivity);
-  const hasResparkled = checkIfHasResparkled(appActivity);
+  const hasLikedSparkle = hasLiked(activity);
+  const hasResparkledSparkle = hasResparkled(activity);
+  const hasBookmarkedSparkle = hasBookmarked(activity);
   const isAQuote = activity.verb === "quote";
   const isAProject = activity.verb === "project";
   const sparkleLink = generateSparkleLink(actor.data.username, appActivity.id);
@@ -147,6 +156,12 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
       Icon: Upload,
       alt: "Upload",
       onClick: () => setShowShareModal(true),
+    },
+    {
+      id: "bookmark",
+      Icon: Bookmark,
+      alt: "Bookmark",
+      onClick: () => toggleBookmark(activity),
     },
   ];
 
@@ -223,7 +238,10 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   }
 
   function handleResparkle() {
-    return toggleResparkle(appActivity as unknown as Activity, hasResparkled);
+    return toggleResparkle(
+      appActivity as unknown as Activity,
+      hasResparkledSparkle
+    );
   }
 
   const handlePostComment = async (text: string) =>
@@ -238,14 +256,16 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     let color = "#777";
 
     if (name === "heart" && hasLikedSparkle) color = "var(--theme-color)";
-    else if (name === "resparkle" && hasResparkled) color = "#17BF63";
+    else if (name === "resparkle" && hasResparkledSparkle) color = "#17BF63";
+    else if (name === "bookmark" && hasBookmarkedSparkle)
+      color = "var(--blue-color)";
 
     return color;
   };
 
   const getResparklerName = (): string => {
     const { actor } = activity as unknown as AppActivity;
-    const isSparkler = user?.id === actor.id || hasResparkled;
+    const isSparkler = user?.id === actor.id || hasResparkledSparkle;
     const actorName = actor.data.name;
 
     // if (isSparkler && actorName) return `You and ${actorName}`;
@@ -288,7 +308,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
             </Flex>
           )}
 
-          {(isAReaction || hasResparkled) && (
+          {(isAReaction || hasResparkledSparkle) && (
             <Flex align="center" mb={1.5} color="#777" fontSize="small" ml={5}>
               <Resparkle color="#777" size={13} />
               <Text ml={1} fontWeight={700}>
@@ -364,14 +384,18 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
                     <action.Icon
                       color={getColor(action.id)}
                       size={17}
-                      fill={action.id === "heart" && hasLikedSparkle}
+                      fill={
+                        (action.id === "heart" && hasLikedSparkle) ||
+                        (action.id === "bookmark" && hasBookmarkedSparkle)
+                      }
                     />
                     <span
                       className={classNames("tweet__actions__value", {
                         colored:
                           (action.id === "heart" && hasLikedSparkle) ||
-                          (action.id === "resparkle" && hasResparkled),
-                        green: action.id === "resparkle" && hasResparkled,
+                          (action.id === "resparkle" && hasResparkledSparkle),
+                        green:
+                          action.id === "resparkle" && hasResparkledSparkle,
                       })}
                     >
                       {action.value}
@@ -415,7 +439,7 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
         <ResparklePopup
           onClose={() => setResparklePopupOpened(false)}
           onResparkle={handleResparkle}
-          hasBeenResparkled={hasResparkled}
+          hasBeenResparkled={hasResparkledSparkle}
           onQuote={startQuoting}
           position={resparklePopupPosition}
         />

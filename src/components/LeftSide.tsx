@@ -5,7 +5,15 @@ import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import classNames from "classnames";
 import styled from "styled-components";
 
-import { Bell, Home, Mail, Search, Sparkle, User } from "../assets/icons";
+import {
+  Bell,
+  Bookmark,
+  Home,
+  Mail,
+  Search,
+  Sparkle,
+  User,
+} from "../assets/icons";
 import { events, logEvent } from "../storage/analytics";
 import { logout } from "../hooks/useAuth";
 import {
@@ -17,7 +25,13 @@ import {
 } from "../hooks";
 
 type Menu = {
-  id: "home" | "explore" | "notifications" | "messages" | "profile";
+  id:
+    | "bookmarks"
+    | "home"
+    | "explore"
+    | "notifications"
+    | "messages"
+    | "profile";
   label: string;
   Icon: (props: {
     color?: string | undefined;
@@ -56,6 +70,12 @@ export default function LeftSide() {
       Icon: Bell,
       link: "/notifications",
       value: newNotifications,
+    },
+    {
+      id: "bookmarks",
+      label: "Bookmarks",
+      Icon: Bookmark,
+      link: "/bookmarks",
     },
     {
       id: "messages",

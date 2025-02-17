@@ -1,4 +1,5 @@
 export { default as AuthPages } from "./AuthPages";
+export { default as BookmarksPage } from "./BookmarksPage";
 export { default as CSAEPolicyPage } from "./CSAEPolicyPage";
 export { default as EditProfilePage } from "./EditProfilePage";
 export { default as ExplorePage } from "./ExplorePage";
