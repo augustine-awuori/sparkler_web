@@ -11,9 +11,9 @@ import { useUser } from "../../hooks";
 const Btn = ({ children, ...otherProps }: ButtonProps) => (
   <Button
     size="sm"
-    color="var(--conc-theme-color)"
+    color="var(--primary-color)"
     letterSpacing={0.1}
-    colorScheme="var(--conc-theme-color)"
+    colorScheme="var(--primary-color)"
     py={0}
     my={0}
     {...otherProps}

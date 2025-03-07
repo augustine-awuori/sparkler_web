@@ -1,53 +1,32 @@
 import { ReactNode } from "react";
-import { Box, BoxProps, Flex } from "@chakra-ui/react";
+import { Formik, FormikHelpers, FormikValues } from "formik";
 
-import { FormHandleSubmit } from "../../hooks/useForm";
-import ErrorMessage from "./ErrorMessage";
-import Text from "../Text";
-
-interface Props extends BoxProps {
+interface Props<FormValues extends FormikValues> {
   children: ReactNode;
-  error?: string;
-  explanation?: string;
-  handleSubmit: FormHandleSubmit;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit: (values: any) => void;
+  onSubmit: (
+    values: FormValues,
+    formikHelpers: FormikHelpers<FormValues>
+  ) => void;
+  validationSchema: object;
+  initialValues: FormValues;
   title?: string;
 }
 
-const Form = ({
-  error,
-  explanation,
+const Form = <FormValues extends FormikValues>({
   children,
-  handleSubmit,
-  onSubmit,
   title,
+  validationSchema,
   ...otherProps
-}: Props) => {
-  return (
-    <Box px={{ base: 5 }} {...otherProps}>
-      <Box
-        my={4}
-        textAlign="left"
-        maxW="400px"
-        mx="auto"
-        w={{ sm: "100%" }}
-        mt={{ base: 7 }}
-      >
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Flex align="center" justify="space-between">
-            {title && (
-              <Text fontWeight="bold" fontSize="2xl" my={3}>
-                {title}
-              </Text>
-            )}
-          </Flex>
-          <ErrorMessage error={error} visible={!!error} />
-          {children}
-        </form>
-      </Box>
-    </Box>
-  );
-};
+}: Props<FormValues>) => (
+  <form
+    className="max-w-500 m-y-auto"
+    style={{ maxWidth: "500px", margin: "auto" }}
+  >
+    {title && <h1 className="text-center font-bold text-lg">{title}</h1>}
+    <Formik<FormValues> {...otherProps} validationSchema={validationSchema}>
+      {() => <section>{children}</section>}
+    </Formik>
+  </form>
+);
 
 export default Form;

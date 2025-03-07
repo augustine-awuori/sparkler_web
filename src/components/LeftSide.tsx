@@ -1,8 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
-import { IoSparkles } from "react-icons/io5";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
-import classNames from "classnames";
 import styled from "styled-components";
 
 import {
@@ -52,18 +50,8 @@ export default function LeftSide() {
   const navigate = useNavigate();
 
   const menus: Menu[] = [
-    {
-      id: "home",
-      label: "Home",
-      Icon: Home,
-      link: "/",
-    },
-    {
-      id: "explore",
-      label: "Explore",
-      Icon: Search,
-      link: "/explore",
-    },
+    { id: "home", label: "Home", Icon: Home, link: "/" },
+    { id: "explore", label: "Explore", Icon: Search, link: "/explore" },
     {
       id: "notifications",
       label: "Notifications",
@@ -71,12 +59,7 @@ export default function LeftSide() {
       link: "/notifications",
       value: newNotifications,
     },
-    {
-      id: "bookmarks",
-      label: "Bookmarks",
-      Icon: Bookmark,
-      link: "/bookmarks",
-    },
+    { id: "bookmarks", label: "Bookmarks", Icon: Bookmark, link: "/bookmarks" },
     {
       id: "messages",
       label: "Messages",
@@ -84,12 +67,7 @@ export default function LeftSide() {
       Icon: Mail,
       value: count,
     },
-    {
-      id: "profile",
-      label: "Profile",
-      Icon: User,
-      link: `/${user?.username}`,
-    },
+    { id: "profile", label: "Profile", Icon: User, link: `/${user?.username}` },
   ];
 
   const checkIsValidNavigation = (menuItem: Menu): boolean =>
@@ -100,15 +78,12 @@ export default function LeftSide() {
 
   const handleItemClick = (menuItem: Menu) => {
     logEvent(events.general.PAGE_VIEW, { pageLink: menuItem.link });
-
     if (menuItem.id === "profile" && user) return viewUserProfile(user);
-
     navigate(getRoute(menuItem));
   };
 
   const isActiveLink = (menu: Menu): boolean => {
     if (location.pathname === "/" && menu.id === "home") return true;
-
     return (
       location.pathname === `/${menu.id}` ||
       (menu.id === "profile" && location.pathname === `/${user?.username}`)
@@ -117,223 +92,178 @@ export default function LeftSide() {
 
   return (
     <Container>
-      <Link to="/" className="header">
-        <Sparkle color="white" size={25} />
-      </Link>
-      <div className="buttons">
+      <LogoLink to="/">
+        <Sparkle color={theme.textColor} size={24} />
+      </LogoLink>
+      <NavButtons>
         {menus.map((menu) => {
           const isActive = isActiveLink(menu);
-
           return (
-            <Link
+            <NavLink
               to={getRoute(menu)}
-              className={classNames(
-                `btn--${menu.id} new-tweets`,
-                isActive && "active"
-              )}
               key={menu.id}
+              isActive={isActive}
               onClick={() => handleItemClick(menu)}
             >
-              <div className="btn--icon">
+              <IconContainer>
                 {menu.value && user ? (
-                  <span className="value-count">{menu.value}</span>
+                  <NotificationBadge>{menu.value}</NotificationBadge>
                 ) : null}
                 <menu.Icon
                   fill={isActive}
-                  color={isActive ? "#fff" : "#9e9999"}
-                  size={25}
+                  color={isActive ? theme.textColor : theme.grayColor}
+                  size={20} // Reduced from 25
                 />
-              </div>
-              <span>{menu.label}</span>
-            </Link>
+              </IconContainer>
+              <Label>{menu.label}</Label>
+            </NavLink>
           );
         })}
-      </div>
-      <Button
-        onClick={() => setShowSparkleModal(true)}
-        className="tweet-btn"
-        leftIcon={<IoSparkles color="#fff" />}
-        _hover={{ bg: "var(--conc-theme-color)" }}
-      >
+      </NavButtons>
+      <SparkleButton onClick={() => setShowSparkleModal(true)}>
         Sparkle
-      </Button>
-
-      <div className="profile-section">
+      </SparkleButton>
+      <ProfileSection>
         {user ? (
-          <Button
-            leftIcon={<FaSignOutAlt />}
-            className="logout-button"
+          <ActionButton
+            isLogout
             onClick={logout}
+            leftIcon={<FaSignOutAlt size={16} />}
           >
             Logout
-          </Button>
+          </ActionButton>
         ) : (
-          <Button
+          <ActionButton
             onClick={() => navigate("/auth")}
-            className="login-button"
-            leftIcon={<FaSignInAlt />}
-            _hover={{ bg: "var(--conc-theme-color)" }}
+            leftIcon={<FaSignInAlt size={16} />}
           >
             Login
-          </Button>
+          </ActionButton>
         )}
-      </div>
+      </ProfileSection>
     </Container>
   );
 }
 
+const theme = {
+  primaryColor: "var(--primary-color)", // #1da1f2
+  primaryHoverColor: "var(--primary-hover-color)", // #1a91da
+  backgroundColor: "var(--background-color)", // #15202b
+  borderColor: "var(--border-color)", // #38444d
+  textColor: "var(--text-color)", // #fff
+  grayColor: "var(--gray-color)", // #888888
+};
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 30px;
-  height: 100%;
-  overflow-y: auto; /* Enable vertical scrolling */
-  overflow-x: hidden; /* Hide horizontal scrolling */
-  border-right: 1px solid #333;
+  padding: 0 10px;
+  height: 100vh;
+  border-right: 1px solid ${theme.borderColor};
+  position: sticky;
+  top: 0;
+`;
 
-  .header {
-    padding: 15px;
+const LogoLink = styled(Link)`
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
   }
+`;
 
-  .buttons {
-    margin-top: 5px;
-    max-width: 200px;
+const NavButtons = styled.div`
+  margin-top: 10px;
+`;
 
-    a,
-    button {
-      display: block;
-      margin-bottom: 8px; /* Adjusted margin here */
-      color: white;
-      padding: 10px 15px;
-      display: flex;
-      align-items: center;
-      border-radius: 30px;
-      font-size: 18px;
-      padding-right: 25px;
-      text-decoration: none;
-      --icon-size: 25px;
+const NavLink = styled(Link)<{ isActive: boolean }>`
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: ${(props) => (props.isActive ? theme.textColor : theme.grayColor)};
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 1.1rem; // Slightly smaller than 18px
+  font-weight: ${(props) => (props.isActive ? 700 : 400)};
+  transition: all 0.2s ease;
 
-      .btn--icon {
-        margin-right: 15px;
-        height: var(--icon-size);
-        width: var(--icon-size);
-        color: #9e9999;
-
-        position: relative;
-        .value-count {
-          position: absolute;
-          font-size: 11px;
-          background-color: var(--theme-color);
-          top: -5px;
-          padding: 1px 5px;
-          border-radius: 10px;
-          left: 0;
-          right: 0;
-          margin: 0 auto;
-          width: max-content;
-        }
-      }
-
-      &.active {
-        font-weight: bold;
-        color: #fff;
-
-        img {
-          --size: 27px;
-        }
-      }
-
-      &:hover {
-        background-color: #333;
-      }
-
-      &.btn--home {
-        position: relative;
-        &.new-tweets::after {
-          content: "";
-          position: absolute;
-          width: 5px;
-          height: 5px;
-          left: 35px;
-          top: 7px;
-          border-radius: 50%;
-          background-color: var(--theme-color);
-        }
-      }
-
-      span {
-        white-space: nowrap; /* Prevent text from wrapping */
-        overflow: hidden; /* Hide text overflow */
-        text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
-      }
-    }
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: ${theme.textColor};
   }
+`;
 
-  .login-button {
-    width: 100%;
-    background-color: white;
-    color: var(--conc-theme-color);
-    border: 1px solid var(--conc-theme-color);
-    border-radius: 30px;
-    font-size: 16px;
-    padding: 10px 0;
-    font-weight: bold;
-    transition: all 0.3s ease;
+const IconContainer = styled.div`
+  position: relative;
+  margin-right: 20px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-    &:hover {
-      background-color: var(--conc-theme-color);
-      color: white;
-    }
+const NotificationBadge = styled.span`
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: ${theme.primaryColor};
+  color: ${theme.textColor};
+  font-size: 0.7rem;
+  padding: 2px 5px;
+  border-radius: 10px;
+  font-weight: 600;
+`;
 
-    &:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.5); /* Focus shadow */
-    }
+const Label = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const SparkleButton = styled.button`
+  width: 80%;
+  margin: 15px auto 0;
+  padding: 12px;
+  background: ${theme.primaryColor};
+  color: ${theme.textColor};
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${theme.primaryHoverColor};
+    transform: translateY(-1px);
   }
+`;
 
-  .tweet-btn {
-    background-color: var(--theme-color);
-    margin-top: 10px;
-    border-radius: 30px;
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    font-size: 16px;
-  }
+const ProfileSection = styled.div`
+  margin-top: auto;
+  padding: 10px 0 20px;
+`;
 
-  .profile-section {
-    margin-top: auto;
-    margin-bottom: 20px;
-    display: flex;
-    text-align: left;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 30px;
+const ActionButton = styled(Button)<{ isLogout?: boolean }>`
+  width: 100%;
+  padding: 10px 15px;
+  background: ${(props) => (props.isLogout ? "#e33437" : "transparent")};
+  color: ${(props) => (props.isLogout ? theme.textColor : theme.primaryColor)};
+  border: ${(props) =>
+    props.isLogout ? "none" : `1px solid ${theme.primaryColor}`};
+  border-radius: 30px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
 
-    &:hover {
-      background-color: #333;
-    }
-
-    .logout-button {
-      width: 100%; /* Take full width of the container */
-      background-color: #e33437; /* Red color for emphasis */
-      border: none;
-      color: white;
-      padding: 10px 0; /* Adjust padding to make it more button-like */
-      border-radius: 30px; /* Keep the rounded corners */
-      cursor: pointer;
-      font-size: 16px; /* Adjust font size */
-      transition: background-color 0.3s ease;
-      text-align: center; /* Center text */
-
-      &:hover {
-        background-color: #e60000; /* Darker red on hover */
-      }
-
-      &:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.5);
-      }
-    }
+  &:hover {
+    background: ${(props) =>
+      props.isLogout ? "#e60000" : "rgba(29, 161, 242, 0.1)"};
+    color: ${(props) =>
+      props.isLogout ? theme.textColor : theme.primaryHoverColor};
+    border-color: ${(props) => !props.isLogout && theme.primaryHoverColor};
   }
 `;

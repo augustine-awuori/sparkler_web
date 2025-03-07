@@ -1,26 +1,52 @@
-import { Box, Button } from "@chakra-ui/react";
+import React from "react";
+import { useFormikContext } from "formik";
+import styled from "styled-components";
 
-interface Props {
-  isLoading: boolean;
-  label: string;
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  title: string;
 }
 
-const SubmitButton = ({ isLoading, label }: Props) => (
-  <Box marginTop={5}>
-    <Button
-      width="full"
+const SubmitButton = ({ title, ...otherProps }: Props) => {
+  const { handleSubmit } = useFormikContext();
+
+  return (
+    <LoginButton
+      onClick={(e) => {
+        e.preventDefault();
+        handleSubmit();
+      }}
       type="submit"
-      isLoading={isLoading}
-      colorScheme="twitter"
-      bgColor="twitter.500"
-      _hover={{ bgColor: "twitter.600" }}
-      _active={{ bgColor: "twitter.700" }}
-      color="white"
-      fontWeight="bold"
+      {...otherProps}
     >
-      {label}
-    </Button>
-  </Box>
-);
+      {title}
+    </LoginButton>
+  );
+};
+
+const LoginButton = styled.button`
+  width: 100%;
+  padding: 0.875rem;
+  margin-top: 1rem;
+  border-radius: 50px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--primary-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background: var(--primary-hover-color);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
 
 export default SubmitButton;

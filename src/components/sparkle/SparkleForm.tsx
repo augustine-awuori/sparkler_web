@@ -13,7 +13,7 @@ import TextProgressRing from "../TextProgressRing";
 
 interface FormProps {
   inline?: boolean;
-  minheight?: string;
+  minHeight?: string;
 }
 
 interface SparkleFormProps {
@@ -35,7 +35,7 @@ export default function SparkleForm({
   submitText = "Sparkle",
   onSubmit,
   className,
-  placeholder,
+  placeholder = "What’s sparkling?",
   collapsedOnMount = false,
   minHeight = 120,
   shouldFocus = false,
@@ -53,9 +53,8 @@ export default function SparkleForm({
   const { files, removeAllFiles, filesCount } = useFiles(IMAGES_LIMIT);
 
   useEffect(() => {
-    if (filesCount) removeAllFiles();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filesCount]);
+    if (filesCount > IMAGES_LIMIT) removeAllFiles(); // Clear if limit exceeded
+  }, [filesCount, removeAllFiles]);
 
   useEffect(() => {
     if (shouldFocus && inputRef.current) inputRef.current.focus();
@@ -65,13 +64,13 @@ export default function SparkleForm({
     {
       id: "image",
       Icon: Image,
-      alt: "Image",
+      alt: "Add Image",
       onclick: () => setIsSelectingImages((value) => !value),
     },
     {
       id: "emoji-picker",
       Icon: EmojiPicker,
-      alt: "Emoji",
+      alt: "Add Emoji",
     },
   ];
 
@@ -79,7 +78,6 @@ export default function SparkleForm({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(value);
-
     const match = value.match(/@(\w*)$/);
     if (match) {
       const query = match[1].toLowerCase();
@@ -92,15 +90,12 @@ export default function SparkleForm({
 
   const handleEmojiSelect = (emojiData: any) => {
     const emoji = emojiData.native;
-
     if (!inputRef.current) return setText(text + emoji);
 
     const start = inputRef.current.selectionStart;
     const end = inputRef.current.selectionEnd;
-    const newText =
-      text.substring(0, start) + emoji + text.substring(end, text.length);
+    const newText = text.substring(0, start) + emoji + text.substring(end);
     setText(newText);
-
     inputRef.current.selectionStart = inputRef.current.selectionEnd =
       start + emoji.length;
   };
@@ -114,26 +109,14 @@ export default function SparkleForm({
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!user) {
-      toast.info("Login to sparkle");
-      return;
-    }
-
-    if (text.length > MAX_CHARS) {
-      toast.error("Sparkle cannot exceed " + MAX_CHARS + " characters");
-      return;
-    }
-
-    if (textLimitExceeded)
-      return alert("Sparkle cannot exceed " + MAX_CHARS + " characters");
+    if (!user) return toast.info("Login to sparkle");
+    if (text.length > MAX_CHARS)
+      return toast.error(`Sparkle cannot exceed ${MAX_CHARS} characters`);
 
     let imagesUrl: string[] = [];
-
     try {
       if (filesCount) imagesUrl = await filesStorage.saveFiles(files);
       await onSubmit(text, imagesUrl);
-
       removeAllFiles();
       logEvent(events.userInteraction.SPARKLE, { userId: user?._id });
       setText("");
@@ -145,37 +128,29 @@ export default function SparkleForm({
     }
   };
 
-  const onClick = () => setExpanded(true);
-
-  const isInputEmpty = !Boolean(text);
+  const isInputEmpty = !text.trim();
   const charsLeft = MAX_CHARS - text.length;
   const textLimitExceeded = charsLeft < 0;
   const isReplying = Boolean(replyingTo);
 
   return (
-    <Container>
+    <Container className={className}>
       {isReplying && expanded && (
-        <span className="reply-to">
-          Replying to <span className="reply-to--name">@{replyingTo}</span>
-        </span>
+        <ReplyTo>
+          Replying to <ReplyName>@{replyingTo}</ReplyName>
+        </ReplyTo>
       )}
-
-      <Form
-        minheight={minHeight + "px"}
-        inline={!expanded}
-        className={className}
-        onSubmit={submit}
-      >
-        <figure className="user">
-          <Avatar image={user?.profileImage} />
-        </figure>
-        <div className="input-section">
+      <Form minHeight={`${minHeight}px`} inline={!expanded} onSubmit={submit}>
+        <UserAvatar>
+          <Avatar image={user?.profileImage} size={40} />
+        </UserAvatar>
+        <InputSection>
           <TextArea
             ref={inputRef}
             onChange={handleInputChange}
             placeholder={placeholder}
             value={text}
-            onClick={onClick}
+            onClick={() => setExpanded(true)}
           />
           {mentionVisible && (
             <MentionsDropdown>
@@ -189,39 +164,40 @@ export default function SparkleForm({
               ))}
             </MentionsDropdown>
           )}
-          <div className="actions">
-            {expanded &&
-              actions.map((action) => {
-                return (
-                  <button
-                    type="button"
-                    key={action.id}
-                    style={{ margin: "0 8px" }}
-                    onClick={action?.onclick}
-                  >
-                    <action.Icon
-                      size={19}
-                      color="var(--theme-color)"
-                      onSelect={handleEmojiSelect}
-                    />
-                  </button>
-                );
-              })}
-            <div className="right">
-              <TextProgressRing textLength={text.length} />
-              {!isInputEmpty && <hr className="divider" />}
-              <button
-                type="submit"
-                className="submit-btn"
-                disabled={!text.trim() || sparkling}
-              >
-                {submitText}
-              </button>
-            </div>
-          </div>
-        </div>
+          {expanded && (
+            <Actions>
+              {actions.map((action) => (
+                <ActionButton
+                  type="button"
+                  key={action.id}
+                  onClick={action.onclick}
+                  aria-label={action.alt}
+                >
+                  <action.Icon
+                    size={18}
+                    color="var(--primary-color)"
+                    onSelect={
+                      action.id === "emoji-picker"
+                        ? handleEmojiSelect
+                        : undefined
+                    }
+                  />
+                </ActionButton>
+              ))}
+              <RightActions>
+                <TextProgressRing textLength={text.length} />
+                {!isInputEmpty && <Divider />}
+                <SubmitButton
+                  type="submit"
+                  disabled={isInputEmpty || textLimitExceeded || sparkling}
+                >
+                  {submitText}
+                </SubmitButton>
+              </RightActions>
+            </Actions>
+          )}
+        </InputSection>
       </Form>
-
       {isSelectingImages && <ImageInputList imagesLimit={IMAGES_LIMIT} />}
     </Container>
   );
@@ -229,112 +205,141 @@ export default function SparkleForm({
 
 const Container = styled.div`
   width: 100%;
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px 15px;
+`;
 
-  .reply-to {
-    font-size: 14px;
-    color: #888;
-    display: flex;
-    margin-left: 55px;
-    margin-bottom: 10px;
+const ReplyTo = styled.span`
+  font-size: 0.875rem;
+  color: var(--gray-color);
+  margin-left: 55px;
+  margin-bottom: 8px;
+  display: block;
+`;
 
-    &--name {
-      margin-left: 4px;
-      color: var(--theme-color);
-    }
-  }
+const ReplyName = styled.span`
+  color: var(--primary-color);
+  margin-left: 4px;
 `;
 
 const Form = styled.form<FormProps>`
-  width: 100%;
   display: flex;
-  align-items: ${({ inline }) => (inline ? "center" : "initial")};
+  align-items: ${({ inline }) => (inline ? "center" : "flex-start")};
+  min-height: ${({ minHeight }) => minHeight};
+`;
 
-  .user {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 15px;
+const UserAvatar = styled.figure`
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 12px;
+  transition: opacity 0.2s ease;
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+  &:hover {
+    opacity: 0.9;
   }
 
-  .input-section {
+  img {
     width: 100%;
-    display: flex;
-    flex: 1;
-    flex-direction: ${({ inline }) => (inline ? "row" : "column")};
-    align-items: ${({ inline }) => (inline ? "center" : "initial")};
-    height: ${({ inline, minheight: minHeight }) =>
-      inline ? "40px" : minHeight};
+    height: 100%;
+    object-fit: cover;
+  }
+`;
 
-    .actions {
-      margin-top: ${({ inline }) => (inline ? "0" : "auto")};
-      display: flex;
-      height: 50px;
-      align-items: center;
+const InputSection = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`;
 
-      button {
-        margin: 0 8px;
-        &:disabled {
-          opacity: 0.5;
-        }
-      }
+const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+`;
 
-      .right {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-      }
+const ActionButton = styled.button`
+  padding: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.2s ease;
 
-      .divider {
-        height: 30px;
-        width: 2px;
-        border: none;
-        background-color: #444;
-        border-radius: 5px;
-        margin: 0 18px;
-      }
+  &:hover {
+    background: rgba(29, 161, 242, 0.1);
+  }
 
-      .submit-btn {
-        background-color: var(--theme-color);
-        padding: 8px 18px;
-        color: white;
-        border-radius: 30px;
-        margin-left: auto;
-        font-weight: bold;
-        font-size: 16px;
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary-color);
+  }
+`;
 
-        &:disabled {
-          opacity: 0.6;
-        }
-      }
-    }
+const RightActions = styled.div`
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+`;
+
+const Divider = styled.hr`
+  height: 20px;
+  width: 1px;
+  background: var(--border-color);
+  border: none;
+  margin: 0 12px;
+`;
+
+const SubmitButton = styled.button`
+  background: var(--primary-color);
+  color: var(--text-color);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--primary-hover-color);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary-hover-color);
   }
 `;
 
 const MentionsDropdown = styled.div`
   position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  max-height: 150px;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-width: 300px;
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
-  width: 100%;
 `;
 
 const MentionItem = styled.div`
-  padding: 10px;
+  padding: 8px 12px;
+  color: var(--text-color);
   cursor: pointer;
+  font-size: 0.9rem;
 
   &:hover {
-    background-color: #f0f0f0;
+    background: rgba(255, 255, 255, 0.1);
   }
 `;

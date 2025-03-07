@@ -1,5 +1,4 @@
-import { LoginInfo } from "../pages/LoginPage";
-import { RegistrationInfo } from "../pages/RegisterPage";
+import { UserInfoWithCode } from "../pages/AuthCodeRegisterPage";
 import client, {
   emptyResponse,
   getFailedResponse,
@@ -9,8 +8,7 @@ import client, {
 
 const endpoint = "/users";
 
-const register = (userInfo: RegistrationInfo) =>
-  client.post(endpoint, userInfo);
+const register = (userInfo: {}) => client.post(endpoint, userInfo);
 
 const updateFollowers = async (leaderId: string) => {
   try {
@@ -22,7 +20,7 @@ const updateFollowers = async (leaderId: string) => {
   }
 };
 
-const login = async (userInfo: LoginInfo) => {
+const login = async (userInfo: {}) => {
   try {
     return processResponse(await client.post("/auth", userInfo));
   } catch (error) {
@@ -95,6 +93,14 @@ const getUserFollowing = async (userId: string) => {
   }
 };
 
+const registerWithCode = async (userInfo: UserInfoWithCode) => {
+  try {
+    return processResponse(await client.post(endpoint, userInfo));
+  } catch (error) {
+    return getFailedResponse(error);
+  }
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   deleteUserAccont,
@@ -106,6 +112,7 @@ export default {
   login,
   quickAuth,
   register,
+  registerWithCode,
   updateFollowers,
   updateUserInfo,
 };

@@ -1,9 +1,12 @@
 :root {
-  --theme-color: #f91680;
-  --conc-theme-color: #e6207c;
+  --primary-color: #1da1f2;
+  --primary-hover-color: #1a91da;
+  --background-color: #15202b;
+  --border-color: #38444d;
   --faded-theme-color: #f916803c;
   --gray-color: #888888;
   --blue-color: #1d9bf0;
+  --text-color: #fff;
   --light-gray: #222;
 }
 
@@ -13,7 +16,7 @@
 
 body {
   margin: 0;
-  background-color: black;
+  background-color: #15202b;
   font-family: "Quicksand", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

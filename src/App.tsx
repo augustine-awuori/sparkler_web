@@ -10,6 +10,9 @@ import {
 } from "stream-chat";
 
 import {
+  AuthCodeLoginPage,
+  AuthCodePages,
+  AuthCodeRegisterPage,
   AuthPages,
   BookmarksPage,
   CSAEPolicyPage,
@@ -242,6 +245,18 @@ function App() {
                             <Route
                               element={<CSAEPolicyPage />}
                               path="/docs/policy"
+                            />
+                            <Route
+                              element={<AuthCodePages />}
+                              path="/auth/code"
+                            />
+                            <Route
+                              element={<AuthCodeLoginPage />}
+                              path="/auth/code/login"
+                            />
+                            <Route
+                              element={<AuthCodeRegisterPage />}
+                              path="/auth/code/register"
                             />
                             <Route element={<AuthPages />} path="/auth" />
                             <Route

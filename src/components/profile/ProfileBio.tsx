@@ -288,12 +288,12 @@ const Container = styled.div`
           }
 
           &:hover {
-            background-color: var(--conc-theme-color);
+            background-color: var(--primary-color);
             transform: translateY(-2px);
           }
 
           &:active {
-            background-color: #1a91d1;
+            background-color: var(--primary-color);
             transform: translateY(0);
           }
         }

@@ -68,7 +68,7 @@ const Container = styled.div`
     }
 
     &:hover {
-      background-color: var(--conc-theme-color);
+      background-color: var(--primary-color);
     }
 
     &.following:hover {

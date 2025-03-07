@@ -10,7 +10,7 @@ const LoadMoreButton = ({ onClick, refreshing }: LoadMoreButtonProps) => (
       size="sm"
       bg="var(--theme-color)"
       color="#fff"
-      _hover={{ bg: "var(--conc-theme-color)" }}
+      _hover={{ bg: "var(--primary-color)" }}
       leftIcon={<ImSpinner9 />}
       isLoading={refreshing}
     >

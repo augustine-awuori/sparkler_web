@@ -1,73 +1,110 @@
-import { ChangeEvent, useState } from "react";
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-  IconButton,
-  InputProps,
-} from "@chakra-ui/react";
+import { useState } from "react";
+import { useFormikContext } from "formik";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import styled from "styled-components";
 
-import { FormRegister } from "../../hooks/useForm";
-import ErrorMessage, { AppFieldError } from "./ErrorMessage";
+import { ErrorMessage, FormInput } from ".";
 
-interface Props extends InputProps {
-  error: AppFieldError | undefined;
-  label: string;
-  register: FormRegister;
-  onChangeText?: (value: string) => void | undefined;
+const colors = {
+  primary: "#1DA1F2",
+  text: "#FFFFFF",
+  textLight: "#8899A6",
+  border: "#38444D",
+  error: "#F4212E",
+};
+
+interface FieldValue {
+  [key: string]: string;
+}
+
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+  name: string;
+  width?: string;
+  placeholder?: string;
+  onTextChange?: (text: string) => void;
 }
 
 const FormField = ({
-  error,
   name,
+  width = "100%",
+  onTextChange,
   placeholder,
-  label,
-  register,
   type = "text",
-  onChangeText,
-  ...otherProps
+  ...inputProps
 }: Props) => {
-  const [isPasswordVisible, setPasswordVisibility] = useState(false);
+  const { setFieldTouched, setFieldValue, errors, touched, values } =
+    useFormikContext<FieldValue>();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const inputName = name || label?.toLowerCase();
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
-    onChangeText?.(e.target.value);
-
-  const togglePasswordVisibility = () =>
-    setPasswordVisibility(!isPasswordVisible);
-
-  const getType = () =>
-    isPasswordVisible || inputName !== "password" ? "text" : "password";
+  const handleTextChange = (text: string) => {
+    onTextChange?.(text);
+    setFieldValue(name, text);
+  };
 
   return (
-    <FormControl marginBottom={4}>
-      <FormLabel>{label}</FormLabel>
-      <InputGroup>
-        <Input
-          {...otherProps}
-          {...register(inputName)}
-          onChange={handleChange}
-          placeholder={placeholder || label}
-          type={getType()}
+    <FieldWrapper>
+      <InputContainer>
+        <FormInput
+          onBlur={() => setFieldTouched(name)}
+          value={values[name]}
+          onChangeText={handleTextChange}
+          placeholder={placeholder || name}
+          type={type === "password" && showPassword ? "text" : type}
+          style={{ width }}
+          {...inputProps}
         />
         {type === "password" && (
-          <InputRightElement>
-            <IconButton
-              size="sm"
-              aria-label={isPasswordVisible ? "Hide Password" : "Show Password"}
-              icon={isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
-              onClick={togglePasswordVisibility}
-            />
-          </InputRightElement>
+          <ToggleButton onClick={handleTogglePasswordVisibility}>
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </ToggleButton>
         )}
-      </InputGroup>
-      <ErrorMessage error={error?.message as string} visible={!!error} />
-    </FormControl>
+      </InputContainer>
+      <StyledErrorMessage error={errors[name]} visible={!!touched[name]} />
+    </FieldWrapper>
   );
 };
+
+const FieldWrapper = styled.section`
+  margin-bottom: 0.8rem;
+  position: relative;
+  width: 100%;
+`;
+
+const InputContainer = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const ToggleButton = styled.span`
+  position: absolute;
+  right: 0.75rem; // pr-3 equivalent
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${colors.textLight};
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${colors.primary};
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+`;
+
+const StyledErrorMessage = styled(ErrorMessage)`
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: ${colors.error};
+  font-weight: 400;
+`;
 
 export default FormField;

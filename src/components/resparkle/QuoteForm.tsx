@@ -17,14 +17,11 @@ interface QuoteFormProps {
   sendingQuote: boolean;
 }
 
-const QuoteForm: React.FC<QuoteFormProps> = ({
-  onQuoteChange,
-  onQuoteSubmit,
-  quote,
-  sendingQuote,
-}) => {
+const QuoteForm: React.FC<QuoteFormProps> = (props) => {
   const { activity } = useActivity();
   const { user } = useUser();
+
+  const { onQuoteChange, onQuoteSubmit, quote, sendingQuote } = props;
 
   if (!activity) return <Navigate to="/" />;
 
@@ -48,7 +45,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({
                 size="sm"
                 bg="var(--theme-color)"
                 color="#fff"
-                _hover={{ bg: "var(--conc-theme-color)" }}
+                _hover={{ bg: "var(--primary-color)" }}
                 rightIcon={<BsSend />}
                 isLoading={sendingQuote}
                 disabled={sendingQuote}

@@ -261,7 +261,7 @@ const SaveButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: var(--conc-theme-color);
+    background-color: var(--primary-color);
   }
 `;
 
