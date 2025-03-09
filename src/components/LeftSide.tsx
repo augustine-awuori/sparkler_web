@@ -112,7 +112,7 @@ export default function LeftSide() {
                 <menu.Icon
                   fill={isActive}
                   color={isActive ? theme.textColor : theme.grayColor}
-                  size={20} // Reduced from 25
+                  size={16}
                 />
               </IconContainer>
               <Label>{menu.label}</Label>
@@ -219,6 +219,7 @@ const NotificationBadge = styled.span`
 
 const Label = styled.span`
   white-space: nowrap;
+  font-size: 0.9rem;
   overflow: hidden;
   text-overflow: ellipsis;
 `;

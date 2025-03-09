@@ -18,7 +18,7 @@ interface FormProps {
 
 interface SparkleFormProps {
   submitText?: string;
-  onSubmit: (text: string, images: string[]) => Promise<void>;
+  onSubmit: (text: string, images: string[]) => Promise<any>;
   className?: string;
   placeholder?: string;
   collapsedOnMount?: boolean;

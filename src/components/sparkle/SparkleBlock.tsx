@@ -49,7 +49,7 @@ import {
   useSparkle,
 } from "../../hooks";
 import { IconType } from "../nav/BottomTab";
-import CommentDialog from "./CommentDialog ";
+import CommentDialog from "./CommentDialog";
 import MoreOptionsPopup, { Option } from "./MoreOptionPopup";
 import QuoteDialog from "../quote/QuoteDialog";
 import ResparklePopup from "./ResparklePopup";

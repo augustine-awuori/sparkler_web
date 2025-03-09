@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useRef, useState } from "react";
 import { Activity as MainActivity } from "getstream";
 import { toast } from "react-toastify";
-import { Box } from "@chakra-ui/react";
+import { Box, BoxProps } from "@chakra-ui/react";
 
 import { Activity, QuoteActivity } from "../../utils/types";
 import { EmbeddedSparkleBlock } from "../resparkle";
@@ -28,7 +28,6 @@ import {
   Upload,
 } from "../../assets/icons";
 import { generateSparkleLink } from "../../utils/links";
-import CommentDialog from "../sparkle/CommentDialog ";
 import FollowBtn from "../FollowBtn";
 import ResparklePopup from "../sparkle/ResparklePopup";
 import SparkleCommentBlock from "./SparkleCommentBlock";
@@ -36,6 +35,7 @@ import SparkleShareModal from "../sparkle/SparkleShareModal";
 import TweetForm from "../sparkle/SparkleForm";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
+import CommentDialog from "../sparkle/CommentDialog";
 
 interface Props {
   activity: MainActivity;
@@ -59,8 +59,8 @@ export default function SparkleContent({ activity }: Props) {
   const navigate = useNavigate();
   const resparkleButtonRef = useRef<HTMLButtonElement>(null);
 
-  const time = format(new Date(activity.time), "p");
-  const date = format(new Date(activity.time), "PP");
+  const time = format(activity.time, "p");
+  const date = format(activity.time, "PP");
 
   const appActivity = activity as unknown as Activity;
   const tweet = appActivity.object.data;
@@ -73,9 +73,8 @@ export default function SparkleContent({ activity }: Props) {
   const hasBookmarkedSparkle = hasBookmarked(appActivity);
   const isAQuote = activity.verb === "quote";
   const images: string[] = appActivity.attachments?.images || [];
-  const hasResparkledSparkle = hasResparkled(appActivity);
   const sparkleLink = generateSparkleLink(
-    appActivity.actor.data.username,
+    sparkleActor.username,
     appActivity.id
   );
   const completeSparkleLink = `${appUrl}${sparkleLink}`;
@@ -94,39 +93,19 @@ export default function SparkleContent({ activity }: Props) {
     {
       id: "resparkle",
       Icon: Resparkle,
-      onClick: (_e: React.MouseEvent<HTMLButtonElement>) => {
+      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
         const buttonRect = resparkleButtonRef.current!.getBoundingClientRect();
-        setPopupPosition({
-          top: buttonRect.top - 10,
-          left: buttonRect.left,
-        });
+        setPopupPosition({ top: buttonRect.top - 10, left: buttonRect.left });
         setResparklePopupOpened(!resparklePopupOpened);
       },
     },
-    {
-      id: "heart",
-      Icon: Heart,
-      onClick: onToggleLike,
-    },
-    {
-      id: "upload",
-      Icon: Upload,
-      onClick: () => setShowShareModal(true),
-    },
-    {
-      id: "bookmark",
-      Icon: Bookmark,
-      alt: "Bookmark",
-      onClick: () => {},
-    },
+    { id: "heart", Icon: Heart, onClick: onToggleLike },
+    { id: "upload", Icon: Upload, onClick: () => setShowShareModal(true) },
+    { id: "bookmark", Icon: Bookmark, onClick: () => {} },
   ];
 
   const onPostComment = async (text: string) => {
-    if (!user) {
-      toast.info("Login to send reply");
-      return;
-    }
-
+    if (!user) return toast.info("Login to send reply");
     if (commenting) return;
 
     setCommenting(true);
@@ -134,7 +113,6 @@ export default function SparkleContent({ activity }: Props) {
     await createComment(text, activity);
     toast.dismiss();
     setCommenting(false);
-
     feed.refresh();
   };
 
@@ -155,7 +133,7 @@ export default function SparkleContent({ activity }: Props) {
   const handleResparkle = async () => {
     await toggleResparkle(
       activity as unknown as MainActivity,
-      hasResparkledSparkle
+      hasBeenResparkled
     );
     feed.refresh();
   };
@@ -163,151 +141,119 @@ export default function SparkleContent({ activity }: Props) {
   const visitProfile = () => viewUserProfile(appActivity.actor);
 
   return (
-    <>
-      <Container>
-        <div onClick={visitProfile} className="user">
-          <figure className="user__image">
-            <Avatar image={sparkleActor.profileImage} />
-          </figure>
-
-          <div className="user__name">
-            <span className="user__name--name">
-              {sparkleActor.name}
-              {sparkleActor.verified && (
-                <img
-                  src={
-                    sparkleActor.isAdmin
-                      ? require("../../assets/admin.png")
-                      : require("../../assets/verified.png")
-                  }
-                  alt="Verified"
-                  className="verified-icon"
-                />
-              )}
-            </span>
-            <span className="user__name--id">@{sparkleActor.username}</span>
-          </div>
-
-          <div className="user__option">
-            {user?._id !== sparkleActor.id && (
-              <div className="user__actions">
-                <FollowBtn userId={sparkleActor.id} />
-                <More color="#777" size={20} />
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="tweet">
-          <p
-            className="tweet__text"
-            dangerouslySetInnerHTML={{
-              __html: formatStringWithLink(
-                tweet.text,
-                "tweet__text--link"
-              )?.replace(/\n/g, "<br/>"),
-            }}
-          />
-
-          {Boolean(images.length) && (
-            <Box mt={2}>
-              <Gallery
-                images={images}
-                style={{ borderRadius: 15, border: "none" }}
+    <Container>
+      <UserSection onClick={visitProfile}>
+        <UserAvatar>
+          <Avatar image={sparkleActor.profileImage} size={48} />
+        </UserAvatar>
+        <UserInfo>
+          <UserName>
+            {sparkleActor.name}
+            {sparkleActor.verified && (
+              <VerifiedIcon
+                src={
+                  sparkleActor.isAdmin
+                    ? require("../../assets/admin.png")
+                    : require("../../assets/verified.png")
+                }
+                alt="Verified"
               />
-            </Box>
-          )}
+            )}
+          </UserName>
+          <UserHandle>@{sparkleActor.username}</UserHandle>
+        </UserInfo>
+        {user?._id !== sparkleActor.id && (
+          <UserActions>
+            <FollowBtn userId={sparkleActor.id} />
+            <MoreButton>
+              <More color={theme.grayColor} size={18} />
+            </MoreButton>
+          </UserActions>
+        )}
+      </UserSection>
 
-          {isAQuote && (
-            <EmbeddedSparkleBlock
-              activity={
-                (appActivity as unknown as QuoteActivity)
-                  .quoted_activity as unknown as MainActivity
-              }
-            />
-          )}
+      <TweetContent>
+        <TweetText
+          dangerouslySetInnerHTML={{
+            __html: formatStringWithLink(tweet.text, "tweet-link")?.replace(
+              /\n/g,
+              "<br/>"
+            ),
+          }}
+        />
+        {images.length > 0 && (
+          <GalleryWrapper>
+            <Gallery images={images} style={{ borderRadius: 12 }} />
+          </GalleryWrapper>
+        )}
+        {isAQuote && (
+          <EmbeddedSparkleBlock
+            activity={
+              (appActivity as unknown as QuoteActivity)
+                .quoted_activity as unknown as MainActivity
+            }
+          />
+        )}
+        <TweetMeta>
+          <Time>{time}</Time>
+          <DateSeparator />
+          <Date>{date}</Date>
+        </TweetMeta>
 
-          <div className="tweet__time">
-            <span className="tweet__time--time">{time}</span>
-            <span className="tweet__time--date">{date}</span>
-          </div>
+        {(likesCount || resparklesCount || quotesCount) && (
+          <Reactions>
+            {likesCount > 0 && (
+              <ReactionItem>
+                <ReactionCount>{likesCount}</ReactionCount>
+                <ReactionLabel>Like{likesCount === 1 ? "" : "s"}</ReactionLabel>
+              </ReactionItem>
+            )}
+            {resparklesCount > 0 && (
+              <ReactionItem onClick={viewQuotes}>
+                <ReactionCount>{resparklesCount}</ReactionCount>
+                <ReactionLabel>
+                  Resparkle{resparklesCount === 1 ? "" : "s"}
+                </ReactionLabel>
+              </ReactionItem>
+            )}
+            {quotesCount > 0 && (
+              <ReactionItem onClick={viewQuotes}>
+                <ReactionCount>{quotesCount}</ReactionCount>
+                <ReactionLabel>
+                  Quote{quotesCount === 1 ? "" : "s"}
+                </ReactionLabel>
+              </ReactionItem>
+            )}
+          </Reactions>
+        )}
 
-          {/* <div className="tweet__analytics">
-            <BarChart color="#888" />
-            <span className="tweet__analytics__text">
-              Sparkle Analytics coming sooner
-            </span>
-          </div> */}
+        <Reactors>
+          {reactors.map((action) => (
+            <ReactorButton
+              key={action.id}
+              onClick={action.onClick}
+              ref={action.id === "resparkle" ? resparkleButtonRef : null}
+              aria-label={action.id}
+            >
+              <action.Icon
+                color={
+                  action.id === "heart" && hasLikedSparkled
+                    ? "#F91880"
+                    : action.id === "resparkle" && hasBeenResparkled
+                    ? "#17BF63"
+                    : theme.grayColor
+                }
+                fill={
+                  (action.id === "heart" && hasLikedSparkled) ||
+                  (action.id === "bookmark" && hasBookmarkedSparkle)
+                }
+                size={18}
+              />
+            </ReactorButton>
+          ))}
+        </Reactors>
 
-          {(Boolean(likesCount) ||
-            Boolean(resparklesCount) ||
-            Boolean(quotesCount)) && (
-            <div className="tweet__reactions">
-              {likesCount > 0 && (
-                <Box cursor="pointer" className="tweet__reactions__likes">
-                  <span className="reaction-count">{likesCount}</span>
-                  <span className="reaction-label">
-                    Like{likesCount === 1 ? "" : "s"}
-                  </span>
-                </Box>
-              )}
-
-              {resparklesCount !== 0 && (
-                <Box
-                  cursor="pointer"
-                  className="tweet__reactions__likes"
-                  ml={2}
-                >
-                  <span className="reaction-count">{resparklesCount}</span>
-                  <span className="reaction-label">
-                    Resparkle{resparklesCount === 1 ? "" : "s"}
-                  </span>
-                </Box>
-              )}
-
-              {Boolean(quotesCount) && (
-                <Box
-                  cursor="pointer"
-                  className="tweet__reactions__likes"
-                  ml={2}
-                  onClick={viewQuotes}
-                >
-                  <span className="reaction-count">{quotesCount}</span>
-                  <span className="reaction-label">
-                    Quote{quotesCount === 1 ? "" : "s"}
-                  </span>
-                </Box>
-              )}
-            </div>
-          )}
-
-          <div className="tweet__reactors">
-            {reactors.map((action, i) => (
-              <button
-                onClick={action.onClick}
-                key={`reactor-${i}`}
-                ref={action.id === "resparkle" ? resparkleButtonRef : null}
-              >
-                <action.Icon
-                  color={
-                    action.id === "heart" && hasLikedSparkled
-                      ? "var(--theme-color)"
-                      : action.id === "resparkle" && hasBeenResparkled
-                      ? "#17BF63"
-                      : "#888"
-                  }
-                  fill={
-                    (action.id === "heart" && hasLikedSparkled) ||
-                    (action.id === "bookmark" && hasBookmarkedSparkle)
-                  }
-                  size={20}
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="write-reply">
+        <ReplySection>
           <TweetForm
             onSubmit={onPostComment}
             submitText="Reply"
@@ -316,181 +262,203 @@ export default function SparkleContent({ activity }: Props) {
             replyingTo={sparkleActor.username}
             sparkling={commenting}
           />
-        </div>
+        </ReplySection>
 
         {appActivity.latest_reactions?.comment?.map((comment) => (
           <SparkleCommentBlock key={comment.id} comment={comment} />
         ))}
+      </TweetContent>
 
-        <SparkleShareModal
-          isOpen={showShareModal}
-          onClose={() => setShowShareModal(false)}
-          sparkleUrl={completeSparkleLink}
-          text={tweet.text}
+      <SparkleShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        sparkleUrl={completeSparkleLink}
+        text={tweet.text}
+      />
+      {resparklePopupOpened && (
+        <ResparklePopup
+          onClose={() => setResparklePopupOpened(false)}
+          onQuote={quoteSparkle}
+          onResparkle={handleResparkle}
+          position={popupPosition}
+          hasBeenResparkled={hasBeenResparkled}
         />
-
-        {resparklePopupOpened && (
-          <ResparklePopup
-            onClose={() => setResparklePopupOpened(false)}
-            onQuote={quoteSparkle}
-            onResparkle={handleResparkle}
-            position={popupPosition}
-            hasBeenResparkled={hasBeenResparkled}
-          />
-        )}
-        {commentDialogOpened && (
-          <CommentDialog
-            activity={activity}
-            onPostComment={onPostComment}
-            onClickOutside={() => setCommentDialogOpened(false)}
-          />
-        )}
-      </Container>
-    </>
+      )}
+      {commentDialogOpened && (
+        <CommentDialog
+          activity={activity}
+          onPostComment={onPostComment}
+          onClickOutside={() => setCommentDialogOpened(false)}
+        />
+      )}
+    </Container>
   );
 }
 
+const theme = {
+  primaryColor: "var(--primary-color)", // #1da1f2
+  primaryHoverColor: "var(--primary-hover-color)", // #1a91da
+  backgroundColor: "var(--background-color)", // #15202b
+  borderColor: "var(--border-color)", // #38444d
+  textColor: "var(--text-color)", // #fff
+  grayColor: "var(--gray-color)", // #888888
+};
+
 const Container = styled.div`
-  padding: 10px 15px;
+  padding: 12px 15px;
+  border-bottom: 1px solid ${theme.borderColor};
+  color: ${theme.textColor};
+`;
 
-  .user {
-    display: flex;
+const UserSection = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+`;
+
+const UserAvatar = styled.figure`
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 12px;
+  transition: opacity 0.2s ease;
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const UserInfo = styled.div`
+  flex: 1;
+`;
+
+const UserName = styled.span`
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+`;
+
+const VerifiedIcon = styled.img`
+  width: 18px;
+  height: 18px;
+  margin-left: 4px;
+`;
+
+const UserHandle = styled.span`
+  font-size: 0.9rem;
+  color: ${theme.grayColor};
+`;
+
+const UserActions = styled.div`
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const MoreButton = styled.button`
+  background: none;
+  border: none;
+  padding: 4px;
+  border-radius: 50%;
+  cursor: pointer;
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const TweetContent = styled.div`
+  margin-top: 8px;
+`;
+
+const TweetText = styled.p`
+  font-size: 1.1rem;
+  line-height: 1.4;
+  word-wrap: break-word;
+  .tweet-link {
+    color: ${theme.primaryColor};
     text-decoration: none;
-
-    &__image {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-right: 15px;
-
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    &__name {
-      display: flex;
-      flex-direction: column; /* Align items vertically */
-      justify-content: center; /* Center the text vertically */
-
-      &--name {
-        color: white;
-        font-weight: bold;
-        display: flex; /* Make this a flex container to align the icon */
-        align-items: center; /* Align items center to keep the icon on the same line */
-      }
-
-      &--id {
-        color: #52575b;
-        font-size: 14px;
-        margin-top: 2px; /* Space between name and username */
-      }
-    }
-
-    &__option {
-      margin-left: auto;
+    &:hover {
+      text-decoration: underline;
     }
   }
+`;
 
-  .verified-icon {
-    width: 16px; /* Adjust size as needed */
-    height: 16px; /* Adjust size as needed */
-    margin-left: 5px; /* Space between name and icon */
+const GalleryWrapper = styled(Box)<BoxProps>`
+  margin-top: 12px;
+`;
+
+const TweetMeta = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: ${theme.grayColor};
+  margin-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid ${theme.borderColor};
+`;
+
+const Time = styled.span``;
+
+const DateSeparator = styled.span`
+  width: 2px;
+  height: 2px;
+  background: ${theme.grayColor};
+  border-radius: 50%;
+  margin: 0 6px;
+`;
+
+const Date = styled.span``;
+
+const Reactions = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid ${theme.borderColor};
+`;
+
+const ReactionItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  cursor: pointer;
+  &:hover {
+    color: ${theme.primaryColor};
   }
+`;
 
-  .tweet {
-    margin-top: 20px;
-    margin-bottom: 5px;
+const ReactionCount = styled.span`
+  font-weight: 700;
+  margin-right: 4px;
+`;
 
-    a {
-      text-decoration: none;
-      color: var(--theme-color);
-    }
+const ReactionLabel = styled.span`
+  font-size: 0.9rem;
+`;
 
-    &__text {
-      color: white;
-      font-size: 20px;
-    }
+const Reactors = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid ${theme.borderColor};
+`;
 
-    &__time,
-    &__analytics,
-    &__reactions,
-    &__reactors {
-      height: 50px;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #555;
-      font-size: 15px;
-      color: #888;
-    }
-
-    &__time {
-      &--date {
-        margin-left: 12px;
-        position: relative;
-
-        &::after {
-          position: absolute;
-          content: "";
-          width: 2px;
-          height: 2px;
-          background-color: #777;
-          border-radius: 50%;
-          top: 0;
-          bottom: 0;
-          left: -7px;
-          margin: auto 0;
-        }
-      }
-    }
-
-    &__analytics {
-      &__text {
-        margin-left: 7px;
-      }
-    }
-
-    &__reactions {
-      &__likes {
-        display: flex;
-
-        .reaction-count {
-          color: white;
-          font-weight: bold;
-        }
-
-        .reaction-label {
-          margin-left: 4px;
-        }
-      }
-    }
-
-    &__reactors {
-      justify-content: space-between;
-      padding: 0 50px;
-    }
+const ReactorButton = styled.button`
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
   }
+`;
 
-  .write-reply {
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #555;
-  }
-
-  .user__option {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-  }
-
-  .user__actions {
-    display: flex;
-    gap: 10px; /* Space between Follow button and More icon */
-  }
-
-  .user__actions button {
-    padding: 5px 10px;
-  }
+const ReplySection = styled.div`
+  padding: 8px 0;
 `;
