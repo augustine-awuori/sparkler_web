@@ -1,6 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaUserGroup } from "react-icons/fa6";
 import styled from "styled-components";
 
 import {
@@ -22,23 +23,32 @@ import {
   useShowSparkleModal,
 } from "../hooks";
 
+interface CustomIconProps {
+  color?: string;
+  size?: number;
+  fill?: boolean;
+}
+
+type CustomIcon = (props: CustomIconProps) => JSX.Element;
+
 type Menu = {
   id:
     | "bookmarks"
     | "home"
     | "explore"
+    | "communities"
     | "notifications"
     | "messages"
     | "profile";
   label: string;
-  Icon: (props: {
-    color?: string | undefined;
-    size?: number | undefined;
-    fill?: boolean | undefined;
-  }) => JSX.Element;
+  Icon: CustomIcon;
   link: string;
   value?: number;
 };
+
+const GroupIcon = ({ fill, ...props }: CustomIconProps) => (
+  <FaUserGroup fill={props.color} {...props} />
+);
 
 export default function LeftSide() {
   const { count } = useUnreadMessages();
@@ -52,6 +62,12 @@ export default function LeftSide() {
   const menus: Menu[] = [
     { id: "home", label: "Home", Icon: Home, link: "/" },
     { id: "explore", label: "Explore", Icon: Search, link: "/explore" },
+    {
+      id: "communities",
+      label: "Communities",
+      Icon: GroupIcon,
+      link: "/communities",
+    },
     {
       id: "notifications",
       label: "Notifications",
@@ -71,7 +87,12 @@ export default function LeftSide() {
   ];
 
   const checkIsValidNavigation = (menuItem: Menu): boolean =>
-    Boolean(user || menuItem.id === "home" || menuItem.id === "explore");
+    !(
+      menuItem.id === "profile" ||
+      menuItem.id === "notifications" ||
+      menuItem.id === "messages" ||
+      menuItem.id === "bookmarks"
+    );
 
   const getRoute = (menuItem: Menu): To =>
     checkIsValidNavigation(menuItem) ? menuItem.link : "/auth";
@@ -109,6 +130,7 @@ export default function LeftSide() {
                 {menu.value && user ? (
                   <NotificationBadge>{menu.value}</NotificationBadge>
                 ) : null}
+
                 <menu.Icon
                   fill={isActive}
                   color={isActive ? theme.textColor : theme.grayColor}
@@ -185,7 +207,7 @@ const NavLink = styled(Link)<{ isActive: boolean }>`
   color: ${(props) => (props.isActive ? theme.textColor : theme.grayColor)};
   text-decoration: none;
   border-radius: 30px;
-  font-size: 1.1rem; // Slightly smaller than 18px
+  font-size: 1.1rem;
   font-weight: ${(props) => (props.isActive ? 700 : 400)};
   transition: all 0.2s ease;
 

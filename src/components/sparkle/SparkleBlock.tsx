@@ -58,6 +58,7 @@ import TweetActorName from "./SparkleActorName";
 
 interface Props {
   activity: Activity;
+  showMedia?: boolean;
 }
 
 type ActionId = "comment" | "resparkle" | "heart" | "upload" | "bookmark";
@@ -70,7 +71,7 @@ type Action = {
   onClick: (arg?: any) => void;
 };
 
-const SparkleBlock: React.FC<Props> = ({ activity }) => {
+const SparkleBlock: React.FC<Props> = ({ activity, showMedia }) => {
   const [commentDialogOpened, setCommentDialogOpened] = useState(false);
   const [moreOptions, setMoreOptions] = useState<Option[]>([]);
   const [morePopupOpened, setMorePopupOpened] = useState(false);
@@ -255,10 +256,10 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
   const getColor = (name: ActionId): string => {
     let color = "#777";
 
-    if (name === "heart" && hasLikedSparkle) color = "var(--theme-color)";
+    if (name === "heart" && hasLikedSparkle) color = "#f91880";
     else if (name === "resparkle" && hasResparkledSparkle) color = "#17BF63";
     else if (name === "bookmark" && hasBookmarkedSparkle)
-      color = "var(--blue-color)";
+      color = "var(--primary-color)";
 
     return color;
   };
@@ -292,6 +293,8 @@ const SparkleBlock: React.FC<Props> = ({ activity }) => {
     !images.length
   )
     return null;
+
+  if (showMedia && !images.length) return null;
 
   return (
     <Box _hover={{ bg: "#111" }} onClick={viewDetails}>

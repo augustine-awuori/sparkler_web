@@ -2,6 +2,7 @@ export { default as useActivity } from "./useActivity";
 export { default as useAuth } from "./useAuth";
 export { default as useAuthCode } from "./useAuthCode";
 export { default as useComment } from "./useComment";
+export { default as useCommunities } from "./useCommunities";
 export { default as useFiles } from "./useFiles";
 export { default as useFollow } from "./useFollow";
 export { default as useForm } from "./useForm";

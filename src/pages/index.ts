@@ -3,6 +3,8 @@ export { default as AuthCodePages } from "./AuthCodePages";
 export { default as AuthCodeRegisterPage } from "./AuthCodeRegisterPage";
 export { default as AuthPages } from "./AuthPages";
 export { default as BookmarksPage } from "./BookmarksPage";
+export { default as CommunitiesPage } from "./CommunitiesPage";
+export { default as CommunityPage } from "./CommunityPage";
 export { default as CSAEPolicyPage } from "./CSAEPolicyPage";
 export { default as EditProfilePage } from "./EditProfilePage";
 export { default as ExplorePage } from "./ExplorePage";

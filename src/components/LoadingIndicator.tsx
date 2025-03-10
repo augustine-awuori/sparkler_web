@@ -30,7 +30,7 @@ const Container = styled.div`
       top: 0;
       width: 100%;
       height: 100%;
-      border-top: 2px solid var(--theme-color);
+      border-top: 2px solid var(--primary-color);
       border-radius: 50%;
       animation: spin 500ms infinite linear;
 

@@ -15,6 +15,8 @@ import {
   AuthCodeRegisterPage,
   AuthPages,
   BookmarksPage,
+  CommunitiesPage,
+  CommunityPage,
   CSAEPolicyPage,
   EditProfilePage,
   ExplorePage,
@@ -49,6 +51,8 @@ import UsersContext, {
   UsernameIdMap,
   Users,
 } from "./contexts/UsersContext";
+import CommunitiesContext, { Community } from "./contexts/CommunitiesContext";
+import communitiesService from "./services/communities";
 import usersService from "./services/users";
 import useUser, { initUser } from "./hooks/useUser";
 
@@ -59,8 +63,10 @@ function App() {
   const [activity, setActivity] = useState<Activity<DefaultGenerics>>();
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [appData, setAppData] = useState<AppData>();
+  const [communities, setCommunities] = useState<Community[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [idUserMap, setIdUserMap] = useState<IdUserMap>({});
+  const [loadingCommunities, setLoadingCommunities] = useState(false);
   const [profileUser, setProfileUser] = useState<FeedUser>();
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [showSparkleModal, setShowSparkleModal] = useState(false);
@@ -121,8 +127,19 @@ function App() {
   }, [feedClient, googleUser, user]);
 
   useEffect(() => {
-    setAppData(auth.decode(appDataJwt) as AppData);
-  }, []);
+    const initCommunities = async () => {
+      if (communities.length) return;
+
+      setLoadingCommunities(true);
+      const res = await communitiesService.getCommunities();
+      setLoadingCommunities(false);
+
+      if (res.ok) setCommunities(res.data as Community[]);
+    };
+
+    if (!appData) setAppData(auth.decode(appDataJwt) as AppData);
+    initCommunities();
+  }, [appData, communities.length]);
 
   useEffect(() => {
     const initChatClient = async () => {
@@ -240,77 +257,97 @@ function App() {
                       <ShowSparkleModalContext.Provider
                         value={{ setShowSparkleModal, showSparkleModal }}
                       >
-                        <Layout>
-                          <Routes>
-                            <Route
-                              element={<CSAEPolicyPage />}
-                              path="/docs/policy"
-                            />
-                            <Route
-                              element={<AuthCodePages />}
-                              path="/auth/code"
-                            />
-                            <Route
-                              element={<AuthCodeLoginPage />}
-                              path="/auth/code/login"
-                            />
-                            <Route
-                              element={<AuthCodeRegisterPage />}
-                              path="/auth/code/register"
-                            />
-                            <Route element={<AuthPages />} path="/auth" />
-                            <Route
-                              element={<NotificationsPage />}
-                              path="/notifications"
-                            />
-                            <Route
-                              element={<BookmarksPage />}
-                              path="/bookmarks"
-                            />
-                            <Route
-                              element={<MessagesPage />}
-                              path="/messages"
-                            />
-                            <Route
-                              element={<UsersPage />}
-                              path="/explore/users"
-                            />
-                            <Route
-                              element={<HashtagPage />}
-                              path="/explore/:hashtag"
-                            />
-                            <Route element={<ExplorePage />} path="/explore" />
-                            <Route
-                              element={<QuoteSparklePage />}
-                              path="/:username/status/:id/quote"
-                            />
-                            <Route
-                              element={<ThreadPage />}
-                              path="/:username/status/:id"
-                            />
-                            <Route
-                              element={<QuotesPage />}
-                              path="/:username/status/:id/quotes"
-                            />
-                            <Route
-                              element={<EditProfilePage />}
-                              path="/:username/edit"
-                            />
-                            <Route
-                              element={<FollowingsPage />}
-                              path="/:username/followings"
-                            />
-                            <Route
-                              element={<FollowersPage />}
-                              path="/:username/followers"
-                            />
-                            <Route
-                              element={<ProfilePage />}
-                              path="/:username"
-                            />
-                            <Route element={<HomePage />} path="/" />
-                          </Routes>
-                        </Layout>
+                        <CommunitiesContext.Provider
+                          value={{
+                            communities,
+                            setCommunities,
+                            loading: loadingCommunities,
+                            onLoad: setLoadingCommunities,
+                          }}
+                        >
+                          <Layout>
+                            <Routes>
+                              <Route
+                                element={<CSAEPolicyPage />}
+                                path="/docs/policy"
+                              />
+                              <Route
+                                element={<AuthCodePages />}
+                                path="/auth/code"
+                              />
+                              <Route
+                                element={<AuthCodeLoginPage />}
+                                path="/auth/code/login"
+                              />
+                              <Route
+                                element={<AuthCodeRegisterPage />}
+                                path="/auth/code/register"
+                              />
+                              <Route element={<AuthPages />} path="/auth" />
+                              <Route
+                                element={<NotificationsPage />}
+                                path="/notifications"
+                              />
+                              <Route
+                                element={<BookmarksPage />}
+                                path="/bookmarks"
+                              />
+                              <Route
+                                element={<CommunityPage />}
+                                path="/communities/:communityId"
+                              />
+                              <Route
+                                element={<CommunitiesPage />}
+                                path="/communities"
+                              />
+                              <Route
+                                element={<MessagesPage />}
+                                path="/messages"
+                              />
+                              <Route
+                                element={<UsersPage />}
+                                path="/explore/users"
+                              />
+                              <Route
+                                element={<HashtagPage />}
+                                path="/explore/:hashtag"
+                              />
+                              <Route
+                                element={<ExplorePage />}
+                                path="/explore"
+                              />
+                              <Route
+                                element={<QuoteSparklePage />}
+                                path="/:username/status/:id/quote"
+                              />
+                              <Route
+                                element={<ThreadPage />}
+                                path="/:username/status/:id"
+                              />
+                              <Route
+                                element={<QuotesPage />}
+                                path="/:username/status/:id/quotes"
+                              />
+                              <Route
+                                element={<EditProfilePage />}
+                                path="/:username/edit"
+                              />
+                              <Route
+                                element={<FollowingsPage />}
+                                path="/:username/followings"
+                              />
+                              <Route
+                                element={<FollowersPage />}
+                                path="/:username/followers"
+                              />
+                              <Route
+                                element={<ProfilePage />}
+                                path="/:username"
+                              />
+                              <Route element={<HomePage />} path="/" />
+                            </Routes>
+                          </Layout>
+                        </CommunitiesContext.Provider>
                       </ShowSparkleModalContext.Provider>
                     </ProfileContext.Provider>
                   </FilesContext.Provider>
