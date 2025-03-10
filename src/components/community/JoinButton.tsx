@@ -8,8 +8,13 @@ interface Props {
 }
 
 export default function JoinButton({ joined, joining, onClick }: Props) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClick();
+  };
+
   return (
-    <Button joined={joined} onClick={onClick} disabled={joining}>
+    <Button joined={joined} onClick={handleClick} disabled={joining}>
       {joining ? (
         <Spinner
           size="sm"

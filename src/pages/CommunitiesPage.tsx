@@ -81,13 +81,13 @@ export default function CommunitiesPage() {
           />
         </SearchBarContainer>
 
-        <Categories>
+        {/* <Categories>
           <CategoryButton>All</CategoryButton>
           <CategoryButton>Technology</CategoryButton>
           <CategoryButton>Gaming</CategoryButton>
           <CategoryButton>Music</CategoryButton>
           <CategoryButton>Art</CategoryButton>
-        </Categories>
+        </Categories> */}
 
         <CommunityList>
           {filteredCommunities?.length > 0 ? (
@@ -135,22 +135,30 @@ const Header = styled.div`
   position: sticky;
   top: 0;
   background: #000;
-  padding: 10px 0;
+  padding: 10px 12px; // Added horizontal padding
   z-index: 10;
   border-bottom: 1px solid ${theme.borderColor};
+
+  @media (max-width: 600px) {
+    padding: 8px 10px; // Reduced padding for mobile
+  }
 `;
 
 const HeaderTitleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 15px;
+  margin-bottom: 0;
 `;
 
 const HeaderTitle = styled.h1`
-  font-size: 1.5rem;
+  font-size: 1.25rem; // Reduced to 20px
   font-weight: 700;
   color: ${theme.textColor};
+
+  @media (max-width: 600px) {
+    font-size: 1.125rem; // 18px on mobile
+  }
 `;
 
 const CreateButton = styled.button`
@@ -172,6 +180,11 @@ const CreateButton = styled.button`
 
   svg {
     margin-right: 5px;
+  }
+
+  @media (max-width: 600px) {
+    padding: 4px 8px; // Smaller padding on mobile
+    font-size: 0.8rem; // Smaller font
   }
 `;
 
@@ -241,27 +254,27 @@ const SearchBar = styled.input`
   }
 `;
 
-const Categories = styled.div`
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-  overflow-x: auto;
-  white-space: nowrap;
-`;
+// const Categories = styled.div`
+//   display: flex;
+//   gap: 10px;
+//   margin: 20px 0;
+//   overflow-x: auto;
+//   white-space: nowrap;
+// `;
 
-const CategoryButton = styled.button`
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid ${theme.borderColor};
-  border-radius: 20px;
-  color: ${theme.textColor};
-  font-size: 0.9rem;
-  cursor: pointer;
+// const CategoryButton = styled.button`
+//   padding: 8px 16px;
+//   background: rgba(255, 255, 255, 0.1);
+//   border: 1px solid ${theme.borderColor};
+//   border-radius: 20px;
+//   color: ${theme.textColor};
+//   font-size: 0.9rem;
+//   cursor: pointer;
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-`;
+//   &:hover {
+//     background: rgba(255, 255, 255, 0.2);
+//   }
+// `;
 
 const CommunityList = styled.div`
   display: flex;

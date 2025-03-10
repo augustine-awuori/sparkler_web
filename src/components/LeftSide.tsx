@@ -1,6 +1,8 @@
+import { useState } from "react";
+import { Avatar } from "react-activity-feed";
 import { Button } from "@chakra-ui/react";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
-import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt, FaEllipsisV, FaSignInAlt } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
 import styled from "styled-components";
 
@@ -58,6 +60,7 @@ export default function LeftSide() {
   const { setShowSparkleModal } = useShowSparkleModal();
   const location = useLocation();
   const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const menus: Menu[] = [
     { id: "home", label: "Home", Icon: Home, link: "/" },
@@ -111,6 +114,12 @@ export default function LeftSide() {
     );
   };
 
+  const handleLogout = () => {
+    logout();
+    setIsDropdownOpen(false);
+    navigate("/auth");
+  };
+
   return (
     <Container>
       <LogoLink to="/">
@@ -130,7 +139,6 @@ export default function LeftSide() {
                 {menu.value && user ? (
                   <NotificationBadge>{menu.value}</NotificationBadge>
                 ) : null}
-
                 <menu.Icon
                   fill={isActive}
                   color={isActive ? theme.textColor : theme.grayColor}
@@ -147,13 +155,28 @@ export default function LeftSide() {
       </SparkleButton>
       <ProfileSection>
         {user ? (
-          <ActionButton
-            isLogout
-            onClick={logout}
-            leftIcon={<FaSignOutAlt size={16} />}
+          <ProfileContainer
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            onBlur={() => setIsDropdownOpen(false)}
+            tabIndex={0}
           >
-            Logout
-          </ActionButton>
+            <Avatar image={user.profileImage || ""} size={40} circle={true} />
+            <ProfileInfo>
+              <Username>{user.name || user.username}</Username>
+              <Handle>@{user.username}</Handle>
+            </ProfileInfo>
+            <DotsIcon>
+              <FaEllipsisV size={16} color={theme.grayColor} />
+            </DotsIcon>
+            {isDropdownOpen && (
+              <Dropdown>
+                <DropdownItem onClick={handleLogout}>
+                  <FaSignOutAlt size={14} />
+                  <span>Logout</span>
+                </DropdownItem>
+              </Dropdown>
+            )}
+          </ProfileContainer>
         ) : (
           <ActionButton
             onClick={() => navigate("/auth")}
@@ -168,12 +191,12 @@ export default function LeftSide() {
 }
 
 const theme = {
-  primaryColor: "var(--primary-color)", // #1da1f2
-  primaryHoverColor: "var(--primary-hover-color)", // #1a91da
-  backgroundColor: "var(--background-color)", // #15202b
-  borderColor: "var(--border-color)", // #38444d
-  textColor: "var(--text-color)", // #fff
-  grayColor: "var(--gray-color)", // #888888
+  primaryColor: "var(--primary-color, #1da1f2)",
+  primaryHoverColor: "var(--primary-hover-color, #1a91da)",
+  backgroundColor: "var(--background-color, #15202b)",
+  borderColor: "var(--border-color, #38444d)",
+  textColor: "var(--text-color, #fff)",
+  grayColor: "var(--gray-color, #888888)",
 };
 
 const Container = styled.div`
@@ -268,6 +291,87 @@ const SparkleButton = styled.button`
 const ProfileSection = styled.div`
   margin-top: auto;
   padding: 10px 0 20px;
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 30px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const ProfileInfo = styled.div`
+  flex: 1;
+  margin-left: 10px;
+  overflow: hidden;
+`;
+
+const Username = styled.div`
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: ${theme.textColor};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const Handle = styled.div`
+  font-size: 0.8rem;
+  color: ${theme.grayColor};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const DotsIcon = styled.div`
+  margin-left: 10px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${theme.textColor};
+  }
+`;
+
+const Dropdown = styled.div`
+  position: absolute;
+  bottom: -90px;
+  right: 0;
+  background: ${theme.backgroundColor};
+  border: 1px solid ${theme.borderColor};
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  min-width: 150px;
+`;
+
+const DropdownItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  color: ${theme.textColor};
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  svg {
+    margin-right: 8px;
+  }
 `;
 
 const ActionButton = styled(Button)<{ isLogout?: boolean }>`

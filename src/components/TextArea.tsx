@@ -1,7 +1,8 @@
+import { TextareaProps } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
-interface Props {
+interface Props extends TextareaProps {
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onClick?: () => void;
   placeholder?: string;

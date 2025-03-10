@@ -36,8 +36,8 @@ export default function SparkleForm({
   onSubmit,
   className,
   placeholder = "What’s sparkling?",
-  collapsedOnMount = false,
-  minHeight = 120,
+  collapsedOnMount = true, // Default to collapsed for compactness
+  minHeight = 100, // Reduced default height to match X.com
   shouldFocus = false,
   replyingTo = null,
   sparkling,
@@ -53,7 +53,7 @@ export default function SparkleForm({
   const { files, removeAllFiles, filesCount } = useFiles(IMAGES_LIMIT);
 
   useEffect(() => {
-    if (filesCount > IMAGES_LIMIT) removeAllFiles(); // Clear if limit exceeded
+    if (filesCount > IMAGES_LIMIT) removeAllFiles();
   }, [filesCount, removeAllFiles]);
 
   useEffect(() => {
@@ -142,7 +142,7 @@ export default function SparkleForm({
       )}
       <Form minHeight={`${minHeight}px`} inline={!expanded} onSubmit={submit}>
         <UserAvatar>
-          <Avatar image={user?.profileImage} size={40} />
+          <Avatar image={user?.profileImage || ""} size={40} circle={true} />
         </UserAvatar>
         <InputSection>
           <TextArea
@@ -151,6 +151,7 @@ export default function SparkleForm({
             placeholder={placeholder}
             value={text}
             onClick={() => setExpanded(true)}
+            maxHeight="100px"
           />
           {mentionVisible && (
             <MentionsDropdown>
@@ -168,13 +169,12 @@ export default function SparkleForm({
             <Actions>
               {actions.map((action) => (
                 <ActionButton
-                  type="button"
                   key={action.id}
                   onClick={action.onclick}
                   aria-label={action.alt}
                 >
                   <action.Icon
-                    size={18}
+                    size={16} // Reduced icon size
                     color="var(--primary-color)"
                     onSelect={
                       action.id === "emoji-picker"
@@ -185,7 +185,8 @@ export default function SparkleForm({
                 </ActionButton>
               ))}
               <RightActions>
-                <TextProgressRing textLength={text.length} />
+                <TextProgressRing textLength={text.length} />{" "}
+                {/* Smaller ring */}
                 {!isInputEmpty && <Divider />}
                 <SubmitButton
                   type="submit"
@@ -203,48 +204,49 @@ export default function SparkleForm({
   );
 }
 
+const theme = {
+  primaryColor: "var(--primary-color, #1da1f2)",
+  primaryHoverColor: "var(--primary-hover-color, #1a91da)",
+  backgroundColor: "var(--background-color, #15202b)",
+  borderColor: "var(--border-color, #38444d)",
+  textColor: "var(--text-color, #fff)",
+  grayColor: "var(--gray-color, #888888)",
+};
+
 const Container = styled.div`
   width: 100%;
-  border-bottom: 1px solid var(--border-color);
-  padding: 10px 15px;
 `;
 
 const ReplyTo = styled.span`
-  font-size: 0.875rem;
-  color: var(--gray-color);
-  margin-left: 55px;
-  margin-bottom: 8px;
+  font-size: 0.8rem; // Slightly smaller
+  color: ${theme.grayColor};
+  margin-left: 50px; // Adjusted for smaller avatar
+  margin-bottom: 6px;
   display: block;
 `;
 
 const ReplyName = styled.span`
-  color: var(--primary-color);
-  margin-left: 4px;
+  color: ${theme.primaryColor};
+  margin-left: 3px;
 `;
 
 const Form = styled.form<FormProps>`
   display: flex;
   align-items: ${({ inline }) => (inline ? "center" : "flex-start")};
   min-height: ${({ minHeight }) => minHeight};
+  gap: 8px; // Reduced gap
 `;
 
 const UserAvatar = styled.figure`
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+  width: 36px; // Slightly smaller
+  height: 36px;
+  min-width: 36px;
   border-radius: 50%;
   overflow: hidden;
-  margin-right: 12px;
-  transition: opacity 0.2s ease;
+  margin: 0;
 
   &:hover {
     opacity: 0.9;
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
   }
 `;
 
@@ -258,11 +260,12 @@ const InputSection = styled.div`
 const Actions = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 6px; // Reduced margin
+  gap: 6px; // Reduced gap between action buttons
 `;
 
 const ActionButton = styled.button`
-  padding: 6px;
+  padding: 4px; // Reduced padding
   background: none;
   border: none;
   cursor: pointer;
@@ -275,7 +278,7 @@ const ActionButton = styled.button`
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px var(--primary-color);
+    box-shadow: 0 0 0 2px ${theme.primaryHoverColor};
   }
 `;
 
@@ -283,28 +286,29 @@ const RightActions = styled.div`
   margin-left: auto;
   display: flex;
   align-items: center;
+  gap: 8px; // Reduced gap
 `;
 
 const Divider = styled.hr`
-  height: 20px;
+  height: 16px; // Reduced height
   width: 1px;
-  background: var(--border-color);
+  background: ${theme.borderColor};
   border: none;
-  margin: 0 12px;
+  margin: 0 8px; // Reduced margin
 `;
 
 const SubmitButton = styled.button`
-  background: var(--primary-color);
-  color: var(--text-color);
-  padding: 8px 20px;
+  background: ${theme.primaryColor};
+  color: ${theme.textColor};
+  padding: 6px 16px; // Reduced padding
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 0.85rem; // Slightly smaller
   font-weight: 700;
   border: none;
   transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: var(--primary-hover-color);
+    background: ${theme.primaryHoverColor};
   }
 
   &:disabled {
@@ -314,7 +318,7 @@ const SubmitButton = styled.button`
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px var(--primary-hover-color);
+    box-shadow: 0 0 0 2px ${theme.primaryHoverColor};
   }
 `;
 
@@ -323,21 +327,21 @@ const MentionsDropdown = styled.div`
   top: 100%;
   left: 0;
   width: 100%;
-  max-width: 300px;
-  background: var(--background-color);
-  border: 1px solid var(--border-color);
+  max-width: 250px; // Slightly reduced
+  background: ${theme.backgroundColor};
+  border: 1px solid ${theme.borderColor};
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  max-height: 200px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); // Reduced shadow
+  max-height: 180px; // Slightly reduced
   overflow-y: auto;
   z-index: 1000;
 `;
 
 const MentionItem = styled.div`
-  padding: 8px 12px;
-  color: var(--text-color);
+  padding: 6px 10px; // Reduced padding
+  color: ${theme.textColor};
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.85rem; // Slightly smaller
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
