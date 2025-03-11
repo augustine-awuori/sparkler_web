@@ -203,10 +203,21 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 10px;
+  min-width: 230px;
   height: 100vh;
   border-right: 1px solid ${theme.borderColor};
   position: sticky;
   top: 0;
+
+  @media (max-width: 768px) {
+    min-width: 200px; /* Slightly narrower on tablets */
+    padding: 0 8px; /* Reduced padding on smaller screens */
+  }
+
+  @media (max-width: 480px) {
+    min-width: 180px; /* Narrower on mobile */
+    padding: 0 6px; /* Further reduced padding on mobile */
+  }
 `;
 
 const LogoLink = styled(Link)`
