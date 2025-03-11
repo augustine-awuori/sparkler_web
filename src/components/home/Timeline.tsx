@@ -89,9 +89,8 @@ export default function Timeline() {
         )}
       />
       <IconButton
-        _hover={{ backgroundColor: "var(--theme-color)" }}
         aria-label="icon"
-        background="var(--theme-color)"
+        background="var(--primary-color)"
         borderRadius="full"
         bottom="5rem"
         boxShadow="lg"

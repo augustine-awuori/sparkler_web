@@ -1,20 +1,15 @@
 import { Box } from "@chakra-ui/react";
 
-import { Home, Mail, Search, User } from "../../assets/icons";
-import { useProfileUser, useUnreadMessages, useUser } from "../../hooks";
+import { Home, Mail, Search } from "../../assets/icons";
+import { useUnreadMessages, useUser } from "../../hooks";
 import BottomTab from "./BottomTab";
 import NotificationIcon from "../notifications/Icon";
 
 const BottomNav = () => {
   const { count } = useUnreadMessages();
-  const { viewUserProfile } = useProfileUser();
   const { user } = useUser();
 
   const getPathName = (path: string) => (user ? path : "/auth");
-
-  const handleProfileUserData = () => {
-    if (user) viewUserProfile(user);
-  };
 
   return (
     <Box
@@ -40,11 +35,6 @@ const BottomNav = () => {
         Icon={Mail}
         pathname={getPathName("/messages")}
         value={count}
-      />
-      <BottomTab
-        Icon={User}
-        pathname={getPathName(`/${user?.username}`)}
-        onClick={handleProfileUserData}
       />
     </Box>
   );

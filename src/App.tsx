@@ -10,6 +10,7 @@ import {
 } from "stream-chat";
 
 import {
+  AboutPage,
   AuthCodeLoginPage,
   AuthCodePages,
   AuthCodeRegisterPage,
@@ -290,7 +291,11 @@ function App() {
                               />
                               <Route
                                 element={<BookmarksPage />}
-                                path="/bookmarks"
+                                path="/:username/bookmarks"
+                              />
+                              <Route
+                                element={<AboutPage />}
+                                path="/sparkler/about"
                               />
                               <Route
                                 element={<CommunityPage />}

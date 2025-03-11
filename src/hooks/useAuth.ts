@@ -6,4 +6,6 @@ export const logout = () => {
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { logout };
+export default () => {
+  return { logout };
+};

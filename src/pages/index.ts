@@ -1,3 +1,4 @@
+export { default as AboutPage } from "./AboutPage";
 export { default as AuthCodeLoginPage } from "./AuthCodeLoginPage";
 export { default as AuthCodePages } from "./AuthCodePages";
 export { default as AuthCodeRegisterPage } from "./AuthCodeRegisterPage";
