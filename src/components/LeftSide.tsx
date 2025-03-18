@@ -78,7 +78,12 @@ export default function LeftSide() {
       link: "/notifications",
       value: newNotifications,
     },
-    { id: "bookmarks", label: "Bookmarks", Icon: Bookmark, link: "/bookmarks" },
+    {
+      id: "bookmarks",
+      label: "Bookmarks",
+      Icon: Bookmark,
+      link: `/${user?.username}/bookmarks`,
+    },
     {
       id: "messages",
       label: "Messages",
