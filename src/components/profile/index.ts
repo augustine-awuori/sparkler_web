@@ -1,4 +1,3 @@
-export { default as EditProfileButton } from "./EditProfileButton";
 export { default as ProfileBio } from "./ProfileBio";
 export { default as ProfileHeader } from "./ProfileHeader";
 export { default as ProfileMedia } from "./ProfileMedia";

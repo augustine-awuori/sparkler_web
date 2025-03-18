@@ -11,7 +11,6 @@ import { appUrl } from "../../services/client";
 import { Calendar, Mail } from "../../assets/icons";
 import { formatStringWithLink } from "../../utils/string";
 import { useProfileUser, useUser } from "../../hooks";
-import EditProfileButton from "../profile/EditProfileButton";
 import FollowButton from "../FollowButton";
 import SparkleShareModal from "../sparkle/SparkleShareModal";
 import UserAccounts from "../UserAccounts";
@@ -66,104 +65,72 @@ export default function ProfileBio() {
 
   return (
     <Container>
-      <div className="top">
-        <figure className="image">
+      <TopSection>
+        <ProfileImage>
           <Avatar image={user.data.profileImage} alt="profile" />
-        </figure>
+        </ProfileImage>
+        <ActionsContainer>
+          <ActionButton onClick={() => setShowShareModal(true)}>
+            <FaShare size={15} />
+          </ActionButton>
+          {actions.map((action) => (
+            <ActionButton key={action.id} onClick={action.onClick}>
+              <action.Icon size={21} color="#fff" />
+            </ActionButton>
+          ))}
+          <FollowButtonWrapper>
+            <FollowButton userId={user?.id || ""} />
+          </FollowButtonWrapper>
+        </ActionsContainer>
+      </TopSection>
 
-        <div className="actions">
-          <button
-            className="action-btn"
-            onClick={() => setShowShareModal(true)}
-          >
-            <FaShare color="white" size={15} />
-          </button>
-
-          {isLoggedInUserProfile ? (
-            <EditProfileButton />
-          ) : (
-            <>
-              {actions.map((action) => (
-                <button
-                  className="action-btn"
-                  key={action.id}
-                  onClick={action.onClick}
-                >
-                  <action.Icon color="white" size={21} />
-                </button>
-              ))}
-              {user?.id && <FollowButton userId={user.id} />}
-            </>
-          )}
-        </div>
-      </div>
-
-      <div className="details">
-        <span className="user__name">
+      <Details>
+        <UserName>
           {user.data?.name}
           {user.data?.verified && (
-            <img
+            <VerifiedIcon
               src={
                 user.data?.isAdmin
                   ? require("../../assets/admin.png")
                   : require("../../assets/verified.png")
               }
               alt="Verified"
-              className="verified-icon"
             />
           )}
-        </span>
-        <span className="user__id">@{username}</span>
-        <span
-          className="user__bio"
-          dangerouslySetInnerHTML={{ __html: formattedBio }}
-        />
-
+        </UserName>
+        <UserId>@{username}</UserId>
+        <UserBio dangerouslySetInnerHTML={{ __html: formattedBio }} />
         {user.data.customLink && (
-          <div className="user__custom-link">
-            <a
+          <CustomLinkWrapper>
+            <CustomLink
               href={user.data.customLink}
-              className="custom-link"
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaLink className="link-icon" size={16} />
-              <span className="custom-link-text">
-                {user.data.customLink.replace("https://", "")}
-              </span>
-            </a>
-          </div>
+              <span>{user.data.customLink.replace("https://", "")}</span>
+            </CustomLink>
+          </CustomLinkWrapper>
         )}
-
-        <div className="user__joined">
+        <UserJoined>
           <Calendar color="#777" size={20} />
-          <span className="user__joined--text">Joined {joinedDate}</span>
-        </div>
-        <div className="user__follows">
-          <Box
-            cursor="pointer"
-            onClick={() => navigate("followings")}
-            className="user__follows__following"
-          >
+          <span>Joined {joinedDate}</span>
+        </UserJoined>
+        <UserFollows>
+          <FollowCount onClick={() => navigate("followings")}>
             <b>{followingCount}</b> Following
-          </Box>
-          <Box
-            cursor="pointer"
-            onClick={() => navigate("followers")}
-            className="user__follows__followers"
-          >
+          </FollowCount>
+          <FollowCount onClick={() => navigate("followers")}>
             <b>{followersCount}</b> Follower{followersCount === 1 ? "" : "s"}
-          </Box>
-        </div>
-
+          </FollowCount>
+        </UserFollows>
         {!isLoggedInUserProfile && (
-          <div className="user__followed-by">
+          <UserFollowedBy>
             Not followed by anyone you are following
-          </div>
+          </UserFollowedBy>
         )}
-
         <UserAccounts user={user} />
-      </div>
+      </Details>
       <SparkleShareModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
@@ -178,126 +145,154 @@ export default function ProfileBio() {
 const Container = styled.div`
   padding: 20px;
   position: relative;
+`;
 
-  .top {
-    display: flex;
-    justify-content: space-between;
-    margin-top: -50px;
+const TopSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: -50px;
+`;
 
-    .image {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 4px solid black;
-      background-color: #444;
+const ProfileImage = styled.figure`
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid black;
+  background-color: #444;
 
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
 
-    .actions {
-      position: relative;
-      top: 60px;
-      display: flex;
+const ActionsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  top: 60px;
+`;
 
-      .action-btn {
-        border: 1px solid #777;
-        margin-right: 10px;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
+const ActionButton = styled.button`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #777;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const FollowButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Details = styled.div`
+  color: #888;
+  margin-top: 20px;
+`;
+
+const UserName = styled.span`
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+`;
+
+const VerifiedIcon = styled.img`
+  width: 16px;
+  height: 16px;
+  margin-left: 5px;
+`;
+
+const UserId = styled.span`
+  display: block;
+  margin-top: 2px;
+`;
+
+const UserBio = styled.span`
+  color: white;
+  margin-top: 10px;
+  display: block;
+
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+`;
+
+const CustomLinkWrapper = styled.div`
+  margin-top: 7px;
+`;
+
+const CustomLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  .link-icon {
+    margin-right: 8px;
   }
 
-  .details {
-    color: #888;
-    margin-top: 20px;
-
-    .user {
-      &__name {
-        color: white;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-
-        .verified-icon {
-          width: 16px;
-          height: 16px;
-          margin-left: 5px;
-        }
-      }
-
-      &__bio {
-        color: white;
-        margin-top: 10px;
-        a {
-          color: var(--theme-color);
-          text-decoration: none;
-        }
-      }
-
-      &__joined {
-        display: flex;
-        align-items: center;
-        margin-top: 15px;
-        font-size: 15px;
-
-        &--text {
-          margin-left: 5px;
-        }
-      }
-
-      &__follows {
-        font-size: 15px;
-        display: flex;
-        margin-top: 15px;
-
-        b {
-          color: white;
-        }
-
-        &__followers {
-          margin-left: 20px;
-        }
-      }
-
-      &__custom-link {
-        margin-top: 7px;
-
-        .custom-link {
-          display: inline-flex;
-          align-items: center;
-          background-color: var(--theme-color);
-          color: white;
-          padding: 8px 12px;
-          border-radius: 30px;
-          text-decoration: none;
-          font-size: 14px;
-          transition: background-color 0.3s, transform 0.3s ease;
-
-          .link-icon {
-            margin-right: 8px;
-          }
-
-          &:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-2px);
-          }
-
-          &:active {
-            background-color: var(--primary-color);
-            transform: translateY(0);
-          }
-        }
-      }
-    }
+  &:hover {
+    background-color: var(--primary-hover-color);
+    transform: translateY(-2px);
   }
+
+  &:active {
+    background-color: var(--primary-color);
+    transform: translateY(0);
+  }
+`;
+
+const UserJoined = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  font-size: 15px;
+
+  span {
+    margin-left: 5px;
+  }
+`;
+
+const UserFollows = styled.div`
+  font-size: 15px;
+  display: flex;
+  margin-top: 15px;
+`;
+
+const FollowCount = styled(Box)`
+  cursor: pointer;
+
+  &:not(:last-child) {
+    margin-right: 20px;
+  }
+
+  b {
+    color: white;
+  }
+`;
+
+const UserFollowedBy = styled.div`
+  margin-top: 10px;
 `;

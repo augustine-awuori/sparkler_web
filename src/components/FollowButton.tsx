@@ -1,11 +1,13 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 import { useFollow, useUser } from "../hooks";
 
 export default function FollowButton({ userId }: { userId: string }) {
   const { isFollowing, toggleFollow, loading } = useFollow({ userId });
   const { user } = useUser();
+  const navigate = useNavigate();
 
   const handleToggle = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -14,12 +16,18 @@ export default function FollowButton({ userId }: { userId: string }) {
     toggleFollow();
   };
 
+  const navigateToProfileEdit = () => {
+    if (user) navigate(`/${user.username}/edit`);
+  };
+
   const isCurrentUser = user?._id === userId;
 
   return (
     <Container>
       {isCurrentUser ? (
-        <StyledButton $isFollowing={false}>Edit Profile</StyledButton>
+        <StyledButton $isFollowing={false} onClick={navigateToProfileEdit}>
+          Edit Profile
+        </StyledButton>
       ) : (
         <StyledButton
           onClick={handleToggle}

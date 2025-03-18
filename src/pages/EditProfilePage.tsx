@@ -238,7 +238,7 @@ const Header = styled.header`
 
 const BackButton = styled.button`
   font-size: 24px;
-  color: var(--theme-color);
+  color: var(--primary-color);
   border: none;
   background: none;
   cursor: pointer;
@@ -252,7 +252,7 @@ const Title = styled.h1`
 
 const SaveButton = styled.button`
   padding: 6px 16px;
-  background-color: var(--theme-color);
+  background-color: var(--primary-color);
   color: #fff;
   border: none;
   border-radius: 20px;
@@ -340,7 +340,7 @@ const Label = styled.label`
 const Input = styled.input`
   background-color: inherit;
   border-radius: 4px;
-  border: 1px solid var(--theme-color);
+  border: 1px solid var(--primary-color);
   color: #fff;
   font-size: 16px;
   padding: 12px;
@@ -350,7 +350,7 @@ const Input = styled.input`
 const TextArea = styled.textarea`
   background-color: inherit;
   border-radius: 4px;
-  border: 1px solid var(--theme-color);
+  border: 1px solid var(--primary-color);
   color: #fff;
   font-size: 16px;
   padding: 12px;
