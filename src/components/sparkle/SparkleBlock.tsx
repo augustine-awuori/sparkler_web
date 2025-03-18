@@ -12,7 +12,6 @@ import { FaUserMinus, FaUserPlus } from "react-icons/fa";
 import { HiLightBulb } from "react-icons/hi";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
-import classNames from "classnames";
 import styled from "styled-components";
 
 import {
@@ -253,7 +252,7 @@ const SparkleBlock: React.FC<Props> = ({ activity, showMedia }) => {
     setQuoteDialogOpened(true);
   };
 
-  const getColor = (name: ActionId): string => {
+  const getIconColor = (name: ActionId): string => {
     let color = "#777";
 
     if (name === "heart" && hasLikedSparkle) color = "#f91880";
@@ -262,6 +261,13 @@ const SparkleBlock: React.FC<Props> = ({ activity, showMedia }) => {
       color = "var(--primary-color)";
 
     return color;
+  };
+
+  const getValueColor = (actionId: ActionId): string => {
+    if (actionId === "heart" && hasLikedSparkle) return getIconColor(actionId);
+    if (actionId === "resparkle" && hasResparkledSparkle)
+      return getIconColor(actionId);
+    return "#666";
   };
 
   const getResparklerName = (): string => {
@@ -385,24 +391,16 @@ const SparkleBlock: React.FC<Props> = ({ activity, showMedia }) => {
                     type="button"
                   >
                     <action.Icon
-                      color={getColor(action.id)}
+                      color={getIconColor(action.id)}
                       size={17}
                       fill={
                         (action.id === "heart" && hasLikedSparkle) ||
                         (action.id === "bookmark" && hasBookmarkedSparkle)
                       }
                     />
-                    <span
-                      className={classNames("tweet__actions__value", {
-                        colored:
-                          (action.id === "heart" && hasLikedSparkle) ||
-                          (action.id === "resparkle" && hasResparkledSparkle),
-                        green:
-                          action.id === "resparkle" && hasResparkledSparkle,
-                      })}
-                    >
+                    <ActionValue color={getValueColor(action.id)}>
                       {action.value}
-                    </span>
+                    </ActionValue>
                   </button>
                 );
               })}
@@ -456,6 +454,11 @@ const SparkleBlock: React.FC<Props> = ({ activity, showMedia }) => {
     </Box>
   );
 };
+
+const ActionValue = styled.span<{ color: string }>`
+  margin-left: 10px;
+  color: ${(props) => props.color};
+`;
 
 const Block = styled.div`
   border-bottom: 1px solid #333;
