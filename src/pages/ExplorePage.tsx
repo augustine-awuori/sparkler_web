@@ -1,36 +1,125 @@
 import { useState } from "react";
-import { useBreakpointValue, Box } from "@chakra-ui/react";
 import styled from "styled-components";
 
+import { CommunityCard } from "../components/community";
+import { useCommunities, useUsers } from "../hooks";
 import Trends from "../components/trends";
-import WhoToFollow from "../components/explore/WhoToFollow";
 import SearchInput from "../components/trends/SearchInput";
+import TabsList, { Tab } from "../components/TabsList";
+import UserCard from "../components/UserCard";
+
+type TabId = "Hashtags" | "Sparklers" | "Communities";
+type Category = "All" | "Verified" | "Unverified";
+
+const tabs: Tab<TabId>[] = [
+  { id: "Hashtags", label: "Hashtags" },
+  { id: "Sparklers", label: "Sparklers" },
+  { id: "Communities", label: "Communities" },
+];
 
 export default function ExplorePage() {
-  const [query, setQuery] = useState("");
-  const showWhoToFollowOnRight = useBreakpointValue({ base: false, lg: true });
+  const [communitiesQuery, setCommunitiesQuery] = useState("");
+  const [usersQuery, setUsersQuery] = useState("");
+  const [activeTab, setActiveTab] = useState<TabId>("Hashtags");
+  const [activeCategory, setActiveCategory] = useState<Category>("All");
+  const { communities } = useCommunities();
+  const { allUsers } = useUsers();
+
+  const renderContent = (): JSX.Element => {
+    if (activeTab === "Communities") {
+      const filteredCommunities = communities.filter((community) =>
+        community.name.toLowerCase().includes(communitiesQuery.toLowerCase())
+      );
+
+      return (
+        <>
+          <SearchInput
+            onQueryChange={setCommunitiesQuery}
+            query={communitiesQuery}
+            placeholder="Search Communities"
+          />
+          <GridContainer>
+            {filteredCommunities.map((community) => (
+              <CommunityCard community={community} key={community._id} />
+            ))}
+          </GridContainer>
+        </>
+      );
+    } else if (activeTab === "Hashtags")
+      return (
+        <>
+          <Categories>
+            <CategoryButton
+              $isActive={activeCategory === "All"}
+              onClick={() => setActiveCategory("All")}
+            >
+              All
+            </CategoryButton>
+            <CategoryButton
+              $isActive={activeCategory === "Verified"}
+              onClick={() => setActiveCategory("Verified")}
+            >
+              Verified
+            </CategoryButton>
+          </Categories>
+          <GridContainer>
+            <Trends
+              query={usersQuery}
+              verified={activeCategory === "Verified" ? true : undefined}
+            />
+          </GridContainer>
+        </>
+      );
+
+    const sortedUsers = [...allUsers].sort((a, b) => {
+      if (a.isAdmin && !b.isAdmin) return -1;
+      if (!a.isAdmin && b.isAdmin) return 1;
+      if (a.verified && !b.verified) return -1;
+      if (!a.verified && b.verified) return 1;
+      return 0;
+    });
+
+    const filteredUsers = sortedUsers.filter(
+      (user) =>
+        (user.username.toLowerCase().includes(usersQuery.toLowerCase()) ||
+          user.name.toLowerCase().includes(usersQuery.toLowerCase())) &&
+        user.username !== "awuori"
+    );
+
+    return (
+      <>
+        <SearchInput onQueryChange={setUsersQuery} query={usersQuery} />
+        <GridContainer>
+          {filteredUsers.map((user) => (
+            <UserCard user={user} key={user._id} />
+          ))}
+        </GridContainer>
+      </>
+    );
+  };
 
   return (
     <Container>
-      <SearchInput onQueryChange={setQuery} query={query} />
-
-      <ContentContainer>
-        <Trends query={query} verified />
-        <Trends query={query} />
-
-        {showWhoToFollowOnRight ? (
-          <RightSideContainer>
-            <WhoToFollow query={query} />
-          </RightSideContainer>
-        ) : (
-          <Box mt={4}>
-            <WhoToFollow query={query} />
-          </Box>
-        )}
-      </ContentContainer>
+      <TabsList<TabId>
+        activeTabId={activeTab}
+        onTabClick={setActiveTab}
+        tabs={tabs}
+      />
+      <MainLayout>
+        <ContentWrapper>{renderContent()}</ContentWrapper>
+      </MainLayout>
     </Container>
   );
 }
+
+const theme = {
+  primaryColor: "var(--primary-color, #1da1f2)",
+  primaryHoverColor: "var(--primary-hover-color, #1a91da)",
+  backgroundColor: "var(--background-color, #15202b)",
+  borderColor: "var(--border-color, #38444d)",
+  textColor: "var(--text-color, #fff)",
+  grayColor: "var(--gray-color, #888888)",
+};
 
 const Container = styled.div`
   width: 100%;
@@ -42,22 +131,61 @@ const Container = styled.div`
   box-sizing: border-box;
 `;
 
-const ContentContainer = styled.div`
+const MainLayout = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 16px;
+  max-width: 1200px;
+  margin: 1rem auto 0;
+  width: 100%;
+`;
 
+const ContentWrapper = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+
+const GridContainer = styled.div`
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  grid-template-columns: 1fr;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
   @media (min-width: 1024px) {
-    flex-direction: row;
-    justify-content: space-between;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
 `;
 
-const RightSideContainer = styled.div`
-  width: 300px;
-  flex-shrink: 0;
-  margin-left: 16px;
-  @media (max-width: 1023px) {
-    display: none;
+const Categories = styled.div`
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  overflow-x: auto;
+  white-space: nowrap;
+`;
+
+const CategoryButton = styled.button<{ $isActive: boolean }>`
+  padding: 8px 16px;
+  background: ${({ $isActive }) =>
+    $isActive ? theme.primaryColor : "rgba(255, 255, 255, 0.1)"};
+  border: 1px solid ${theme.borderColor};
+  border-radius: 20px;
+  color: ${({ $isActive }) => ($isActive ? "#fff" : theme.textColor)};
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background: ${({ $isActive }) =>
+      $isActive ? theme.primaryHoverColor : "rgba(255, 255, 255, 0.2)"};
   }
+
+  ${({ $isActive }) =>
+    $isActive &&
+    `
+    border-color: ${theme.primaryColor};
+    font-weight: bold;
+  `}
 `;

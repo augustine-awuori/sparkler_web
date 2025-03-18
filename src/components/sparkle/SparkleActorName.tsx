@@ -7,6 +7,7 @@ import { useProfileUser } from "../../hooks";
 
 interface Props extends ActivityActorData {
   time: string;
+  showTime?: boolean;
 }
 
 //TODO: pass the whole user data
@@ -14,7 +15,15 @@ export default function SparkleActorName(props: Props) {
   const navigate = useNavigate();
   const { setProfileUser: setUser } = useProfileUser();
 
-  const { time, isAdmin, name, id, username, verified } = props;
+  const {
+    time,
+    isAdmin,
+    name,
+    id,
+    username,
+    verified,
+    showTime = true,
+  } = props;
   const timeDiff = Date.now() - new Date(time).getTime();
   const hoursBetweenDates = timeDiff / (60 * 60 * 1000);
   const lessThan24hrs = hoursBetweenDates < 24;
@@ -53,14 +62,15 @@ export default function SparkleActorName(props: Props) {
         />
       )}
       <span className="user--id">@{username}</span>
-      <span className="tweet-date">{timeText}</span>
+      {showTime && <span className="tweet-date">{timeText}</span>}
     </TextBlock>
   );
 }
 
 const TextBlock = styled.div`
-  display: flex;
   align-items: center;
+  cursor: pointer;
+  display: flex;
 
   &:hover .user--name {
     text-decoration: underline;

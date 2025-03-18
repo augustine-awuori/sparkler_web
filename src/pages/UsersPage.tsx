@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { ANONYMOUS_USER_ID } from "../components/explore/WhoToFollow";
 import { useProfileUser, useUser, useUsers } from "../hooks";
 import { User } from "../users";
-import FollowBtn from "../components/FollowBtn";
+import FollowButton from "../components/FollowButton";
 import LoadingIndicator from "../components/LoadingIndicator";
 import SearchInput from "../components/trends/SearchInput";
 import TabsList, { Tab } from "../components/TabsList";
@@ -107,7 +107,7 @@ const UsersPage = () => {
                 <span className="user__id">@{leader.username}</span>
               </div>
             </div>
-            <FollowBtn userId={leader._id} />
+            <FollowButton userId={leader._id} />
           </div>
 
           {leader.bio && (

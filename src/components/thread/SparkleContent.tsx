@@ -28,7 +28,7 @@ import {
   Upload,
 } from "../../assets/icons";
 import { generateSparkleLink } from "../../utils/links";
-import FollowBtn from "../FollowBtn";
+import FollowButton from "../FollowButton";
 import ResparklePopup from "../sparkle/ResparklePopup";
 import SparkleCommentBlock from "./SparkleCommentBlock";
 import SparkleShareModal from "../sparkle/SparkleShareModal";
@@ -164,7 +164,7 @@ export default function SparkleContent({ activity }: Props) {
         </UserInfo>
         {user?._id !== sparkleActor.id && (
           <UserActions>
-            <FollowBtn userId={sparkleActor.id} />
+            <FollowButton userId={sparkleActor.id} />
             <MoreButton>
               <More color={theme.grayColor} size={18} />
             </MoreButton>

@@ -19,4 +19,5 @@ export type User = {
   customLink?: string;
   followersId?: Set<string>;
   followingId?: Set<string>;
+  timestamp: number;
 };
