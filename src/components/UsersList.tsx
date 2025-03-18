@@ -4,7 +4,7 @@ import { Avatar } from "react-activity-feed";
 import styled from "styled-components";
 
 import { User } from "../users";
-import FollowBtn from "./FollowBtn";
+import FollowButton from "./FollowButton";
 import LoadingIndicator from "./LoadingIndicator";
 
 interface Props {
@@ -79,7 +79,7 @@ const UsersList = ({ loading, users }: Props) => {
                 </Text>
               )}
             </Flex>
-            <FollowBtn userId={_id} />
+            <FollowButton userId={_id} />
           </Flex>
         );
       })}

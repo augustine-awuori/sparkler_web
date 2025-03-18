@@ -12,7 +12,7 @@ import { Calendar, Mail } from "../../assets/icons";
 import { formatStringWithLink } from "../../utils/string";
 import { useProfileUser, useUser } from "../../hooks";
 import EditProfileButton from "../profile/EditProfileButton";
-import FollowBtn from "../FollowBtn";
+import FollowButton from "../FollowButton";
 import SparkleShareModal from "../sparkle/SparkleShareModal";
 import UserAccounts from "../UserAccounts";
 import usersService from "../../services/users";
@@ -92,7 +92,7 @@ export default function ProfileBio() {
                   <action.Icon color="white" size={21} />
                 </button>
               ))}
-              {user?.id && <FollowBtn userId={user.id} />}
+              {user?.id && <FollowButton userId={user.id} />}
             </>
           )}
         </div>

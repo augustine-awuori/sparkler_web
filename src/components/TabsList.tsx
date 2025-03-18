@@ -69,7 +69,7 @@ const Container = styled.div<{ tabCount: number }>`
             content: "";
             height: 3px;
             width: 100%;
-            background-color: var(--theme-color);
+            background-color: var(--primary-color);
             border-radius: 40px;
             position: absolute;
             bottom: 0;
