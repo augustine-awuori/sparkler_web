@@ -13,7 +13,7 @@ const FEED_ENRICH_OPTIONS = {
 
 export default function Thread() {
   const { user } = useStreamContext();
-  const { user_id } = useParams();
+  const { username } = useParams();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -21,7 +21,7 @@ export default function Thread() {
 
   return (
     <Feed
-      feedGroup={user?.id === user_id ? "user" : "timeline"}
+      feedGroup={user?.id === username ? "user" : "timeline"}
       options={FEED_ENRICH_OPTIONS}
       notify
     >
