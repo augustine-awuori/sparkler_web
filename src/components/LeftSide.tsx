@@ -89,16 +89,15 @@ export default function LeftSide() {
     { id: "profile", label: "Profile", Icon: User, link: `/${user?.username}` },
   ];
 
-  const checkIsValidNavigation = (menuItem: Menu): boolean =>
-    !(
-      menuItem.id === "profile" ||
+  const invalidNavigation = (menuItem: Menu): boolean =>
+    (menuItem.id === "profile" ||
       menuItem.id === "notifications" ||
       menuItem.id === "messages" ||
-      menuItem.id === "bookmarks"
-    );
+      menuItem.id === "bookmarks") &&
+    !user;
 
   const getRoute = (menuItem: Menu): To =>
-    checkIsValidNavigation(menuItem) ? menuItem.link : "/auth";
+    invalidNavigation(menuItem) ? "/auth" : menuItem.link;
 
   const handleItemClick = (menuItem: Menu) => {
     logEvent(events.general.PAGE_VIEW, { pageLink: menuItem.link });
