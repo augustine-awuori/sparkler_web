@@ -6,16 +6,17 @@ export function formatStringWithLink(
   // regex to match links, hashtags and mentions
   const regex = /((https?:\/\/\S*)|(#\S*))|(@\S*)/gi;
 
-  const modifiedText = text.replace(regex, (match) => {
-    let url, label;
+  const modifiedText = (text || "").replace(regex, (match) => {
+    let url = "",
+      label = "";
 
     if (match.startsWith("#")) {
       // it is a hashtag
-      url = `/explore/${match.replace("#", "")}`;
+      url = `/explore/${(match || "").replace("#", "")}`;
       label = match;
     } else if (match.startsWith("@")) {
       // it is a mention
-      url = `/${match.replace("@", "")}`;
+      url = `/${(match || "").replace("@", "")}`;
       label = match;
     } else {
       // it is a link

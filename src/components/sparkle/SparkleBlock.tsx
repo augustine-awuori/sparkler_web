@@ -342,7 +342,7 @@ const SparkleBlock: React.FC<Props> = ({ activity, showMedia }) => {
                     __html: formatStringWithLink(
                       sparkleText,
                       "tweet__text--link"
-                    ).replace(/\n/g, "<br/>"),
+                    )?.replace(/\n/g, "<br/>"),
                   }}
                 />
                 {!morePopupOpened && (sparkle?.text?.length || 0) > 150 && (
