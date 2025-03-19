@@ -34,7 +34,9 @@ const PrivacyPolicyPage = () => {
       <SectionTitle>Contact Us</SectionTitle>
       <Paragraph>
         For privacy-related inquiries, reach us at:{" "}
-        <Link href="mailto:privacy@sparkler.com">privacy@sparkler.com</Link>
+        <Link href="mailto:augustineawuori95@gmail.com">
+          privacy@sparkler.com
+        </Link>
       </Paragraph>
 
       <Footer>
@@ -44,13 +46,10 @@ const PrivacyPolicyPage = () => {
   );
 };
 
-// Same styled-components as your original code
 const Container = styled.div`
-  font-family: "Arial, sans-serif";
   padding: 20px;
   max-width: 900px;
   margin: auto;
-  background: #f9f9f9;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
