@@ -1,89 +1,40 @@
 import styled from "styled-components";
 
-const CSAEPolicyPage = () => {
+const PrivacyPolicyPage = () => {
   return (
     <Container>
-      <Title>Policy Against Child Sexual Abuse and Exploitation (CSAE)</Title>
+      <Title>Privacy Policy</Title>
       <Paragraph>
-        At <strong>Your App Name</strong>, we are committed to maintaining a
-        safe and secure platform for all users, especially children. We have a
-        zero-tolerance policy for any form of child sexual abuse and
-        exploitation.
+        At Sparkler, we value your privacy and are committed to protecting your
+        personal information. This Privacy Policy explains how we collect, use,
+        and safeguard your data.
       </Paragraph>
 
-      <SectionTitle>Our Commitment</SectionTitle>
+      <SectionTitle>Information We Collect</SectionTitle>
       <List>
         <ListItem>
-          We strictly prohibit any content that promotes, depicts, or involves
-          child sexual abuse or exploitation.
+          Personal data like your name, email, and account details when you sign
+          up.
         </ListItem>
         <ListItem>
-          We actively monitor and report any suspicious activities or content to
-          the appropriate legal authorities.
-        </ListItem>
-        <ListItem>
-          We collaborate with law enforcement and child protection agencies to
-          support the fight against CSAE.
+          Usage data, such as browsing activity and interactions on our
+          platform.
         </ListItem>
       </List>
 
-      <SectionTitle>Reporting CSAE Content</SectionTitle>
+      <SectionTitle>How We Use Your Data</SectionTitle>
       <Paragraph>
-        If you encounter any content or behavior on our platform that you
-        believe violates our policy, please report it immediately:
+        We use your information to provide and improve our services, including:
       </Paragraph>
       <List>
-        <ListItem>
-          Email:{" "}
-          <Link href="mailto:augustineawuori95@gmail.com">
-            augustineawuori95@gmail.com
-          </Link>
-        </ListItem>
-        <ListItem>
-          Report Abuse Feature: Use the in-app "Report Abuse" option.
-        </ListItem>
+        <ListItem>Personalizing your experience.</ListItem>
+        <ListItem>Ensuring platform security and compliance.</ListItem>
       </List>
-      <Paragraph>
-        We take all reports seriously and will act promptly to investigate and
-        address any concerns.
-      </Paragraph>
-
-      <SectionTitle>Preventative Measures</SectionTitle>
-      <Paragraph>
-        To ensure the safety of our platform, we implement the following
-        measures:
-      </Paragraph>
-      <List>
-        <ListItem>
-          Regular content moderation using advanced detection technologies and
-          manual review.
-        </ListItem>
-        <ListItem>
-          Mandatory user verification processes to prevent fake or malicious
-          accounts.
-        </ListItem>
-        <ListItem>
-          Educational resources for users on how to stay safe online and
-          recognize harmful content.
-        </ListItem>
-      </List>
-
-      <SectionTitle>Legal Compliance</SectionTitle>
-      <Paragraph>
-        We comply with all applicable laws and regulations regarding child
-        protection and cooperate fully with legal authorities in investigating
-        and addressing any instances of CSAE.
-      </Paragraph>
 
       <SectionTitle>Contact Us</SectionTitle>
       <Paragraph>
-        If you have questions or concerns about this policy, please contact us
-        at:
-        <br />
-        Email:{" "}
-        <Link href="mailto:augustineawuori95@gmail.com">
-          augustineawuori95@gmail.com
-        </Link>
+        For privacy-related inquiries, reach us at:{" "}
+        <Link href="mailto:privacy@sparkler.com">privacy@sparkler.com</Link>
       </Paragraph>
 
       <Footer>
@@ -93,6 +44,7 @@ const CSAEPolicyPage = () => {
   );
 };
 
+// Same styled-components as your original code
 const Container = styled.div`
   font-family: "Arial, sans-serif";
   padding: 20px;
@@ -136,7 +88,6 @@ const ListItem = styled.li`
 const Link = styled.a`
   color: #007bff;
   text-decoration: none;
-
   &:hover {
     text-decoration: underline;
   }
@@ -149,4 +100,4 @@ const Footer = styled.footer`
   color: #777;
 `;
 
-export default CSAEPolicyPage;
+export default PrivacyPolicyPage;
