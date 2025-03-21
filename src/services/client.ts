@@ -15,9 +15,9 @@ export interface DataError {
   error: string;
 }
 
-// baseURL: "https://campus-hub-api-production.up.railway.app/api",
+// baseURL: "https://campus-hub-api.onrender.com/api",
 const apiClient = axios.create({
-  baseURL: "https://campus-hub-api.onrender.com/api",
+  baseURL: "https://campus-hub-api-production.up.railway.app/api",
 });
 
 apiClient.interceptors.request.use((config) => {
