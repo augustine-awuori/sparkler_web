@@ -30,6 +30,7 @@ import {
   ProfilePage,
   QuotesPage,
   QuoteSparklePage,
+  ReportsPage,
   ThreadPage,
   UsersPage,
 } from "./pages";
@@ -288,6 +289,10 @@ function App() {
                               <Route
                                 element={<NotificationsPage />}
                                 path="/notifications"
+                              />
+                              <Route
+                                element={<ReportsPage />}
+                                path="/reports"
                               />
                               <Route
                                 element={<BookmarksPage />}

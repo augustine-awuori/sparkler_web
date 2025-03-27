@@ -18,5 +18,6 @@ export { default as NotificationsPage } from "./NotificationsPage";
 export { default as ProfilePage } from "./ProfilePage";
 export { default as QuotesPage } from "./QuotesPage";
 export { default as QuoteSparklePage } from "./QuoteSparklePage";
+export { default as ReportsPage } from "./ReportsPage";
 export { default as ThreadPage } from "./ThreadPage";
 export { default as UsersPage } from "./UsersPage";

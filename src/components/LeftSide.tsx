@@ -3,6 +3,7 @@ import { Avatar } from "react-activity-feed";
 import { Button } from "@chakra-ui/react";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { FaSignOutAlt, FaEllipsisV, FaSignInAlt } from "react-icons/fa";
+import { HiSpeakerphone } from "react-icons/hi";
 import { FaUserGroup } from "react-icons/fa6";
 import styled from "styled-components";
 
@@ -24,6 +25,7 @@ import {
   useUser,
   useShowSparkleModal,
 } from "../hooks";
+import { IconType } from "react-icons";
 
 interface CustomIconProps {
   color?: string;
@@ -41,7 +43,8 @@ type Menu = {
     | "communities"
     | "notifications"
     | "messages"
-    | "profile";
+    | "profile"
+    | "reports";
   label: string;
   Icon: CustomIcon;
   link: string;
@@ -50,6 +53,10 @@ type Menu = {
 
 const GroupIcon = ({ fill, ...props }: CustomIconProps) => (
   <FaUserGroup fill={props.color} {...props} />
+);
+
+const ReportsIcon = ({ fill, ...props }: CustomIconProps) => (
+  <HiSpeakerphone {...props} />
 );
 
 export default function LeftSide() {
@@ -70,6 +77,12 @@ export default function LeftSide() {
       label: "Communities",
       Icon: GroupIcon,
       link: "/communities",
+    },
+    {
+      id: "reports",
+      label: "Reports",
+      Icon: ReportsIcon,
+      link: "/reports",
     },
     {
       id: "notifications",
