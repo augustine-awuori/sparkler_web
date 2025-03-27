@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Avatar } from "react-activity-feed";
-import { useNavigate } from "react-router-dom";
+import { To, useNavigate } from "react-router-dom";
 import { BsInfo } from "react-icons/bs";
 import { Flex, Image, Text, useBreakpointValue } from "@chakra-ui/react";
 import styled from "styled-components";
 
-import { Bookmark, User } from "../../assets/icons";
-import { useAuth, useUser } from "../../hooks";
+import { events, logEvent } from "../../storage/analytics";
+import { Tab, tabMenus, theme } from "../LeftSide";
+import { useAuth, useProfileUser, useUser } from "../../hooks";
 
 export default function MainHeader() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -14,9 +15,53 @@ export default function MainHeader() {
   const { logout } = useAuth();
   const isMobileSize = useBreakpointValue({ base: true, md: false });
   const navigate = useNavigate();
+  const { viewUserProfile } = useProfileUser();
 
   const openDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
+
+  const isBottomTab = (tab: Tab): boolean => {
+    return (
+      tab.id === "home" ||
+      tab.id === "explore" ||
+      tab.id === "notifications" ||
+      tab.id === "messages"
+    );
+  };
+
+  const isActiveLink = (tab: Tab): boolean => {
+    if (location.pathname === "/" && tab.id === "home") return true;
+    return (
+      location.pathname === `/${tab.id}` ||
+      (tab.id === "profile" && location.pathname === `/${user?.username}`)
+    );
+  };
+
+  const parseMenu = (menu: Tab): Tab => {
+    if (menu.id === "bookmarks")
+      return { ...menu, link: `/${user?.username}/bookmarks` };
+    else if (menu.id === "profile")
+      return { ...menu, link: `/${user?.username}` };
+    else return menu;
+  };
+
+  const handleTabClick = (menuItem: Tab) => {
+    const parsed = parseMenu(menuItem);
+
+    logEvent(events.general.PAGE_VIEW, { pageLink: parsed.link });
+    if (parsed.id === "profile" && user) return viewUserProfile(user);
+    navigate(getRoute(parsed));
+  };
+
+  const invalidNavigation = (menuItem: Tab): boolean =>
+    (menuItem.id === "profile" ||
+      menuItem.id === "notifications" ||
+      menuItem.id === "messages" ||
+      menuItem.id === "bookmarks") &&
+    !user;
+
+  const getRoute = (menuItem: Tab): To =>
+    invalidNavigation(menuItem) ? "/auth" : menuItem.link;
 
   return (
     <>
@@ -80,24 +125,23 @@ export default function MainHeader() {
               <CloseButton onClick={closeDrawer}>×</CloseButton>
             </DrawerHeader>
             <DrawerContent>
-              <NavItem>
-                <Flex
-                  align="center"
-                  onClick={() => navigate(user ? `/${user.username}` : "/")}
-                >
-                  <User color="#fff" /> <Text ml={4}>Profile</Text>
-                </Flex>
-              </NavItem>
-              <NavItem>
-                <Flex
-                  align="center"
-                  onClick={() =>
-                    navigate(user ? `/${user.username}/bookmarks` : "/")
-                  }
-                >
-                  <Bookmark color="#fff" /> <Text ml={4}>Bookmarks</Text>
-                </Flex>
-              </NavItem>
+              {tabMenus
+                .filter((tab) => !isBottomTab(tab))
+                .map((tab) => {
+                  const isActive = isActiveLink(tab);
+
+                  return (
+                    <NavItem key={tab.id}>
+                      <Flex align="center" onClick={() => handleTabClick(tab)}>
+                        <tab.Icon
+                          color={isActive ? theme.textColor : theme.grayColor}
+                        />
+                        <Text ml={4}>{tab.label}</Text>
+                      </Flex>
+                    </NavItem>
+                  );
+                })}
+
               <NavItem>
                 <Flex
                   align="center"

@@ -25,7 +25,6 @@ import {
   useUser,
   useShowSparkleModal,
 } from "../hooks";
-import { IconType } from "react-icons";
 
 interface CustomIconProps {
   color?: string;
@@ -35,7 +34,7 @@ interface CustomIconProps {
 
 type CustomIcon = (props: CustomIconProps) => JSX.Element;
 
-type Menu = {
+export type Tab = {
   id:
     | "bookmarks"
     | "home"
@@ -59,6 +58,42 @@ const ReportsIcon = ({ fill, ...props }: CustomIconProps) => (
   <HiSpeakerphone {...props} />
 );
 
+export const tabMenus: Tab[] = [
+  { id: "home", label: "Home", Icon: Home, link: "/" },
+  { id: "explore", label: "Explore", Icon: Search, link: "/explore" },
+  {
+    id: "communities",
+    label: "Communities",
+    Icon: GroupIcon,
+    link: "/communities",
+  },
+  {
+    id: "reports",
+    label: "Reports",
+    Icon: ReportsIcon,
+    link: "/reports",
+  },
+  {
+    id: "notifications",
+    label: "Notifications",
+    Icon: Bell,
+    link: "/notifications",
+  },
+  {
+    id: "bookmarks",
+    label: "Bookmarks",
+    Icon: Bookmark,
+    link: "",
+  },
+  {
+    id: "messages",
+    label: "Messages",
+    link: "/messages",
+    Icon: Mail,
+  },
+  { id: "profile", label: "Profile", Icon: User, link: `` },
+];
+
 export default function LeftSide() {
   const { count } = useUnreadMessages();
   const { newNotifications } = useNewNotifications();
@@ -69,61 +104,25 @@ export default function LeftSide() {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const menus: Menu[] = [
-    { id: "home", label: "Home", Icon: Home, link: "/" },
-    { id: "explore", label: "Explore", Icon: Search, link: "/explore" },
-    {
-      id: "communities",
-      label: "Communities",
-      Icon: GroupIcon,
-      link: "/communities",
-    },
-    {
-      id: "reports",
-      label: "Reports",
-      Icon: ReportsIcon,
-      link: "/reports",
-    },
-    {
-      id: "notifications",
-      label: "Notifications",
-      Icon: Bell,
-      link: "/notifications",
-      value: newNotifications,
-    },
-    {
-      id: "bookmarks",
-      label: "Bookmarks",
-      Icon: Bookmark,
-      link: `/${user?.username}/bookmarks`,
-    },
-    {
-      id: "messages",
-      label: "Messages",
-      link: "/messages",
-      Icon: Mail,
-      value: count,
-    },
-    { id: "profile", label: "Profile", Icon: User, link: `/${user?.username}` },
-  ];
-
-  const invalidNavigation = (menuItem: Menu): boolean =>
+  const invalidNavigation = (menuItem: Tab): boolean =>
     (menuItem.id === "profile" ||
       menuItem.id === "notifications" ||
       menuItem.id === "messages" ||
       menuItem.id === "bookmarks") &&
     !user;
 
-  const getRoute = (menuItem: Menu): To =>
+  const getRoute = (menuItem: Tab): To =>
     invalidNavigation(menuItem) ? "/auth" : menuItem.link;
 
-  const handleItemClick = (menuItem: Menu) => {
-    logEvent(events.general.PAGE_VIEW, { pageLink: menuItem.link });
-    if (menuItem.id === "profile" && user) return viewUserProfile(user);
-    navigate(getRoute(menuItem));
+  const handleTabClick = (menuItem: Tab) => {
+    const parsed = parseMenu(menuItem);
+
+    logEvent(events.general.PAGE_VIEW, { pageLink: parsed.link });
+    if (parsed.id === "profile" && user) return viewUserProfile(user);
+    navigate(getRoute(parsed));
   };
 
-  const isActiveLink = (menu: Menu): boolean => {
+  const isActiveLink = (menu: Tab): boolean => {
     if (location.pathname === "/" && menu.id === "home") return true;
     return (
       location.pathname === `/${menu.id}` ||
@@ -137,25 +136,44 @@ export default function LeftSide() {
     navigate("/auth");
   };
 
+  const getMenuValue = (menu: Tab): number | undefined => {
+    if (!user) return undefined;
+
+    if (menu.id === "messages") return count;
+    else if (menu.id === "notifications") return newNotifications;
+    return undefined;
+  };
+
+  function parseMenu(menu: Tab): Tab {
+    if (menu.id === "bookmarks")
+      return { ...menu, link: `/${user?.username}/bookmarks` };
+    else if (menu.id === "profile")
+      return { ...menu, link: `/${user?.username}` };
+    else return menu;
+  }
+
   return (
     <Container>
       <LogoLink to="/">
         <Sparkle color={theme.textColor} size={24} />
       </LogoLink>
       <NavButtons>
-        {menus.map((menu) => {
+        {tabMenus.map((menu) => {
           const isActive = isActiveLink(menu);
+          const value = getMenuValue(menu);
+
           return (
             <NavLink
               to={getRoute(menu)}
               key={menu.id}
               isActive={isActive}
-              onClick={() => handleItemClick(menu)}
+              onClick={() => handleTabClick(menu)}
             >
               <IconContainer>
-                {menu.value && user ? (
-                  <NotificationBadge>{menu.value}</NotificationBadge>
-                ) : null}
+                {typeof value === "number" && value > 0 && (
+                  <NotificationBadge>{value}</NotificationBadge>
+                )}
+
                 <menu.Icon
                   fill={isActive}
                   color={isActive ? theme.textColor : theme.grayColor}
@@ -207,7 +225,7 @@ export default function LeftSide() {
   );
 }
 
-const theme = {
+export const theme = {
   primaryColor: "var(--primary-color, #1da1f2)",
   primaryHoverColor: "var(--primary-hover-color, #1a91da)",
   backgroundColor: "var(--background-color, #15202b)",
