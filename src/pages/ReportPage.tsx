@@ -12,6 +12,7 @@ export default function ReportPage() {
   const { reportId } = useParams<{ reportId: string }>();
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<Report | null>(null);
+  const [seen, setSeen] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -25,10 +26,10 @@ export default function ReportPage() {
       setLoading(false);
 
       if (ok) {
-        setReport(data as Report);
-      } else {
-        toast.error(problem || "Error getting report");
-      }
+        const result = data as Report;
+        setReport(result);
+        setSeen(result.seen);
+      } else toast.error(problem || "Error getting report");
     };
 
     init();
@@ -37,6 +38,7 @@ export default function ReportPage() {
   const handleMarkAsSeen = async () => {
     if (!reportId || report?.seen) return;
 
+    setSeen(true);
     setLoading(true);
     const { ok, problem } = await service.markReportAsSeen(reportId);
     setLoading(false);
@@ -45,6 +47,7 @@ export default function ReportPage() {
       setReport((prev) => (prev ? { ...prev, seen: true } : null));
       toast.success("Report marked as seen");
     } else {
+      setSeen(false);
       toast.error(problem || "Error marking report as seen");
     }
   };
@@ -65,11 +68,8 @@ export default function ReportPage() {
         <Status seen={report.seen}>{report.seen ? "Seen" : "Unseen"}</Status>
       </ContentWrapper>
       <ButtonWrapper>
-        <MarkSeenButton
-          onClick={handleMarkAsSeen}
-          disabled={report.seen || loading}
-        >
-          {report.seen ? "Marked as Seen" : "Mark as Seen"}
+        <MarkSeenButton onClick={handleMarkAsSeen} disabled={seen || loading}>
+          {seen ? "Marked as Seen" : "Mark as Seen"}
         </MarkSeenButton>
       </ButtonWrapper>
     </PageWrapper>
