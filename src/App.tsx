@@ -30,6 +30,7 @@ import {
   ProfilePage,
   QuotesPage,
   QuoteSparklePage,
+  ReportPage,
   ReportsPage,
   ThreadPage,
   UsersPage,
@@ -289,6 +290,10 @@ function App() {
                               <Route
                                 element={<NotificationsPage />}
                                 path="/notifications"
+                              />
+                              <Route
+                                element={<ReportPage />}
+                                path="/reports/:reportId"
                               />
                               <Route
                                 element={<ReportsPage />}

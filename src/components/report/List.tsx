@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 
 import Card, { Report } from "./Card";
 import LoadingIndicator from "../LoadingIndicator";
 import service from "../../services/reports";
-import styled from "styled-components";
 
 export default function List() {
   const [reports, setReports] = useState<Report[]>([]);
@@ -18,9 +18,12 @@ export default function List() {
       const { data, ok, problem } = await service.getReports();
       setLoading(false);
 
-      ok
-        ? setReports(data as Report[])
-        : setError(problem || "Error fetching reports");
+      if (ok) {
+        const sortedReports = (data as Report[]).sort((a, b) =>
+          a.seen === b.seen ? 0 : a.seen ? 1 : -1
+        );
+        setReports(sortedReports);
+      } else setError(problem || "Error fetching reports");
     };
 
     init();

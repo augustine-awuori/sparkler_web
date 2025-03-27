@@ -26,5 +26,21 @@ const getReports = async () => {
   }
 };
 
+const getReport = async (reportId: string) => {
+  try {
+    return processResponse(await client.get(`${endpoint}/${reportId}`));
+  } catch (error) {
+    return getFailedResponse(error);
+  }
+};
+
+const markReportAsSeen = async (reportId: string) => {
+  try {
+    return processResponse(await client.patch(`${endpoint}/seen/${reportId}`));
+  } catch (error) {
+    return getFailedResponse(error);
+  }
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getReports, saveReport };
+export default { getReport, getReports, markReportAsSeen, saveReport };
