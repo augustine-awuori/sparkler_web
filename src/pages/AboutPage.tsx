@@ -38,6 +38,20 @@ const AboutPage = () => {
           <br />- Seamless and secure communication with an intuitive interface.
         </Paragraph>
 
+        {/* Add Download Button Here */}
+        <SectionTitle>Get the App</SectionTitle>
+        <Paragraph>
+          Download Sparkler on your Android device today and experience seamless
+          communication on the go!
+        </Paragraph>
+        <DownloadButton
+          href="https://play.google.com/store/apps/details?id=sparkler.lol"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Download on Google Play
+        </DownloadButton>
+
         <SectionTitle>Contact Us</SectionTitle>
         <Paragraph>
           We love hearing from our users! For feedback, support, or inquiries,
@@ -99,6 +113,25 @@ const Footer = styled.footer`
   color: #888;
   text-align: center;
   margin-top: 50px;
+`;
+
+const DownloadButton = styled.a`
+  display: inline-block;
+  background-color: #1e90ff;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 26px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: (var(--primary-color));
+    color: #fff;
+  }
 `;
 
 export default AboutPage;

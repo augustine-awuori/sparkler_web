@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Avatar } from "react-activity-feed";
 import { To, useNavigate } from "react-router-dom";
-import { BsInfo } from "react-icons/bs";
+import { BsDownload, BsInfo } from "react-icons/bs";
 import { Flex, Image, Text, useBreakpointValue } from "@chakra-ui/react";
 import styled from "styled-components";
 
@@ -62,6 +62,13 @@ export default function MainHeader() {
 
   const getRoute = (menuItem: Tab): To =>
     invalidNavigation(menuItem) ? "/auth" : menuItem.link;
+
+  const handleDownloadClick = () => {
+    window.open(
+      "https://play.google.com/store/apps/details?id=sparkler.lol",
+      "_blank"
+    );
+  };
 
   return (
     <>
@@ -147,9 +154,17 @@ export default function MainHeader() {
                   align="center"
                   onClick={() => navigate("/sparkler/about")}
                 >
-                  <BsInfo size={25} /> <Text ml={4}>About Sparkler</Text>
+                  <BsInfo size={25} />
+                  <Text ml={4}>About Sparkler</Text>
                 </Flex>
               </NavItem>
+
+              <DownloadAppItem>
+                <Flex align="center" onClick={handleDownloadClick}>
+                  <BsDownload size={15} color="#fff" />
+                  <Text ml={4}>Download App</Text>
+                </Flex>
+              </DownloadAppItem>
             </DrawerContent>
             <LogoutButton onClick={() => (user ? logout() : navigate("/auth"))}>
               {user ? "LOGOUT" : "LOGIN"}
@@ -160,6 +175,22 @@ export default function MainHeader() {
     </>
   );
 }
+
+const DownloadAppItem = styled.div`
+  font-size: 16px;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+
+  svg {
+    color: #fff; /* Ensures icon contrasts with background */
+  }
+`;
 
 export const Header = styled.header`
   display: flex;
@@ -258,7 +289,7 @@ const DrawerContent = styled.div`
   padding-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 `;
 
 const NavItem = styled.div`
