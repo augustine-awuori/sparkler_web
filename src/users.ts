@@ -17,6 +17,7 @@ export type User = {
   tiktok?: string;
   instagram?: string;
   customLink?: string;
+  isSchOfficial?: boolean;
   followersId?: Set<string>;
   followingId?: Set<string>;
   timestamp: number;

@@ -1,5 +1,5 @@
 import { getFailedResponse, processResponse } from "./client";
-import { ReportInfo } from "../pages/ReportsPage";
+import { ReportInfo } from "../components/report/Form";
 import client from "./client";
 
 const endpoint = "/reports";
