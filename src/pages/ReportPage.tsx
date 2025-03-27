@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Added useNavigate
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { Gallery } from "react-activity-feed";
+import { FaArrowLeft } from "react-icons/fa"; // Added for back icon
 
+import { Report } from "../components/report/Card";
 import LoadingIndicator from "../components/LoadingIndicator";
 import service from "../services/reports";
-import { Report } from "../components/report/Card";
 
 export default function ReportPage() {
   const { reportId } = useParams<{ reportId: string }>();
+  const navigate = useNavigate(); // For back navigation
   const [loading, setLoading] = useState(false);
+  const [loadingReport, setLoadingReport] = useState(false);
   const [report, setReport] = useState<Report | null>(null);
   const [seen, setSeen] = useState(false);
 
@@ -21,9 +24,9 @@ export default function ReportPage() {
         return;
       }
 
-      setLoading(true);
+      setLoadingReport(true);
       const { data, ok, problem } = await service.getReport(reportId);
-      setLoading(false);
+      setLoadingReport(false);
 
       if (ok) {
         const result = data as Report;
@@ -52,10 +55,16 @@ export default function ReportPage() {
     }
   };
 
-  if (loading || !report) return <LoadingIndicator />;
+  if (loadingReport || !report) return <LoadingIndicator />;
 
   return (
     <PageWrapper>
+      <Header>
+        <BackButton onClick={() => navigate(-1)}>
+          <FaArrowLeft />
+        </BackButton>
+        <HeaderTitle>Report Details</HeaderTitle>
+      </Header>
       <ContentWrapper>
         <Title>{report.title}</Title>
         <Description>{report.description}</Description>
@@ -78,17 +87,53 @@ export default function ReportPage() {
 
 const PageWrapper = styled.div`
   min-height: 100vh;
-  padding: 1rem;
+  color: var(--text-color); /* #fff */
+`;
+
+const Header = styled.header`
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color); /* #38444d */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+`;
+
+const BackButton = styled.button`
+  background: none;
+  border: none;
+  color: var(--text-color); /* #fff */
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: var(--primary-hover-color); /* #1a91da */
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+`;
+
+const HeaderTitle = styled.h1`
+  font-size: 1.25rem; /* 20px */
+  font-weight: 700;
   color: var(--text-color); /* #fff */
 `;
 
 const ContentWrapper = styled.div`
   max-width: 600px;
-  margin: 0 auto 2rem; /* Extra bottom margin for spacing before button */
+  margin: 1rem auto 2rem; /* Adjusted top margin for spacing below header */
+  padding: 0 1rem; /* Adjusted padding */
 `;
 
 const Title = styled.h1`
-  font-size: 1.5rem; /* 24px, larger for prominence */
+  font-size: 1.5rem; /* 24px */
   font-weight: 800;
   color: var(--text-color); /* #fff */
   margin-bottom: 1rem;
@@ -97,7 +142,7 @@ const Title = styled.h1`
 `;
 
 const Description = styled.p`
-  font-size: 1rem; /* 16px, slightly larger for readability */
+  font-size: 1rem; /* 16px */
   color: var(--text-color); /* #fff */
   margin-bottom: 1.5rem;
   line-height: 1.5;
