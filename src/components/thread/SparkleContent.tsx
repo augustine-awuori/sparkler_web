@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useRef, useState } from "react";
 import { Activity as MainActivity } from "getstream";
 import { toast } from "react-toastify";
-import { Box, BoxProps } from "@chakra-ui/react";
+import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
 
 import { Activity, QuoteActivity } from "../../utils/types";
 import { EmbeddedSparkleBlock } from "../resparkle";
@@ -37,6 +37,7 @@ import TweetForm from "../sparkle/SparkleForm";
 import useComment from "../../hooks/useComment";
 import useLike from "../../hooks/useLike";
 import CommentDialog from "../sparkle/CommentDialog";
+import { HiLightBulb } from "react-icons/hi";
 
 interface Props {
   activity: MainActivity;
@@ -148,6 +149,17 @@ export default function SparkleContent({ activity }: Props) {
 
   return (
     <Container>
+      {isAProject && (
+        <Flex align="center" mb={3.5}>
+          <Box>
+            <HiLightBulb color="#fff" size={24} />
+          </Box>
+          <Text ml={2} fontWeight={600} color="#fff">
+            Project
+          </Text>
+        </Flex>
+      )}
+
       <UserSection onClick={visitProfile}>
         <UserAvatar>
           <Avatar image={sparkleActor.profileImage} size={48} />

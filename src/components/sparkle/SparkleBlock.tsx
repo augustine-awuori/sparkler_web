@@ -307,8 +307,8 @@ const SparkleBlock: React.FC<Props> = ({ activity, showMedia }) => {
       <Block>
         <Flex align="center" ml={10}>
           {isAProject && (
-            <Flex align="center">
-              <Box mb={1.5}>
+            <Flex align="center" mb={1.5}>
+              <Box>
                 <HiLightBulb color="#fff" size={24} />
               </Box>
               <Text ml={2} fontWeight={600} color="#fff">
