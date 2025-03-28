@@ -27,6 +27,7 @@ import {
   Resparkle,
   Upload,
 } from "../../assets/icons";
+import { describeProject, ProjectData } from "../../utils/funcs";
 import { generateSparkleLink } from "../../utils/links";
 import FollowButton from "../FollowButton";
 import ResparklePopup from "../sparkle/ResparklePopup";
@@ -63,7 +64,7 @@ export default function SparkleContent({ activity }: Props) {
   const date = format(activity.time, "PP");
 
   const appActivity = activity as unknown as Activity;
-  const tweet = appActivity.object.data;
+  const sparkle = appActivity.object.data;
   const sparkleActor = appActivity.actor.data;
   const likesCount = appActivity.reaction_counts.like || 0;
   const resparklesCount = appActivity.reaction_counts.resparkle || 0;
@@ -72,7 +73,12 @@ export default function SparkleContent({ activity }: Props) {
   const hasBeenResparkled = hasResparkled(appActivity);
   const hasBookmarkedSparkle = hasBookmarked(appActivity);
   const isAQuote = activity.verb === "quote";
+  const isAProject = activity.verb === "project";
   const images: string[] = appActivity.attachments?.images || [];
+  const sparkleText = isAProject
+    ? describeProject(appActivity.object?.data as unknown as ProjectData)
+    : (sparkle || { text: "" }).text;
+
   const sparkleLink = generateSparkleLink(
     sparkleActor.username,
     appActivity.id
@@ -175,7 +181,7 @@ export default function SparkleContent({ activity }: Props) {
       <TweetContent>
         <TweetText
           dangerouslySetInnerHTML={{
-            __html: formatStringWithLink(tweet.text, "tweet-link")?.replace(
+            __html: formatStringWithLink(sparkleText, "tweet-link")?.replace(
               /\n/g,
               "<br/>"
             ),
@@ -273,7 +279,7 @@ export default function SparkleContent({ activity }: Props) {
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         sparkleUrl={completeSparkleLink}
-        text={tweet.text}
+        text={sparkle.text}
       />
       {resparklePopupOpened && (
         <ResparklePopup

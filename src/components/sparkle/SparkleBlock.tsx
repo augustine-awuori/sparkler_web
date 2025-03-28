@@ -48,12 +48,12 @@ import {
   useSparkle,
 } from "../../hooks";
 import { IconType } from "../nav/BottomTab";
+import ActorName from "./SparkleActorName";
 import CommentDialog from "./CommentDialog";
 import MoreOptionsPopup, { Option } from "./MoreOptionPopup";
 import QuoteDialog from "../quote/QuoteDialog";
 import ResparklePopup from "./ResparklePopup";
 import SparkleShareModal from "./SparkleShareModal";
-import TweetActorName from "./SparkleActorName";
 
 interface Props {
   activity: Activity;
@@ -333,7 +333,7 @@ const SparkleBlock: React.FC<Props> = ({ activity, showMedia }) => {
           </figure>
           <div className="tweet" onClick={viewDetails}>
             <button className="link">
-              <TweetActorName {...actor.data} time={activity.time} />
+              <ActorName {...actor.data} time={activity.time} />
               <div className="tweet__details">
                 <Text
                   noOfLines={morePopupOpened ? undefined : 8}
