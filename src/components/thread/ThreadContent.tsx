@@ -1,47 +1,28 @@
 import { useEffect, useState } from "react";
 import { useFeedContext, useStreamContext } from "react-activity-feed";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Activity } from "getstream";
-import { Map } from "immutable";
+import { toast } from "react-toastify";
 
-import { Activity as AppActivity } from "../../utils/types";
-import { generateSparkleLink } from "../../utils/links";
-import LoadingIndicator from "../LoadingIndicator";
 import Header from "../Header";
+import LoadingIndicator from "../LoadingIndicator";
 import SparkleContent from "./SparkleContent";
+import sparklesService from "../../services/sparkles";
 
 export default function ThreadContent() {
   const [activity, setActivity] = useState<Activity>();
   const { client } = useStreamContext();
   const { id } = useParams();
   const feed = useFeedContext();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // TODO: Fetch sparkle the right way
     const fetchSparkle = async () => {
-      if (feed.refreshing || !feed.hasDoneRequest || !id) return;
+      if (feed.refreshing || !feed.hasDoneRequest || !id || activity) return;
 
-      const activityPaths = feed.feedManager.getActivityPaths(id) || [];
-
-      if (activityPaths.length) {
-        const targetActivity = (
-          feed.feedManager.state.activities.getIn([...activityPaths[0]]) as Map<
-            string,
-            Activity
-          >
-        ).toJS();
-        setActivity(targetActivity as Activity);
-      } else {
-        const userFeed = client?.feed("user", client.userId);
-        const activities = ((await userFeed?.get({}))?.results ||
-          []) as unknown as AppActivity[];
-
-        const found = activities.find((activity) => activity.object.id === id);
-
-        if (found && client?.userId)
-          navigate(generateSparkleLink(client.userId, found.id));
-      }
+      const res = await sparklesService.getSparkles([id]);
+      res.ok
+        ? setActivity((res.data as Activity[])[0])
+        : toast.error("Error fetching this sparkle");
     };
 
     fetchSparkle();
