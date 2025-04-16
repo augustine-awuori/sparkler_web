@@ -7,6 +7,7 @@ export { default as BookmarksPage } from "./BookmarksPage";
 export { default as CommunitiesPage } from "./CommunitiesPage";
 export { default as CommunityPage } from "./CommunityPage";
 export { default as CSAEPolicyPage } from "./CSAEPolicyPage";
+export { default as DeleteProfilePage } from "./DeleteProfilePage";
 export { default as EditProfilePage } from "./EditProfilePage";
 export { default as ExplorePage } from "./ExplorePage";
 export { default as FollowersPage } from "./FollowersPage";

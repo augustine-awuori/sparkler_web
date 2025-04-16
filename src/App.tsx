@@ -19,6 +19,7 @@ import {
   CommunitiesPage,
   CommunityPage,
   CSAEPolicyPage,
+  DeleteProfilePage,
   EditProfilePage,
   ExplorePage,
   FollowersPage,
@@ -346,6 +347,10 @@ function App() {
                               <Route
                                 element={<EditProfilePage />}
                                 path="/:username/edit"
+                              />
+                              <Route
+                                element={<DeleteProfilePage />}
+                                path="/:username/delete"
                               />
                               <Route
                                 element={<FollowingsPage />}
