@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useFeedContext } from "react-activity-feed";
+import { useStreamContext } from "react-activity-feed";
 import { FormikHelpers } from "formik";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -8,8 +8,9 @@ import * as Yup from "yup";
 
 import { DataError } from "../services/client";
 import { Form, FormField, SubmitButton } from "../components/form";
-import authService from "../services/auth";
 import { useUser } from "../hooks";
+import auth from "../services/auth";
+import authService from "../services/auth";
 
 const schema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
@@ -18,11 +19,11 @@ const schema = Yup.object().shape({
 
 type Info = Yup.InferType<typeof schema>;
 
-export default function AuthCodeLogin() {
+export default function DeleteAccountPage() {
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const feed = useFeedContext();
+  const { client } = useStreamContext();
   const { user } = useUser();
 
   const validateEmail = (): Promise<boolean> =>
@@ -66,13 +67,14 @@ export default function AuthCodeLogin() {
       if (error) setError("");
 
       setLoading(true);
-      const { data, ok } = await login(email, info.authCode);
+      const { ok } = await login(email, info.authCode);
       if (!ok) return setLoading(false);
 
       resetForm();
       setEmail("");
-      // feed.feedManager.
-      // Delete user aaccount
+      await client?.currentUser?.delete();
+      toast.info("You've deleted your account successfully");
+      auth.logout();
       setLoading(false);
       window.location.href = "/";
     } catch (error) {
