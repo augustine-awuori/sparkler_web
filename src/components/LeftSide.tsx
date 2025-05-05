@@ -3,7 +3,6 @@ import { Avatar } from "react-activity-feed";
 import { Button } from "@chakra-ui/react";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { FaSignOutAlt, FaEllipsisV, FaSignInAlt } from "react-icons/fa";
-import { HiSpeakerphone } from "react-icons/hi";
 import { FaUserGroup } from "react-icons/fa6";
 import styled from "styled-components";
 
@@ -54,10 +53,6 @@ const GroupIcon = ({ fill, ...props }: CustomIconProps) => (
   <FaUserGroup fill={props.color} {...props} />
 );
 
-const ReportsIcon = ({ fill, ...props }: CustomIconProps) => (
-  <HiSpeakerphone {...props} />
-);
-
 export const tabMenus: Tab[] = [
   { id: "home", label: "Home", Icon: Home, link: "/" },
   { id: "explore", label: "Explore", Icon: Search, link: "/explore" },
@@ -66,12 +61,6 @@ export const tabMenus: Tab[] = [
     label: "Communities",
     Icon: GroupIcon,
     link: "/communities",
-  },
-  {
-    id: "reports",
-    label: "Reports",
-    Icon: ReportsIcon,
-    link: "/reports",
   },
   {
     id: "notifications",
