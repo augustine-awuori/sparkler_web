@@ -26,6 +26,7 @@ import {
   FollowingsPage,
   HashtagPage,
   HomePage,
+  MarketplacePage,
   MessagesPage,
   NotificationsPage,
   ProductPage,
@@ -338,6 +339,10 @@ function App() {
                                 <Route
                                   element={<ExplorePage />}
                                   path="/explore"
+                                />
+                                <Route
+                                  element={<MarketplacePage />}
+                                  path="/marketplace"
                                 />
                                 <Route
                                   element={<QuoteSparklePage />}

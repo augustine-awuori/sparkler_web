@@ -6,8 +6,9 @@ import { getFailedResponse, processResponse } from "./client";
 const endpoint = "/products";
 
 const apiClient = axios.create({
+  baseURL: "http://localhost:4000/api",
   // baseURL: "https://amazing-api-production.up.railway.app/api",
-  baseURL: "https://amazing-api.onrender.com/api",
+  // baseURLamazing-api.onrender.com/api
 });
 
 const getUserProducts = async (email: string): Promise<Product[]> => {

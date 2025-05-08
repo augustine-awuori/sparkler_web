@@ -71,7 +71,7 @@ export const tabMenus: Tab[] = [
     id: "shop",
     label: "Marketplace",
     Icon: ShopIcon,
-    link: "/", // Create a marketplace for the all products
+    link: "/marketplace",
   },
   {
     id: "notifications",

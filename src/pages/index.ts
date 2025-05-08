@@ -14,6 +14,7 @@ export { default as FollowersPage } from "./FollowersPage";
 export { default as FollowingsPage } from "./FollowingsPage";
 export { default as HashtagPage } from "./HashtagPage";
 export { default as HomePage } from "./HomePage";
+export { default as MarketplacePage } from "./MarketplacePage";
 export { default as MessagesPage } from "./MessagesPage";
 export { default as NotificationsPage } from "./NotificationsPage";
 export { default as ProductPage } from "./ProductPage";
