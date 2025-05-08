@@ -28,6 +28,7 @@ import {
   HomePage,
   MessagesPage,
   NotificationsPage,
+  ProductPage,
   ProfilePage,
   QuotesPage,
   QuoteSparklePage,
@@ -39,12 +40,14 @@ import {
 import {
   ActivityContext,
   FilesContext,
+  ProductContext,
   QuotesContext,
   ShowSparkleModalContext,
   UserContext,
 } from "./contexts";
 import { AppData, appDataJwt } from "./utils/app";
 import { ActivityActor, FollowersResult, Quote } from "./utils/types";
+import { Product } from "./hooks/useProducts";
 import { User } from "./users";
 import auth from "./services/auth";
 import Layout from "./components/Layout";
@@ -71,6 +74,7 @@ function App() {
   const [files, setFiles] = useState<File[]>([]);
   const [idUserMap, setIdUserMap] = useState<IdUserMap>({});
   const [loadingCommunities, setLoadingCommunities] = useState(false);
+  const [product, setProduct] = useState<Product>();
   const [profileUser, setProfileUser] = useState<FeedUser>();
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [showSparkleModal, setShowSparkleModal] = useState(false);
@@ -269,104 +273,112 @@ function App() {
                             onLoad: setLoadingCommunities,
                           }}
                         >
-                          <Layout>
-                            <Routes>
-                              <Route
-                                element={<CSAEPolicyPage />}
-                                path="/docs/policy"
-                              />
-                              <Route
-                                element={<AuthCodePages />}
-                                path="/auth/code"
-                              />
-                              <Route
-                                element={<AuthCodeLoginPage />}
-                                path="/auth/code/login"
-                              />
-                              <Route
-                                element={<AuthCodeRegisterPage />}
-                                path="/auth/code/register"
-                              />
-                              <Route element={<AuthPages />} path="/auth" />
-                              <Route
-                                element={<NotificationsPage />}
-                                path="/notifications"
-                              />
-                              <Route
-                                element={<ReportPage />}
-                                path="/reports/:reportId"
-                              />
-                              <Route
-                                element={<ReportsPage />}
-                                path="/reports"
-                              />
-                              <Route
-                                element={<BookmarksPage />}
-                                path="/:username/bookmarks"
-                              />
-                              <Route
-                                element={<AboutPage />}
-                                path="/sparkler/about"
-                              />
-                              <Route
-                                element={<CommunityPage />}
-                                path="/communities/:communityId"
-                              />
-                              <Route
-                                element={<CommunitiesPage />}
-                                path="/communities"
-                              />
-                              <Route
-                                element={<MessagesPage />}
-                                path="/messages"
-                              />
-                              <Route
-                                element={<UsersPage />}
-                                path="/explore/users"
-                              />
-                              <Route
-                                element={<HashtagPage />}
-                                path="/explore/:hashtag"
-                              />
-                              <Route
-                                element={<ExplorePage />}
-                                path="/explore"
-                              />
-                              <Route
-                                element={<QuoteSparklePage />}
-                                path="/:username/status/:id/quote"
-                              />
-                              <Route
-                                element={<ThreadPage />}
-                                path="/:username/status/:id"
-                              />
-                              <Route
-                                element={<QuotesPage />}
-                                path="/:username/status/:id/quotes"
-                              />
-                              <Route
-                                element={<EditProfilePage />}
-                                path="/:username/edit"
-                              />
-                              <Route
-                                element={<DeleteAccountPage />}
-                                path="/:username/delete"
-                              />
-                              <Route
-                                element={<FollowingsPage />}
-                                path="/:username/followings"
-                              />
-                              <Route
-                                element={<FollowersPage />}
-                                path="/:username/followers"
-                              />
-                              <Route
-                                element={<ProfilePage />}
-                                path="/:username"
-                              />
-                              <Route element={<HomePage />} path="/" />
-                            </Routes>
-                          </Layout>
+                          <ProductContext.Provider
+                            value={{ product, setProduct }}
+                          >
+                            <Layout>
+                              <Routes>
+                                <Route
+                                  element={<CSAEPolicyPage />}
+                                  path="/docs/policy"
+                                />
+                                <Route
+                                  element={<AuthCodePages />}
+                                  path="/auth/code"
+                                />
+                                <Route
+                                  element={<AuthCodeLoginPage />}
+                                  path="/auth/code/login"
+                                />
+                                <Route
+                                  element={<AuthCodeRegisterPage />}
+                                  path="/auth/code/register"
+                                />
+                                <Route element={<AuthPages />} path="/auth" />
+                                <Route
+                                  element={<NotificationsPage />}
+                                  path="/notifications"
+                                />
+                                <Route
+                                  element={<ReportPage />}
+                                  path="/reports/:reportId"
+                                />
+                                <Route
+                                  element={<ReportsPage />}
+                                  path="/reports"
+                                />
+                                <Route
+                                  element={<BookmarksPage />}
+                                  path="/:username/bookmarks"
+                                />
+                                <Route
+                                  element={<AboutPage />}
+                                  path="/sparkler/about"
+                                />
+                                <Route
+                                  element={<CommunityPage />}
+                                  path="/communities/:communityId"
+                                />
+                                <Route
+                                  element={<CommunitiesPage />}
+                                  path="/communities"
+                                />
+                                <Route
+                                  element={<MessagesPage />}
+                                  path="/messages"
+                                />
+                                <Route
+                                  element={<UsersPage />}
+                                  path="/explore/users"
+                                />
+                                <Route
+                                  element={<HashtagPage />}
+                                  path="/explore/:hashtag"
+                                />
+                                <Route
+                                  element={<ExplorePage />}
+                                  path="/explore"
+                                />
+                                <Route
+                                  element={<QuoteSparklePage />}
+                                  path="/:username/status/:id/quote"
+                                />
+                                <Route
+                                  element={<ThreadPage />}
+                                  path="/:username/status/:id"
+                                />
+                                <Route
+                                  element={<QuotesPage />}
+                                  path="/:username/status/:id/quotes"
+                                />
+                                <Route
+                                  element={<EditProfilePage />}
+                                  path="/:username/edit"
+                                />
+                                <Route
+                                  element={<DeleteAccountPage />}
+                                  path="/:username/delete"
+                                />
+                                <Route
+                                  element={<FollowingsPage />}
+                                  path="/:username/followings"
+                                />
+                                <Route
+                                  element={<FollowersPage />}
+                                  path="/:username/followers"
+                                />
+                                <Route
+                                  element={<ProductPage />}
+                                  path="/:username/products/:productId"
+                                />
+                                <Route
+                                  element={<ProfilePage />}
+                                  path="/:username"
+                                />
+                                <Route element={<HomePage />} path="/" />
+                              </Routes>
+                            </Layout>
+                          </ProductContext.Provider>
                         </CommunitiesContext.Provider>
                       </ShowSparkleModalContext.Provider>
                     </ProfileContext.Provider>

@@ -7,6 +7,8 @@ import Trends from "../components/trends";
 import SearchInput from "../components/trends/SearchInput";
 import TabsList, { Tab } from "../components/TabsList";
 import UserCard from "../components/UserCard";
+import Categories from "../components/Categories";
+import CategoryButton from "../components/CategoryButton";
 
 type TabId = "Hashtags" | "Sparklers" | "Communities";
 type Category = "All" | "Verified" | "Unverified";
@@ -156,36 +158,4 @@ const GridContainer = styled.div`
   @media (min-width: 1024px) {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
-`;
-
-const Categories = styled.div`
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-  overflow-x: auto;
-  white-space: nowrap;
-`;
-
-const CategoryButton = styled.button<{ $isActive: boolean }>`
-  padding: 8px 16px;
-  background: ${({ $isActive }) =>
-    $isActive ? theme.primaryColor : "rgba(255, 255, 255, 0.1)"};
-  border: 1px solid ${theme.borderColor};
-  border-radius: 20px;
-  color: ${({ $isActive }) => ($isActive ? "#fff" : theme.textColor)};
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-
-  &:hover {
-    background: ${({ $isActive }) =>
-      $isActive ? theme.primaryHoverColor : "rgba(255, 255, 255, 0.2)"};
-  }
-
-  ${({ $isActive }) =>
-    $isActive &&
-    `
-    border-color: ${theme.primaryColor};
-    font-weight: bold;
-  `}
 `;

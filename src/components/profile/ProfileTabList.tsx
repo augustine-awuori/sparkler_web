@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
-import ProfileSparkles from "./ProfileSparkles";
-import ProfileReplies from "./ProfileReplies";
+import { useUsers } from "../../hooks";
 import ProfileMedia from "./ProfileMedia";
+import ProfileProducts from "./ProfileProducts";
+import ProfileReplies from "./ProfileReplies";
+import ProfileSparkles from "./ProfileSparkles";
 import TabsList from "../TabsList";
 
-export type TabId = "sparkles" | "sparkles-replies" | "media";
+export type TabId = "sparkles" | "sparkles-replies" | "media" | "products";
 
 type Tab = { id: TabId; label: string };
 
@@ -23,13 +25,18 @@ const tabs: Tab[] = [
     id: "media",
     label: "Media",
   },
+  {
+    id: "products",
+    label: "Products",
+  },
 ];
 
 export default function ProfileTabList() {
-  const { username } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
   const [activeTab, setActiveTab] = useState<TabId>(tabs[0].id);
+  const { username } = useParams();
+  const { usernameIdMap, idUserMap } = useUsers();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -49,6 +56,17 @@ export default function ProfileTabList() {
     }
   };
 
+  const getUserEmail = (): string =>
+    idUserMap[usernameIdMap[username || ""]].email;
+
+  const renderTab = () => {
+    if (activeTab === "media") return <ProfileMedia />;
+    if (activeTab === "sparkles") return <ProfileSparkles />;
+    if (activeTab === "sparkles-replies") return <ProfileReplies />;
+    if (activeTab === "products")
+      return <ProfileProducts email={getUserEmail()} />;
+  };
+
   return (
     <div>
       <TabsList<TabId>
@@ -56,9 +74,7 @@ export default function ProfileTabList() {
         onTabClick={handleTabChange}
         tabs={tabs}
       />
-      {activeTab === "sparkles" && <ProfileSparkles />}
-      {activeTab === "sparkles-replies" && <ProfileReplies />}
-      {activeTab === "media" && <ProfileMedia />}
+      {renderTab()}
     </div>
   );
 }

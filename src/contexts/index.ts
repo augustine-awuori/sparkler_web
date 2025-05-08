@@ -1,6 +1,7 @@
 export { default as ActivityContext } from "./ActivityContext";
 export { default as CommunitiesContext } from "./CommunitiesContext";
 export { default as FilesContext } from "./FilesContext";
+export { default as ProductContext } from "./ProductContext";
 export { default as ProfileUserContext } from "./ProfileUserContext";
 export { default as QuotesContext } from "./QuotesContext";
 export { default as ShowSparkleModalContext } from "./ShowSparkleModalContext";

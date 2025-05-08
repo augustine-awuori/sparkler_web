@@ -4,6 +4,7 @@ import { Button } from "@chakra-ui/react";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { FaSignOutAlt, FaEllipsisV, FaSignInAlt } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
+import { CiShop } from "react-icons/ci";
 import styled from "styled-components";
 
 import {
@@ -42,7 +43,7 @@ export type Tab = {
     | "notifications"
     | "messages"
     | "profile"
-    | "reports";
+    | "shop";
   label: string;
   Icon: CustomIcon;
   link: string;
@@ -53,6 +54,10 @@ const GroupIcon = ({ fill, ...props }: CustomIconProps) => (
   <FaUserGroup fill={props.color} {...props} />
 );
 
+const ShopIcon = ({ fill, ...props }: CustomIconProps) => (
+  <CiShop fill={props.color} {...props} size={24} />
+);
+
 export const tabMenus: Tab[] = [
   { id: "home", label: "Home", Icon: Home, link: "/" },
   { id: "explore", label: "Explore", Icon: Search, link: "/explore" },
@@ -61,6 +66,12 @@ export const tabMenus: Tab[] = [
     label: "Communities",
     Icon: GroupIcon,
     link: "/communities",
+  },
+  {
+    id: "shop",
+    label: "Marketplace",
+    Icon: ShopIcon,
+    link: "/", // Create a marketplace for the all products
   },
   {
     id: "notifications",

@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import _ from "lodash";
 
 import { FeedUser } from "../contexts/ProfileUserContext";
 import { User } from "../users";
@@ -63,4 +64,23 @@ Stage: ${stage}.
 ${partnerInfo}
 ${techInfo}
 ${urlInfo}`;
+}
+
+export function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array]; // Create a copy to avoid mutating the original
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Random index from 0 to i
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Swap elements
+  }
+  return shuffled;
+}
+
+export default function paginate<T>(
+  items: T[],
+  pageNumber: number,
+  pageSize: number
+) {
+  const startIndex = (pageNumber - 1) * pageSize;
+
+  return _(items).slice(startIndex).take(pageSize).value() as T[];
 }

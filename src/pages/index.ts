@@ -16,6 +16,7 @@ export { default as HashtagPage } from "./HashtagPage";
 export { default as HomePage } from "./HomePage";
 export { default as MessagesPage } from "./MessagesPage";
 export { default as NotificationsPage } from "./NotificationsPage";
+export { default as ProductPage } from "./ProductPage";
 export { default as ProfilePage } from "./ProfilePage";
 export { default as QuotesPage } from "./QuotesPage";
 export { default as QuoteSparklePage } from "./QuoteSparklePage";

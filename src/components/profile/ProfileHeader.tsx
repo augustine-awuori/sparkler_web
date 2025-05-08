@@ -14,7 +14,15 @@ export interface ProfileUser {
   coverImage?: string;
 }
 
-export default function ProfileHeader() {
+type Props = {
+  showCoverImage?: boolean;
+  subtitle?: string;
+};
+
+export default function ProfileHeader({
+  showCoverImage = true,
+  subtitle,
+}: Props) {
   const [activitiesCount, setActivitiesCount] = useState(0);
   const { client } = useStreamContext();
   const { user } = useProfileUser();
@@ -47,19 +55,25 @@ export default function ProfileHeader() {
         </button>
         <div className="info">
           <h1>{(user?.data).name || "Display user name here"}</h1>
-          <span className="info__tweets-count">
-            {activitiesCount} Sparkle{activitiesCount === 1 ? "" : "s"}
-          </span>
+          {subtitle ? (
+            <span className="info__tweets-count">{subtitle}</span>
+          ) : (
+            <span className="info__tweets-count">
+              {activitiesCount} Sparkle{activitiesCount === 1 ? "" : "s"}
+            </span>
+          )}
         </div>
       </StickyHeader>
-      <Header>
-        <div className="cover">
-          <img
-            src={user.data.coverImage || "https://picsum.photos/500/200"}
-            alt="cover"
-          />
-        </div>
-      </Header>
+      {showCoverImage && (
+        <Header>
+          <div className="cover">
+            <img
+              src={user.data.coverImage || "https://picsum.photos/500/200"}
+              alt="cover"
+            />
+          </div>
+        </Header>
+      )}
     </>
   );
 }

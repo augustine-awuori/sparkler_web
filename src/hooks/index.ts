@@ -9,6 +9,8 @@ export { default as useForm } from "./useForm";
 export { default as useLike } from "./useLike";
 export { default as useNewNotifications } from "./useNewNotifications";
 export { default as useNotification } from "./useNotification";
+export { default as useProduct } from "./useProduct";
+export { default as useProducts } from "./useProducts";
 export { default as useProfileUser } from "./useProfileUser";
 export { default as useQuotes } from "./useQuotes";
 export { default as useQuoting } from "./useQuoting";
